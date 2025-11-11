@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="styles.css">
 
 </head>
-<body>
+<body class="preload"> 
 
 <div class="video-background">
     <div class="video-overlay"></div>
@@ -24,13 +24,13 @@
     </iframe>
 </div>
 
-<main>
+<main class="hidden-on-load">
         <header>
             <h1>Diagnóstico Profesional: Inundaciones en la Ciudad de México</h1>
             <p>Análisis Histórico, Geográfico y Prevención de Riesgos | Publicado: <time datetime="2025-10-27">27 de Octubre de 2025</time></p>
         </header>
 
-        <section id="introduccion">
+        <section id="introduccion" class="reveal-on-scroll">
             <h2>Contexto Geográfico e Histórico</h2>
             <p>La CDMX presenta un alto índice de inundaciones significativas debido a que se encuentra delimitada por un sistema montañoso, siendo la zona baja de la cuenca la más urbanizada. Históricamente, los antiguos mexicas edificaron Tenochtitlán sobre el lago de Texcoco, el cual fue secado y sustituido por asfalto, lo que incrementó el riesgo de inundaciones por la poca filtración del agua hacia el subsuelo.</p>
             
@@ -42,7 +42,7 @@
             </ul>
         </section>
 
-        <section id="pronostico">
+        <section id="pronostico" class="reveal-on-scroll">
             <h2>Pronóstico del Tiempo y Alerta ⛈️</h2>
             <p>La información meteorológica en tiempo real es clave para la prevención de riesgos y la toma de decisiones.</p>
             
@@ -54,7 +54,7 @@
                 </div>
         </section>
 
-        <section id="causas-interactiva">
+        <section id="causas-interactiva" class="reveal-on-scroll">
             <h2>Análisis de Causas y Vulnerabilidad Actual</h2>
 
             <details>
@@ -95,7 +95,7 @@
             </details>
         </section>
         
-        <section id="prevencion">
+        <section id="prevencion" class="reveal-on-scroll">
             <h2>Estrategias de Prevención y Guía de Acción</h2>
             <p>La prevención permite a la gente actuar de manera adecuada en caso de ser necesario, previniendo el alto riesgo e informado el impacto que puede causar este desastre natural.</p>
 
@@ -107,12 +107,12 @@
             </ul>
         </section>
 
-        <aside>
+        <aside class="reveal-on-scroll">
             <h3>Conclusión: Concientización y Propósito</h3>
             <p>A pesar de la extensa infraestructura hídrica, las inundaciones persisten debido a motivos multifactoriales como el desarrollo urbano sin planificación, infraestructura vieja y la acumulación excesiva de desechos en las conducciones de desagüe. Este análisis busca fomentar la concienciación ciudadana para evitar este tipo de problemas para la comunidad, salvaguardando la integridad física de las personas a través de acciones preventivas.</p>
         </aside>
 
-        <section id="referencias">
+        <section id="referencias" class="reveal-on-scroll">
             <h2>Fuentes de Consulta</h2>
             <p>Las siguientes referencias sirvieron como base documental para la elaboración de este diagnóstico:</p>
             <ul>
@@ -130,7 +130,8 @@
         </footer>
 </main>
 
+<button id="scrollToTopBtn" title="Volver al inicio">↑</button>
+
 <script src="script.js"></script>
 </body>
 </html>
-
