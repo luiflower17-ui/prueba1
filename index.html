@@ -6,6 +6,7 @@
     <title>Aplicación Digital: Detección Temprana de Inundaciones - CDMX</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
 
@@ -16,7 +17,7 @@
     <div class="video-overlay"></div>
     <iframe 
         id="youtube-background" 
-        src="https://www.youtube.com/embed/RRrlmxeQlXo?controls=0&rel=0&autoplay=1&loop=1&mute=1&playlist=RRrlmxeQlXo"
+        src="https://www.youtube.com/embed/6E4qvlqMT2A?controls=0&rel=0&autoplay=1&loop=1&mute=1&playlist=6E4qvlqMT2A"
         frameborder="0" 
         allow="autoplay; encrypted-media; loop" 
         allowfullscreen>
@@ -26,16 +27,16 @@
 <main>
         <header>
             <h1>Aplicación digital: Detección temprana de desastres naturales</h1>
-            <p>
+            <p class="header-subtitle">
                 GOBIERNO DE LA CIUDAD DE MÉXICO | UNIVERSIDAD ROSARIO CASTELLANOS | LICENCIATURA EN CIENCIA DE DATOS PARA NEGOCIOS
             </p>
-            <p>
+            <p class="header-authors">
                 Proyecto prototípico: Inundaciones en CDMX. Presentan: Aliza Ramírez, Giovanni Morales, Luis Flores
             </p>
         </header>
 
         <section id="contenido-completo" class="fade-in">
-            <h2>Estructura y Contenido del Proyecto</h2>
+            <h2 class="section-title">Estructura y Contenido del Proyecto</h2>
             <p class="section-intro">Seleccione un tema principal de la lista de la izquierda para ver toda la información de la sección.</p>
 
             <div id="interactive-content">
@@ -56,37 +57,39 @@
                     
                     <div id="content-problemas" class="content-detail active">
                         <h3>1. Problemas de investigación</h3>
-                        <p>Los problemas de investigación detallan las preguntas clave que el proyecto busca resolver en relación con las inundaciones en la CDMX.</p>
+                        <p class="section-text">Los problemas de investigación detallan las preguntas clave que el proyecto busca resolver en relación con las inundaciones en la CDMX.</p>
                         
-                        <div class="info-block">
-                            <h4>Tipos de inundaciones</h4>
-                            <p>Se debe clasificar el fenómeno (fluvial, pluvial, etc.) para aplicar la mitigación correcta. Entender la tipología es el primer paso en la modelación predictiva.</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>Factores principales que provocan las inundaciones recurrentes</h4>
-                            <p>Factores como la geomorfología de cuenca, el hundimiento de la ciudad y el clima extremo se combinan para generar un alto riesgo hídrico.</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>Influencia del crecimiento urbano</h4>
-                            <p>La impermeabilización del suelo por el asfalto y construcciones satura rápidamente el drenaje pluvial, superando la capacidad de la infraestructura actual.</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>Relación entre acumulación de basura y encharcamientos</h4>
-                            <p>La basura obstruye las coladeras y reduce la eficiencia del sistema en más del 50% de los casos, convirtiéndose en un problema de responsabilidad social.</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>Zonas de mayor vulnerabilidad</h4>
-                            <p>Identificar áreas de riesgo alto (Tlalpan, Iztapalapa, G.A. Madero, etc.) es esencial para focalizar las alertas tempranas y la respuesta de Protección Civil.</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>Predicción mediante modelos climáticos y urbanos</h4>
-                            <p>Determinar la viabilidad de un algoritmo de predicción basado en datos meteorológicos y topográficos en tiempo real.</p>
+                        <div class="info-grid">
+                            <div class="info-block">
+                                <h4>Tipos de inundaciones</h4>
+                                <p>Se debe clasificar el fenómeno (fluvial, pluvial, etc.) para aplicar la mitigación correcta. Entender la tipología es el primer paso en la modelación predictiva.</p>
+                            </div>
+                            <div class="info-block">
+                                <h4>Factores principales que provocan las inundaciones recurrentes</h4>
+                                <p>Factores como la geomorfología de cuenca, el hundimiento de la ciudad y el clima extremo se combinan para generar un alto riesgo hídrico.</p>
+                            </div>
+                            <div class="info-block">
+                                <h4>Influencia del crecimiento urbano</h4>
+                                <p>La impermeabilización del suelo por el asfalto y construcciones satura rápidamente el drenaje pluvial, superando la capacidad de la infraestructura actual.</p>
+                            </div>
+                            <div class="info-block">
+                                <h4>Relación entre acumulación de basura y encharcamientos</h4>
+                                <p>La basura obstruye las coladeras y reduce la eficiencia del sistema en más del 50% de los casos, convirtiéndose en un problema de responsabilidad social.</p>
+                            </div>
+                            <div class="info-block">
+                                <h4>Zonas de mayor vulnerabilidad</h4>
+                                <p>Identificar áreas de riesgo alto (Tlalpan, Iztapalapa, G.A. Madero, etc.) es esencial para focalizar las alertas tempranas y la respuesta de Protección Civil.</p>
+                            </div>
+                            <div class="info-block">
+                                <h4>Predicción mediante modelos climáticos y urbanos</h4>
+                                <p>Determinar la viabilidad de un algoritmo de predicción basado en datos meteorológicos y topográficos en tiempo real.</p>
+                            </div>
                         </div>
                     </div>
 
                     <div id="content-contexto" class="content-detail">
                         <h3>2. Contexto histórico y evolución del sistema hídrico</h3>
-                        <p>La Ciudad de México tiene un alto índice de inundaciones significativas. La zona baja de la cuenca, urbanizada sobre lo que fue el lago de Texcoco, combinada con el hundimiento de la ciudad y el clima extremo, incrementa el riesgo.</p>
+                        <p class="section-text">La Ciudad de México tiene un alto índice de inundaciones significativas. La zona baja de la cuenca, urbanizada sobre lo que fue el lago de Texcoco, combinada con el hundimiento de la ciudad y el clima extremo, incrementa el riesgo.</p>
                         
                         <div class="info-block">
                             <h4>La Gran Inundación de 1629</h4>
@@ -205,9 +208,7 @@
                         
                         <div class="info-block">
                             <h4>Objetivo general</h4>
-                            <ul>
-                                <li>Abordar el fenómeno de inundaciones en la Ciudad de México, buscando reducir su impacto mediante una guía introductoria y el desarrollo de una página web integral con un algoritmo de prevención y predicción.</li>
-                            </ul>
+                            <p>Abordar el fenómeno de inundaciones en la Ciudad de México, buscando reducir su impacto mediante una guía introductoria y el desarrollo de una página web integral con un algoritmo de prevención y predicción.</p>
                         </div>
                         
                         <div class="info-block">
