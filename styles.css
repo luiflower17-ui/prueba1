@@ -1,6 +1,4 @@
-* ... (CSS anterior) ... */
 
-/* MODIFICACIÓN: Hacemos que la cabecera sea fija */
 header { 
     /* ... (Estilos existentes) ... */
     position: sticky; /* Sticky es más moderno que fixed y se queda en su lugar */
@@ -32,3 +30,4 @@ section:target {
 }
 
 /* ... (resto del CSS) ... */
+
