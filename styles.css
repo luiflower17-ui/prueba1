@@ -108,6 +108,21 @@ ul li::before {
 }
 ol li { margin-bottom: 8px; }
 
+/* Estilo para la lista de referencias */
+.references-list {
+    list-style-type: none;
+    padding: 0;
+}
+.references-list li {
+    margin-bottom: 15px;
+    padding-left: 0;
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+.references-list li::before {
+    content: none; /* Elimina el punto de las referencias */
+}
+
 
 /* ==================================== */
 /* 3. IMAGEN Y CAPTION                  */
@@ -142,7 +157,6 @@ ol li { margin-bottom: 8px; }
     flex: 0 0 35%; 
     padding-right: 20px;
     border-right: 1px solid var(--color-divider);
-    /* Transición en el contenedor para suavidad visual */
     transition: opacity 0.3s ease;
 }
 
@@ -172,10 +186,10 @@ ol li { margin-bottom: 8px; }
     padding: 10px 0;
     border-bottom: none; 
     cursor: pointer;
-    transition: all 0.3s ease; /* Transición para color, padding, opacidad */
+    transition: all 0.3s ease; 
     font-size: 0.9rem;
-    opacity: 0.7; /* Ligeramente apagado por defecto */
-    position: relative; /* Para el indicador lateral */
+    opacity: 0.7; 
+    position: relative; 
 }
 
 .nav-item:hover, .nav-item.active {
@@ -191,7 +205,7 @@ ol li { margin-bottom: 8px; }
     left: 0;
     top: 0;
     bottom: 0;
-    width: 3px; /* Indicador visual de la selección */
+    width: 3px; 
     background-color: var(--color-accent-blue);
     transition: background-color 0.3s;
 }
@@ -206,14 +220,13 @@ ol li { margin-bottom: 8px; }
     border: 1px solid var(--color-divider);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
     position: relative;
-    overflow: hidden; /* Asegura que el contenido animado no se salga */
+    overflow: hidden; 
 }
 
 .content-detail {
     display: none;
     opacity: 0;
     transform: translateY(10px);
-    /* Se gestiona en JS, pero añadimos la transición base */
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 .content-detail.active {
@@ -240,11 +253,10 @@ ol li { margin-bottom: 8px; }
     border-radius: 8px;
     transition: all 0.3s ease-in-out;
     background-color: var(--color-card-bg);
-    /* Animación de elevación al hacer hover */
     transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
 }
 .problema-card:hover {
-    transform: translateY(-3px); /* Pequeña elevación suave */
+    transform: translateY(-3px); 
     box-shadow: 0 0 15px rgba(74, 144, 226, 0.2); 
     border-color: var(--color-accent-blue);
 }
@@ -290,7 +302,6 @@ ol li { margin-bottom: 8px; }
     justify-content: space-between;
     align-items: center;
     font-size: 0.95rem;
-    /* Suavizamos el movimiento de entrada */
     transition: transform 0.2s ease-out;
 }
 .alcaldias-list li:hover {
@@ -313,7 +324,6 @@ ol li { margin-bottom: 8px; }
 /* ==================================== */
 /* 6. Animación de Entrada y Scroll-to-Top */
 /* ==================================== */
-/* Animación general de fade-in al cargar la sección */
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
 .is-visible { opacity: 1; transform: translateY(0); }
 
@@ -351,5 +361,5 @@ ol li { margin-bottom: 8px; }
 
     .nav-item { padding-left: 10px; }
     .nav-item:hover, .nav-item.active { padding-left: 15px; }
-    .nav-item.active::before { left: 5px; } /* Ajuste del indicador en móvil */
+    .nav-item.active::before { left: 5px; } 
 }
