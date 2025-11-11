@@ -16,7 +16,7 @@ window.addEventListener('scroll', handleScroll);
 
 
 // ===================================================================
-// 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (Sección 1)
+// 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (CONTENIDO ÚNICO)
 // ===================================================================
 const navItems = document.querySelectorAll('.nav-item');
 const detailContents = document.querySelectorAll('.content-detail');
@@ -26,12 +26,10 @@ let currentActiveContent = null;
 function showContent(targetId, item) {
     const nextContent = document.getElementById(targetId);
 
-    // Solo procede si el contenido es diferente al que ya está activo
     if (nextContent && nextContent !== currentActiveContent) {
         
         // 1. Desactivar y animar salida del contenido actual (si existe)
         if (currentActiveContent) {
-            // Inicia la transición CSS (opacity y transform) para el contenido que sale
             currentActiveContent.classList.remove('active');
             
             // Retrasa el cambio de display para permitir que la animación se complete
@@ -40,13 +38,12 @@ function showContent(targetId, item) {
                 
                 // 2. Activar y animar entrada del nuevo contenido
                 nextContent.style.display = 'block';
-                // Forzar reflow/repaint antes de aplicar la clase 'active' para reiniciar la transición
                 nextContent.offsetHeight; 
                 nextContent.classList.add('active');
                 currentActiveContent = nextContent;
             }, 350); // Tiempo ligeramente menor que la transición CSS (0.4s) para asegurar la continuidad
         } else {
-            // Caso inicial (al cargar la página): Mostrar el primero sin animación de salida
+            // Caso inicial (al cargar la página)
             detailContents.forEach(content => content.style.display = 'none');
             nextContent.style.display = 'block';
             nextContent.offsetHeight; 
@@ -60,8 +57,7 @@ function showContent(targetId, item) {
     }
 }
 
-// Inicializa el sistema: Muestra el primer contenido y establece el currentActiveContent
-// Esto garantiza que al cargar la página, el contenido de "Tipos de inundaciones" esté visible.
+// Inicializa el sistema: Muestra el primer contenido al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     const initialItem = document.querySelector('.nav-item.active');
     if (initialItem) {
@@ -88,31 +84,7 @@ navItems.forEach(item => {
 
 
 // ===================================================================
-// 3. ACORDEÓN INTERACTIVO (Para secciones 2, 3, 6, 7)
-// ===================================================================
-const problemaDetails = document.querySelectorAll('.problema-card');
-
-problemaDetails.forEach(detail => {
-    detail.addEventListener('mouseenter', () => {
-        // Cierra todos los demás detalles abiertos en la misma sección
-        detail.closest('section').querySelectorAll('.problema-card').forEach(otherDetail => {
-            if (otherDetail !== detail) {
-                otherDetail.open = false;
-            }
-        });
-        // Abre el detalle actual
-        detail.open = true;
-    });
-
-    detail.addEventListener('mouseleave', () => {
-        // Cierra el detalle actual al retirar el cursor
-        detail.open = false;
-    });
-});
-
-
-// ===================================================================
-// 4. ANIMACIÓN DE ENTRADA (Intersection Observer)
+// 3. ANIMACIÓN DE ENTRADA (Intersection Observer)
 // ===================================================================
 const faders = document.querySelectorAll('.fade-in');
 
@@ -138,7 +110,7 @@ faders.forEach(fader => {
 
 
 // ===================================================================
-// 5. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
+// 4. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
 // ===================================================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 const scrollDistance = 300; 
