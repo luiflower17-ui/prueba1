@@ -26,35 +26,42 @@ let currentActiveContent = null;
 function showContent(targetId, item) {
     const nextContent = document.getElementById(targetId);
 
-    if (nextContent && nextContent !== currentActiveContent) {
+    if (!nextContent || nextContent === currentActiveContent) {
+        return; // Evita el repintado si es el mismo contenido
+    }
+
+    // 1. Desactivar y animar salida del contenido actual
+    if (currentActiveContent) {
+        // Inicia la animación de salida CSS
+        currentActiveContent.classList.remove('active');
         
-        // 1. Desactivar y animar salida del contenido actual (si existe)
-        if (currentActiveContent) {
-            currentActiveContent.classList.remove('active');
+        // Retrasa el cambio de display para permitir la transición de salida
+        setTimeout(() => {
+            currentActiveContent.style.display = 'none';
             
-            // Retrasa el cambio de display para permitir que la animación se complete
-            setTimeout(() => {
-                currentActiveContent.style.display = 'none';
-                
-                // 2. Activar y animar entrada del nuevo contenido
-                nextContent.style.display = 'block';
-                nextContent.offsetHeight; 
-                nextContent.classList.add('active');
-                currentActiveContent = nextContent;
-            }, 350); // Tiempo ligeramente menor que la transición CSS (0.4s) para asegurar la continuidad
-        } else {
-            // Caso inicial (al cargar la página)
-            detailContents.forEach(content => content.style.display = 'none');
+            // 2. Activar y animar entrada del nuevo contenido
             nextContent.style.display = 'block';
-            nextContent.offsetHeight; 
+            // Forzar reflow para reiniciar la animación CSS (es clave para que la transición funcione cada vez)
+            void nextContent.offsetWidth; 
             nextContent.classList.add('active');
             currentActiveContent = nextContent;
-        }
-
-        // Manejar el estado activo del botón de navegación
-        navItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
+        }, 400); // Tiempo que coincide con la transición CSS (0.5s)
+    } else {
+        // Caso inicial (al cargar la página): Mostrar el primer contenido de inmediato
+        detailContents.forEach(content => {
+            content.style.display = 'none';
+            content.classList.remove('active');
+        });
+        
+        nextContent.style.display = 'block';
+        void nextContent.offsetWidth; 
+        nextContent.classList.add('active');
+        currentActiveContent = nextContent;
     }
+
+    // Manejar el estado activo del botón de navegación
+    navItems.forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
 }
 
 // Inicializa el sistema: Muestra el primer contenido al cargar la página
@@ -62,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialItem = document.querySelector('.nav-item.active');
     if (initialItem) {
         const initialTarget = initialItem.getAttribute('data-target');
+        // Usamos solo showContent para inicializar correctamente
         showContent(initialTarget, initialItem);
     }
 });
