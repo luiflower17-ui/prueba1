@@ -3,13 +3,12 @@
 /* ==================================== */
 :root {
     --color-bg: #0A0A0A; 
-    /* CAMBIO CLAVE: Fondo principal semi-transparente (80% opacidad) */
-    --color-main-bg: rgba(18, 18, 18, 0.85); 
+    --color-main-bg: rgba(18, 18, 18, 0.85); /* Fondo principal semi-transparente */
     --color-text-light: #F0F0F0; 
     --color-accent-blue: #4A90E2; 
     --color-accent-hover: #67A0E7; 
     --color-divider: #333333; 
-    --color-card-bg: #181818; 
+    --color-card-bg: rgba(24, 24, 24, 0.9); /* Fondo de tarjetas ligeramente más opaco que main */
     --color-card-hover: #252525; 
     --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.7);
 }
@@ -31,12 +30,11 @@ body {
 }
 
 main {
-    /* CAMBIO CLAVE: Aumentamos el ancho a 80% y max-width para vista panorámica */
+    /* DISEÑO PANORÁMICO (80% de ancho) */
     width: 80%; 
     max-width: 1100px; 
     margin: 4rem 2rem; 
     padding: 0; 
-    /* Aplicamos la transparencia */
     background-color: var(--color-main-bg); 
     box-shadow: var(--shadow-subtle); 
     border-radius: 12px; 
@@ -44,16 +42,17 @@ main {
     border: 1px solid var(--color-divider);
     z-index: 10; 
     position: relative; 
-    backdrop-filter: blur(2px); 
+    backdrop-filter: blur(2px); /* Efecto de desenfoque sutil */
 }
 
-/* AJUSTE PARA HEADER PEGADIZO: Le damos la misma transparencia o más opaco */
+/* ==================================== */
+/* 2. Estilos Globales y HEADER         */
+/* ==================================== */
 header { 
     position: sticky; 
     top: 0;
     z-index: 20; 
-    /* Usamos el color base semitransparente */
-    background-color: var(--color-main-bg); 
+    background-color: var(--color-main-bg); /* Semic-transparente */
     transition: all 0.3s ease-in-out; 
     padding: 2.5rem 3rem; 
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4); 
@@ -62,39 +61,163 @@ header {
     border-bottom: 2px solid var(--color-accent-blue); 
 }
 .scrolled {
-    /* Un poco más opaco al scrollear para mejor legibilidad */
-    background-color: rgba(10, 10, 10, 0.95); 
+    background-color: rgba(10, 10, 10, 0.95); /* Más opaco al scrollear */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); 
     padding: 1.2rem 3rem; 
 }
+/* ... otros estilos globales ... */
 
 
-/* SECCIÓN INTERACTIVA: Aseguramos que la barra lateral no sea demasiado grande */
+/* ==================================== */
+/* 4. SECCIÓN INTERACTIVA (PANEL LATERAL) */
+/* ==================================== */
 #interactive-content {
     display: flex;
     gap: 30px;
     margin-top: 2rem;
-    min-height: 500px; 
+    min-height: 600px; 
 }
 
 /* Panel Izquierdo (Navegación) */
 #sidebar-nav {
-    /* Reducimos el tamaño de la barra lateral, ya que solo tendrá 8 elementos */
-    flex: 0 0 30%; 
+    flex: 0 0 30%; /* 30% del espacio para 8 items principales */
     padding-right: 20px;
     border-right: 1px solid var(--color-divider);
-    transition: opacity 0.3s ease;
 }
 
-.nav-heading {
-    /* Esto ya no se usará, pero lo dejamos por si acaso */
-    display: none; 
-}
-/* Estilo específico para los 8 puntos principales (ahora serán los nav-item) */
+#sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+
 .nav-item {
-    font-size: 1.05rem; /* Los hacemos ligeramente más grandes */
+    display: block;
+    color: var(--color-text-light);
+    background-color: transparent;
+    padding: 12px 5px; /* Más padding para los 8 puntos */
+    border-bottom: none; 
+    cursor: pointer;
+    transition: all 0.3s ease; 
+    font-size: 1.05rem; 
+    font-weight: 500;
+    opacity: 0.8; 
+    position: relative; 
+}
+
+.nav-item:hover, .nav-item.active {
+    color: var(--color-accent-blue);
+    background-color: var(--color-card-hover);
+    padding-left: 15px; /* Animación de movimiento */
+    opacity: 1;
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px; /* Más grueso */
+    background-color: var(--color-accent-blue);
+    transition: background-color 0.3s;
+}
+
+
+/* Panel Derecho (Contenido) */
+#detail-panel {
+    flex: 1; 
+    background-color: var(--color-card-bg);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--color-divider);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden; 
+}
+
+.content-detail {
+    display: none;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Animación principal más lenta */
+    padding-bottom: 20px; /* Espacio extra */
+}
+.content-detail.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    /* Animación del fondo del panel al cambiar de contenido */
+    animation: backgroundPulse 0.6s ease-out; 
+}
+
+/* Animación de fondo al cambiar de pestaña */
+@keyframes backgroundPulse {
+    0% { background-color: rgba(24, 24, 24, 0.8); }
+    50% { background-color: rgba(30, 30, 30, 0.9); }
+    100% { background-color: var(--color-card-bg); }
+}
+
+.content-detail h3 {
+    color: var(--color-accent-blue);
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--color-divider);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* Estilo para los sub-bloques de información (info-block) */
+.info-block {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left: 3px solid var(--color-accent-hover);
+    background-color: rgba(40, 40, 40, 0.2); /* Fondo sutil para bloques internos */
+    border-radius: 4px;
+    /* Animación de entrada de los subtemas */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.info-block:nth-child(2) { animation-delay: 0.1s; }
+.info-block:nth-child(3) { animation-delay: 0.2s; }
+.info-block:nth-child(4) { animation-delay: 0.3s; }
+/* Aseguramos que los bloques internos aparezcan después del principal */
+.content-detail.active .info-block { opacity: 1; transform: translateY(0); }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-block h4 {
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 10px;
     font-weight: 500;
 }
 
+/* Lista de Alcaldías con color animado */
+.alcaldias-list li {
+    background-color: var(--color-card-hover);
+    border-left: 5px solid var(--color-accent-blue);
+    transition: all 0.3s ease-in-out;
+}
+.alcaldias-list li:hover {
+    transform: translateX(8px) scale(1.01); /* Animación de hover más notable */
+    border-left-color: #FF5252; /* Color de advertencia al hacer hover */
+}
 
-/* El resto del CSS se mantiene */
+
+/* ==================================== */
+/* 6. Animación de Entrada (fade-in) y Scroll-to-Top */
+/* Se mantiene el fade-in general, pero añadimos el fadeInUp para detalles internos */
+/* ==================================== */
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ... resto de estilos ... */
