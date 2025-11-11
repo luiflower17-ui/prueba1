@@ -104,8 +104,10 @@ header {
     padding: 1.2rem 2.5rem; /* Más compacto */
 }
 
-h1 { margin: 0; font-size: 2rem; font-weight: 300; letter-spacing: 0.5px; color: var(--color-text-light); transition: font-size 0.4s ease; }
+/* Se eliminaron transiciones de tamaño de fuente para evitar el efecto de "trabado" en el scroll */
+h1 { margin: 0; font-size: 2rem; font-weight: 300; letter-spacing: 0.5px; color: var(--color-text-light); }
 .scrolled h1 { font-size: 1.6rem; }
+
 header p { color: var(--color-divider); font-size: 0.85rem; margin: 0.5rem 0 0 0; transition: margin 0.4s ease; }
 .scrolled header p { margin: 0.2rem 0 0 0; }
 
@@ -136,7 +138,7 @@ details {
     border-radius: 4px; 
     margin-bottom: 15px; 
     background-color: var(--color-main-bg); 
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition: all 0.3s; /* Transición para todo (incluyendo el color de fondo) */
 }
 details:hover { 
     background-color: var(--color-light-gray); 
@@ -144,7 +146,7 @@ details:hover {
 }
 summary { 
     padding: 15px 20px; 
-    background-color: var(--color-main-bg); 
+    background-color: transparent; 
     color: var(--color-text-light); 
     list-style: none; 
     font-weight: 500; 
@@ -204,7 +206,7 @@ details p, details ul, details ol { padding: 15px 20px 20px 20px; font-size: 0.9
 }
 
 /* ==================================== */
-/* 4. SECCIÓN 1: PROBLEMAS (Hover/Grid) */
+/* 4. SECCIÓN 1/TODAS: PROBLEMAS (Hover/Grid) */
 /* ==================================== */
 #problemas-grid {
     display: grid;
@@ -240,17 +242,32 @@ details p, details ul, details ol { padding: 15px 20px 20px 20px; font-size: 0.9
 }
 
 /* Animación de apertura: Oculta el contenido de forma animada */
-.problema-card p {
+.problema-card p, .problema-card ul, .problema-card ol, .problema-card h3, .problema-card .image-caption {
     max-height: 0;
     overflow: hidden;
     padding: 0 20px;
-    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+    opacity: 0;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
 }
 
-.problema-card[open] p {
+.problema-card[open] p, .problema-card[open] ul, .problema-card[open] ol {
     max-height: 300px; /* Altura suficiente para el contenido */
-    padding: 0 20px 20px 20px;
+    padding: 15px 20px 20px 20px; /* Añadida la separación de 15px arriba */
+    opacity: 1;
 }
+
+.problema-card[open] h3 {
+    max-height: 100px;
+    padding: 15px 20px 0 20px; 
+    opacity: 1;
+}
+
+.problema-card[open] .image-caption {
+    max-height: 100px;
+    padding: 0 20px 20px 20px; 
+    opacity: 1;
+}
+
 
 /* ==================================== */
 /* 5. Animación de Entrada (Fade In)    */
