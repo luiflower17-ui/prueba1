@@ -16,10 +16,9 @@ window.addEventListener('scroll', handleScroll);
 
 
 // ===================================================================
-// 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (CONTENIDO ÚNICO)
+// 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (8 TEMAS)
 // ===================================================================
-// CAMBIO CLAVE: Seleccionar la clase 'sub-item' para la interacción
-const navItems = document.querySelectorAll('.sub-item');
+const navItems = document.querySelectorAll('.nav-item');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
 
@@ -35,15 +34,16 @@ function showContent(targetId, item) {
     if (currentActiveContent) {
         currentActiveContent.classList.remove('active');
         
+        // Retraso para permitir que la transición CSS de salida se complete
         setTimeout(() => {
             currentActiveContent.style.display = 'none';
             
             // 2. Activar y animar entrada del nuevo contenido
             nextContent.style.display = 'block';
-            void nextContent.offsetWidth; // Forzar reflow
+            void nextContent.offsetWidth; // Forzar reflow para reiniciar la animación
             nextContent.classList.add('active');
             currentActiveContent = nextContent;
-        }, 400); 
+        }, 400); // Coincide con el tiempo de transición CSS (0.6s)
     } else {
         // Caso inicial (al cargar la página)
         detailContents.forEach(content => {
@@ -57,17 +57,17 @@ function showContent(targetId, item) {
         currentActiveContent = nextContent;
     }
 
-    // Manejar el estado activo del botón de navegación (sub-items)
+    // Manejar el estado activo del botón de navegación
     navItems.forEach(i => i.classList.remove('active'));
     item.classList.add('active');
 }
 
 // Inicializa el sistema: Muestra el primer contenido al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-    // CAMBIO CLAVE: Seleccionar la clase 'sub-item' para la inicialización
-    const initialItem = document.querySelector('.sub-item.active'); 
+    const initialItem = document.querySelector('.nav-item.active'); 
     if (initialItem) {
         const initialTarget = initialItem.getAttribute('data-target');
+        // Usamos showContent para inicializar correctamente el estado activo
         showContent(initialTarget, initialItem);
     }
 });
@@ -90,7 +90,7 @@ navItems.forEach(item => {
 
 
 // ===================================================================
-// 3. ANIMACIÓN DE ENTRADA (Intersection Observer)
+// 4. ANIMACIÓN DE ENTRADA (Intersection Observer)
 // ===================================================================
 const faders = document.querySelectorAll('.fade-in');
 
@@ -116,7 +116,7 @@ faders.forEach(fader => {
 
 
 // ===================================================================
-// 4. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
+// 5. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
 // ===================================================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 const scrollDistance = 300; 
