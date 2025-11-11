@@ -3,18 +3,20 @@
 /* ==================================== */
 :root {
     --color-bg: #0A0A0A; 
-    --color-main-bg: rgba(18, 18, 18, 0.90); /* Aumentamos ligeramente la opacidad de la capa principal */
+    /* CAMBIO: Transparencia levemente aumentada */
+    --color-main-bg: rgba(18, 18, 18, 0.88); 
     --color-text-light: #F0F0F0; 
+    --color-text-secondary: #CCCCCC; /* Para subtítulos y notas */
     --color-accent-blue: #4A90E2; 
     --color-accent-hover: #67A0E7; 
     --color-divider: #333333; 
-    --color-card-bg: rgba(24, 24, 24, 0.95); /* Más opaco para mejor contraste del contenido */
+    --color-card-bg: rgba(24, 24, 24, 0.92); /* Fondo de tarjetas */
     --color-card-hover: #252525; 
-    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.8); /* Sombra más fuerte */
+    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.8); 
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif; /* Fuente principal para contenido */
     font-weight: 400;
     line-height: 1.7; 
     margin: 0;
@@ -47,7 +49,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.6); /* Ligeramente más opaco para visibilidad del texto */
     z-index: 5;
 }
 
@@ -67,19 +69,54 @@ body {
 /* 2. CONTENIDO PRINCIPAL (90% Panorámico y Transparente) */
 /* ==================================== */
 main {
-    /* CAMBIO CLAVE: Ampliamos el ancho a 90% */
     width: 90%; 
-    max-width: 1300px; /* Aumentamos el máximo para la sensación panorámica */
+    max-width: 1400px; /* Aumentado para un panorama aún mayor */
     margin: 4rem 2rem; 
     padding: 0; 
     background-color: var(--color-main-bg); 
     box-shadow: var(--shadow-subtle); 
-    border-radius: 15px; /* Bordes más suaves */
+    border-radius: 15px; 
     overflow: hidden;
     border: 1px solid var(--color-divider);
     z-index: 10; 
     position: relative; 
-    backdrop-filter: blur(3px); /* Aumentamos el desenfoque */
+    backdrop-filter: blur(4px); /* Aumentamos el desenfoque para resaltar el contenido */
+}
+
+/* ==================================== */
+/* 3. HEADER (Tipografía) */
+/* ==================================== */
+header { 
+    position: sticky; 
+    top: 0;
+    z-index: 20; 
+    background-color: var(--color-main-bg); 
+    transition: all 0.3s ease-in-out; 
+    padding: 2.5rem 3rem; 
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4); 
+    color: var(--color-text-light); 
+    text-align: left; 
+    border-bottom: 2px solid var(--color-accent-blue); 
+}
+header h1 {
+    font-family: 'Montserrat', sans-serif; /* Fuente destacada para el título principal */
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-accent-blue);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em; /* Espaciado para mayor impacto */
+}
+.header-subtitle {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.2rem;
+}
+.header-authors {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    opacity: 0.7; /* Más transparente */
 }
 
 /* ==================================== */
@@ -87,7 +124,7 @@ main {
 /* ==================================== */
 #interactive-content {
     display: flex;
-    gap: 35px; /* Más espacio entre los paneles */
+    gap: 35px; 
     margin-top: 2rem;
     padding: 0 3rem 3rem 3rem; 
     min-height: 600px; 
@@ -95,9 +132,9 @@ main {
 
 /* Panel Izquierdo (Navegación de los 8 puntos) */
 #sidebar-nav {
-    flex: 0 0 30%; /* Mantenemos 30% para la barra lateral */
+    flex: 0 0 28%; /* Ligeramente menos ancho para la barra lateral */
     padding-right: 25px;
-    border-right: 2px solid var(--color-divider); /* Separador más notorio */
+    border-right: 2px solid var(--color-divider); 
 }
 
 #sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
@@ -105,54 +142,65 @@ main {
 .nav-item {
     display: block;
     color: var(--color-text-light);
-    background-color: transparent;
-    padding: 15px 10px; /* Más padding para que se vean grandes y llamativos */
+    background-color: rgba(40, 40, 40, 0.4); /* Fondo más claro para destacar */
+    padding: 18px 15px; /* Más padding */
+    margin-bottom: 12px; /* Más espacio entre items */
     cursor: pointer;
-    transition: all 0.4s ease-out; /* Animación más suave */
-    font-size: 1.15rem; 
-    font-weight: 500;
-    opacity: 0.9; 
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Curva de animación más avanzada */
+    font-family: 'Montserrat', sans-serif; /* Misma fuente que el título principal */
+    font-size: 1.25rem; /* Más grande */
+    font-weight: 600; /* Más peso */
+    opacity: 0.95; 
     position: relative; 
-    border-radius: 8px; /* Borde redondeado */
+    border-radius: 10px; /* Bordes más redondeados */
+    border: 1px solid transparent; /* Borde sutil para hover */
+    letter-spacing: 0.02em;
 }
 
 .nav-item:hover, .nav-item.active {
     color: var(--color-accent-blue);
     background-color: var(--color-card-hover);
-    transform: scale(1.03); /* Animación de zoom/escala */
+    transform: scale(1.04); 
     opacity: 1;
-    box-shadow: 0 0 10px rgba(74, 144, 226, 0.4); /* Sombra de brillo al hacer hover/activo */
+    box-shadow: 0 5px 20px rgba(74, 144, 226, 0.6); /* Sombra de brillo al hacer hover/activo */
+    border-color: var(--color-accent-blue);
 }
 
 .nav-item.active::before {
-    content: '★'; /* Ícono más llamativo */
+    content: '→'; /* Flecha para indicar activo */
     position: absolute;
-    left: -20px;
+    left: 10px; /* Posición ajustada */
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.2rem;
-    color: #FFD700; /* Dorado para destacar */
+    font-size: 1.5rem; /* Más grande */
+    color: var(--color-accent-blue); 
     opacity: 1;
     transition: all 0.3s ease;
 }
+/* Ocultar el ícono de flecha en el texto para que solo aparezca el ::before */
+.nav-item span {
+    display: none;
+}
+
 
 /* Panel Derecho (Contenido) y Animaciones */
 #detail-panel {
     flex: 1; 
     background-color: var(--color-card-bg);
-    padding: 30px; /* Más padding interno */
+    padding: 30px; 
     border-radius: 10px;
     border: 1px solid var(--color-divider);
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
     position: relative;
-    overflow: hidden; 
+    overflow-y: auto; /* Para permitir scroll si el contenido es largo */
+    max-height: calc(100vh - 8rem - 6rem); /* Ajuste dinámico de altura */
 }
 
 .content-detail {
     display: none;
     opacity: 0;
-    transform: translateY(20px); /* Aumentamos el desplazamiento inicial */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Animación principal más lenta */
+    transform: translateY(20px); 
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
     padding-bottom: 20px; 
 }
 .content-detail.active {
@@ -162,7 +210,6 @@ main {
     animation: backgroundPulse 0.6s ease-out; 
 }
 
-/* Animación de fondo al cambiar de pestaña */
 @keyframes backgroundPulse {
     0% { background-color: rgba(24, 24, 24, 0.8); }
     50% { background-color: rgba(35, 35, 35, 0.95); }
@@ -170,14 +217,20 @@ main {
 }
 
 .content-detail h3 {
+    font-family: 'Montserrat', sans-serif;
     color: var(--color-accent-blue);
-    font-size: 1.6rem;
-    border-bottom: 3px solid var(--color-accent-blue); /* Línea divisoria destacada */
-    padding-bottom: 10px;
-    margin-bottom: 25px;
+    font-size: 2.1rem; /* Títulos de sección más grandes */
+    border-bottom: 3px solid var(--color-accent-blue); 
+    padding-bottom: 12px;
+    margin-bottom: 30px;
     font-weight: 700;
-    /* Animación extra para el H3 al aparecer */
     animation: bounceIn 0.5s ease-out;
+}
+
+.section-intro, .section-text {
+    font-size: 1.05rem;
+    color: var(--color-text-light);
+    margin-bottom: 25px;
 }
 
 @keyframes bounceIn {
@@ -186,41 +239,149 @@ main {
     100% { transform: scale(1) translateY(0); }
 }
 
-/* Animación y estilo de bloques internos (info-block) */
-.info-block {
-    margin-bottom: 25px;
-    padding: 20px;
-    border-left: 4px solid var(--color-accent-hover);
-    background-color: rgba(40, 40, 40, 0.3); 
-    border-radius: 6px;
-    opacity: 0;
-    transform: translateY(15px);
-    animation: fadeInUp 0.5s ease-out forwards; /* Más lenta la animación del info-block */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+/* ==================================== */
+/* ESTILO Y LAYOUT DE INFO-BLOCKS (2 COLUMNAS) */
+/* ==================================== */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(50% - 15px), 1fr)); /* 2 columnas */
+    gap: 30px; /* Espacio entre recuadros */
+    margin-top: 20px;
 }
 
-/* Retraso de animación para los bloques internos (asegura animación fluida) */
+.info-block {
+    background-color: rgba(40, 40, 40, 0.45); /* Fondo más estético y transparente */
+    padding: 25px;
+    border-radius: 12px; /* Bordes suaves */
+    border: 1px solid rgba(var(--color-accent-blue), 0.3); /* Borde sutil */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra para profundidad */
+    transition: all 0.3s ease; /* Animación para hover */
+
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.info-block:hover {
+    transform: translateY(-5px) scale(1.01); /* Efecto de elevación al hacer hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border-color: var(--color-accent-hover);
+}
+
+/* Retrasos de animación para los bloques internos (info-block) */
+.content-detail.active .info-block:nth-child(1) { animation-delay: 0.1s; }
 .content-detail.active .info-block:nth-child(2) { animation-delay: 0.2s; }
 .content-detail.active .info-block:nth-child(3) { animation-delay: 0.3s; }
 .content-detail.active .info-block:nth-child(4) { animation-delay: 0.4s; }
-/* ... continúa según el número de bloques ... */
+.content-detail.active .info-block:nth-child(5) { animation-delay: 0.5s; }
+.content-detail.active .info-block:nth-child(6) { animation-delay: 0.6s; }
+.content-detail.active .info-block:nth-child(7) { animation-delay: 0.7s; }
+.content-detail.active .info-block:nth-child(8) { animation-delay: 0.8s; }
+
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Estilo para las listas dentro de info-block */
-.info-block ul {
-    list-style-type: '👉 '; /* Viñetas personalizadas */
-    padding-left: 20px;
+.info-block h4 {
+    font-family: 'Montserrat', sans-serif; /* Subtítulos internos con Montserrat */
+    color: var(--color-accent-blue);
+    font-size: 1.3rem; /* Más grandes */
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-weight: 600;
+    border-bottom: 1px dashed rgba(var(--color-divider), 0.5); /* Línea punteada sutil */
+    padding-bottom: 8px;
 }
 
-/* Otros estilos... */
+.info-block p {
+    font-size: 0.95rem; /* Tamaño de texto de párrafo */
+    color: var(--color-text-light);
+    margin-bottom: 0;
+}
+
+.info-block ul {
+    list-style-type: '➡️ '; /* Viñetas personalizadas y más visibles */
+    padding-left: 20px;
+}
+.info-block ul li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+/* ==================================== */
+/* IMÁGENES Y NOTAS (Captions) */
+/* ==================================== */
+.media-container {
+    margin-bottom: 25px;
+    background-color: rgba(30, 30, 30, 0.7); /* Fondo sutil para el contenedor de imagen */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.content-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto 10px auto;
+    transition: transform 0.3s ease;
+}
+.content-image:hover {
+    transform: scale(1.02); /* Pequeño zoom al hacer hover */
+}
+.image-caption {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    text-align: center;
+    opacity: 0.6; /* CAMBIO: Notas más transparentes y en cursiva */
+    margin-top: 10px;
+}
+
+/* ==================================== */
+/* LISTAS ESPECÍFICAS (ALCALDÍAS Y REFERENCIAS) */
+/* ==================================== */
+.alcaldias-list li {
+    background-color: rgba(40, 40, 40, 0.6); /* Fondo para cada ítem */
+    border-left: 5px solid var(--color-accent-blue);
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.alcaldias-list li:hover {
+    transform: translateX(8px) scale(1.01); 
+    border-left-color: #FF5252; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.references-list {
+    list-style-type: none;
+    padding: 0;
+}
+.references-list li {
+    margin-bottom: 18px; /* Más espacio entre referencias */
+    padding-left: 0;
+    line-height: 1.6;
+    font-size: 0.88rem; /* Tamaño de fuente para referencias */
+    font-weight: 300; /* Peso de fuente más ligero */
+    color: var(--color-text-secondary); /* Color secundario */
+    border-left: 2px solid rgba(var(--color-accent-blue), 0.2); /* Borde sutil izquierdo */
+    padding-left: 10px;
+}
+
+/* ==================================== */
+/* FOOTER */
+/* ==================================== */
 footer {
     padding: 20px 3rem;
     text-align: center;
     border-top: 1px solid var(--color-divider);
     background-color: rgba(10, 10, 10, 0.95); 
     font-size: 0.85rem;
+    color: var(--color-text-secondary); /* Texto más sutil en el footer */
 }
