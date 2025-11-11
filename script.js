@@ -14,17 +14,81 @@ function handleScroll() {
 
 window.addEventListener('scroll', handleScroll);
 
+
 // ===================================================================
-// 2. ACORDEÓN INTERACTIVO (Aplica a TODAS las tarjetas con la clase .problema-card)
-// Solo permite que una tarjeta esté abierta a la vez.
+// 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (Sección 1)
+// ===================================================================
+const navItems = document.querySelectorAll('.nav-item');
+const detailPanel = document.getElementById('detail-panel');
+const detailContents = document.querySelectorAll('.content-detail');
+let currentActiveContent = null;
+
+// Función para mostrar el contenido con animación
+function showContent(targetId, item) {
+    const nextContent = document.getElementById(targetId);
+
+    if (nextContent && nextContent !== currentActiveContent) {
+        // 1. Desactivar y animar salida del contenido actual (si existe)
+        if (currentActiveContent) {
+            currentActiveContent.classList.remove('active');
+            // Nota: El display:none es crucial para evitar que el contenido oculto ocupe espacio
+            // Se realiza después del fade-out para permitir la animación
+            setTimeout(() => {
+                detailContents.forEach(content => content.style.display = 'none');
+                
+                // 2. Activar y animar entrada del nuevo contenido
+                nextContent.style.display = 'block';
+                // Forzar reflow/repaint antes de aplicar la clase 'active' para reiniciar la transición
+                nextContent.offsetHeight; 
+                nextContent.classList.add('active');
+                currentActiveContent = nextContent;
+            }, 350); // Tiempo ligeramente mayor que la transición CSS (0.4s)
+        } else {
+            // Caso inicial (al cargar la página)
+            detailContents.forEach(content => content.style.display = 'none');
+            nextContent.style.display = 'block';
+            nextContent.offsetHeight; 
+            nextContent.classList.add('active');
+            currentActiveContent = nextContent;
+        }
+
+        // Manejar el estado activo del botón de navegación
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+    }
+}
+
+// Inicializa el primer elemento como activo y lo muestra
+if (navItems.length > 0) {
+    const initialTarget = navItems[0].getAttribute('data-target');
+    showContent(initialTarget, navItems[0]); 
+}
+
+navItems.forEach(item => {
+    const targetId = item.getAttribute('data-target');
+    
+    // Evento de mouse: al pasar el cursor (Hover)
+    item.addEventListener('mouseenter', () => {
+        showContent(targetId, item);
+    });
+
+    // Evento de click: (Para navegadores móviles)
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        showContent(targetId, item);
+    });
+});
+
+
+// ===================================================================
+// 3. ACORDEÓN INTERACTIVO (Para secciones 2, 3, 6, 7)
 // ===================================================================
 const problemaDetails = document.querySelectorAll('.problema-card');
 
 problemaDetails.forEach(detail => {
-    // Evento para abrir al pasar el cursor (Hover)
     detail.addEventListener('mouseenter', () => {
-        // Cierra todos los demás detalles abiertos en la página
-        problemaDetails.forEach(otherDetail => {
+        // Cierra todos los demás detalles abiertos en la misma sección
+        detail.closest('section').querySelectorAll('.problema-card').forEach(otherDetail => {
             if (otherDetail !== detail) {
                 otherDetail.open = false;
             }
@@ -33,15 +97,17 @@ problemaDetails.forEach(detail => {
         detail.open = true;
     });
 
-    // Evento para cerrar al retirar el cursor (Salida del Hover)
+    // Opcional: Cerrar al salir (puede ser molesto, lo dejamos comentado para prueba)
+    /*
     detail.addEventListener('mouseleave', () => {
-        // Cierra el detalle actual
         detail.open = false;
     });
+    */
 });
 
+
 // ===================================================================
-// 3. ANIMACIÓN DE ENTRADA (Intersection Observer)
+// 4. ANIMACIÓN DE ENTRADA (Intersection Observer)
 // ===================================================================
 const faders = document.querySelectorAll('.fade-in');
 
@@ -67,12 +133,11 @@ faders.forEach(fader => {
 
 
 // ===================================================================
-// 4. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
+// 5. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
 // ===================================================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 const scrollDistance = 300; 
 
-// Muestra/Oculta el botón
 window.addEventListener("scroll", () => {
     if (window.scrollY > scrollDistance) {
         scrollToTopBtn.style.display = "block";
@@ -81,7 +146,6 @@ window.addEventListener("scroll", () => {
     }
 });
 
-// Función de scroll suave al hacer clic
 scrollToTopBtn.addEventListener("click", () => {
     window.scrollTo({
         top: 0,
