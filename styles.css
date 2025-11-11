@@ -1,14 +1,14 @@
 /* ==================================== */
-/* 0. Paleta y Tipografía (MODO OSCURO MINIMALISTA) */
+/* 0. Paleta y Tipografía */
 /* ==================================== */
 :root {
     --color-bg: #0A0A0A; 
-    --color-main-bg: rgba(18, 18, 18, 0.85); /* Fondo principal semi-transparente */
+    --color-main-bg: rgba(18, 18, 18, 0.85); 
     --color-text-light: #F0F0F0; 
     --color-accent-blue: #4A90E2; 
     --color-accent-hover: #67A0E7; 
     --color-divider: #333333; 
-    --color-card-bg: rgba(24, 24, 24, 0.9); /* Fondo de tarjetas ligeramente más opaco que main */
+    --color-card-bg: rgba(24, 24, 24, 0.9); 
     --color-card-hover: #252525; 
     --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.7);
 }
@@ -24,13 +24,49 @@ body {
     background-color: var(--color-bg); 
     display: flex;
     justify-content: center;
-    padding: 0; 
     position: relative;
     overflow-x: hidden;
 }
 
+/* ==================================== */
+/* 1. VIDEO DE FONDO (VERIFICADO Y CORREGIDO) */
+/* ==================================== */
+.video-background {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    overflow: hidden;
+    z-index: 1; 
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 5;
+}
+
+#youtube-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+/* ==================================== */
+/* 2. CONTENIDO PRINCIPAL (Panorámico y Transparente) */
+/* ==================================== */
 main {
-    /* DISEÑO PANORÁMICO (80% de ancho) */
     width: 80%; 
     max-width: 1100px; 
     margin: 4rem 2rem; 
@@ -42,85 +78,65 @@ main {
     border: 1px solid var(--color-divider);
     z-index: 10; 
     position: relative; 
-    backdrop-filter: blur(2px); /* Efecto de desenfoque sutil */
+    backdrop-filter: blur(2px); 
 }
 
 /* ==================================== */
-/* 2. Estilos Globales y HEADER         */
-/* ==================================== */
-header { 
-    position: sticky; 
-    top: 0;
-    z-index: 20; 
-    background-color: var(--color-main-bg); /* Semic-transparente */
-    transition: all 0.3s ease-in-out; 
-    padding: 2.5rem 3rem; 
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4); 
-    color: var(--color-text-light); 
-    text-align: left; 
-    border-bottom: 2px solid var(--color-accent-blue); 
-}
-.scrolled {
-    background-color: rgba(10, 10, 10, 0.95); /* Más opaco al scrollear */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); 
-    padding: 1.2rem 3rem; 
-}
-/* ... otros estilos globales ... */
-
-
-/* ==================================== */
-/* 4. SECCIÓN INTERACTIVA (PANEL LATERAL) */
+/* 4. SECCIÓN INTERACTIVA (Panel Lateral) */
 /* ==================================== */
 #interactive-content {
     display: flex;
     gap: 30px;
     margin-top: 2rem;
+    padding: 0 3rem 3rem 3rem; 
     min-height: 600px; 
 }
 
-/* Panel Izquierdo (Navegación) */
-#sidebar-nav {
-    flex: 0 0 30%; /* 30% del espacio para 8 items principales */
-    padding-right: 20px;
-    border-right: 1px solid var(--color-divider);
+/* Encabezados de los 8 puntos principales (NO interactivos, solo separadores) */
+.nav-heading {
+    list-style: none;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-accent-blue);
+    padding: 20px 0 5px 0;
+    margin-top: 10px;
+    border-bottom: 1px solid var(--color-divider);
+    text-transform: uppercase;
 }
 
-#sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-
-.nav-item {
+/* Subtemas (ITEM INTERACTIVO) */
+.sub-item {
     display: block;
     color: var(--color-text-light);
     background-color: transparent;
-    padding: 12px 5px; /* Más padding para los 8 puntos */
-    border-bottom: none; 
+    padding: 8px 5px 8px 15px; /* Más indentación para sub-item */
     cursor: pointer;
     transition: all 0.3s ease; 
-    font-size: 1.05rem; 
-    font-weight: 500;
-    opacity: 0.8; 
+    font-size: 0.95rem; 
+    font-weight: 400;
+    opacity: 0.9; 
     position: relative; 
 }
 
-.nav-item:hover, .nav-item.active {
-    color: var(--color-accent-blue);
+.sub-item:hover, .sub-item.active {
+    color: var(--color-accent-hover);
     background-color: var(--color-card-hover);
-    padding-left: 15px; /* Animación de movimiento */
+    padding-left: 25px; /* Animación de movimiento */
     opacity: 1;
 }
 
-.nav-item.active::before {
+.sub-item.active::before {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 4px; /* Más grueso */
+    width: 3px; 
     background-color: var(--color-accent-blue);
     transition: background-color 0.3s;
 }
 
-
-/* Panel Derecho (Contenido) */
+/* Panel Derecho (Contenido) y Animaciones */
 #detail-panel {
     flex: 1; 
     background-color: var(--color-card-bg);
@@ -136,18 +152,16 @@ header {
     display: none;
     opacity: 0;
     transform: translateY(15px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Animación principal más lenta */
-    padding-bottom: 20px; /* Espacio extra */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out; 
+    padding-bottom: 20px; 
 }
 .content-detail.active {
     display: block;
     opacity: 1;
     transform: translateY(0);
-    /* Animación del fondo del panel al cambiar de contenido */
     animation: backgroundPulse 0.6s ease-out; 
 }
 
-/* Animación de fondo al cambiar de pestaña */
 @keyframes backgroundPulse {
     0% { background-color: rgba(24, 24, 24, 0.8); }
     50% { background-color: rgba(30, 30, 30, 0.9); }
@@ -163,61 +177,27 @@ header {
     font-weight: 700;
 }
 
-/* Estilo para los sub-bloques de información (info-block) */
+/* Animación y estilo de bloques internos */
 .info-block {
     margin-bottom: 20px;
     padding: 15px;
     border-left: 3px solid var(--color-accent-hover);
-    background-color: rgba(40, 40, 40, 0.2); /* Fondo sutil para bloques internos */
+    background-color: rgba(40, 40, 40, 0.2); 
     border-radius: 4px;
-    /* Animación de entrada de los subtemas */
     opacity: 0;
     transform: translateY(10px);
     animation: fadeInUp 0.4s ease-out forwards;
 }
 
-.info-block:nth-child(2) { animation-delay: 0.1s; }
-.info-block:nth-child(3) { animation-delay: 0.2s; }
-.info-block:nth-child(4) { animation-delay: 0.3s; }
-/* Aseguramos que los bloques internos aparezcan después del principal */
-.content-detail.active .info-block { opacity: 1; transform: translateY(0); }
+/* Retraso de animación para los bloques internos (asegura animación fluida) */
+.content-detail.active .info-block { animation-delay: 0.1s; }
+.content-detail.active .info-block:nth-child(2) { animation-delay: 0.2s; }
+.content-detail.active .info-block:nth-child(3) { animation-delay: 0.3s; }
+.content-detail.active .info-block:nth-child(4) { animation-delay: 0.4s; }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.info-block h4 {
-    color: var(--color-text-light);
-    font-size: 1.1rem;
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-weight: 500;
-}
-
-/* Lista de Alcaldías con color animado */
-.alcaldias-list li {
-    background-color: var(--color-card-hover);
-    border-left: 5px solid var(--color-accent-blue);
-    transition: all 0.3s ease-in-out;
-}
-.alcaldias-list li:hover {
-    transform: translateX(8px) scale(1.01); /* Animación de hover más notable */
-    border-left-color: #FF5252; /* Color de advertencia al hacer hover */
-}
-
-
-/* ==================================== */
-/* 6. Animación de Entrada (fade-in) y Scroll-to-Top */
-/* Se mantiene el fade-in general, pero añadimos el fadeInUp para detalles internos */
-/* ==================================== */
-.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-.is-visible { opacity: 1; transform: translateY(0); }
-
-/* ... resto de estilos ... */
+/* El resto de estilos se mantiene igual */
