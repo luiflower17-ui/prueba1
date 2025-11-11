@@ -43,7 +43,7 @@ function showContent(targetId, item) {
             void nextContent.offsetWidth; // Forzar reflow para reiniciar la animación
             nextContent.classList.add('active');
             currentActiveContent = nextContent;
-        }, 400); // Coincide con el tiempo de transición CSS (0.6s)
+        }, 500); // Ajustado para coincidir con la transición de content-detail
     } else {
         // Caso inicial (al cargar la página)
         detailContents.forEach(content => {
@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialItem = document.querySelector('.nav-item.active'); 
     if (initialItem) {
         const initialTarget = initialItem.getAttribute('data-target');
-        // Usamos showContent para inicializar correctamente el estado activo
         showContent(initialTarget, initialItem);
     }
 });
@@ -90,7 +89,7 @@ navItems.forEach(item => {
 
 
 // ===================================================================
-// 4. ANIMACIÓN DE ENTRADA (Intersection Observer)
+// 3. ANIMACIÓN DE ENTRADA (Intersection Observer)
 // ===================================================================
 const faders = document.querySelectorAll('.fade-in');
 
@@ -116,7 +115,7 @@ faders.forEach(fader => {
 
 
 // ===================================================================
-// 5. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
+// 4. BOTÓN VOLVER ARRIBA (Scroll-to-Top)
 // ===================================================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 const scrollDistance = 300; 
