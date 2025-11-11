@@ -19,7 +19,6 @@ window.addEventListener('scroll', handleScroll);
 // 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (Sección 1)
 // ===================================================================
 const navItems = document.querySelectorAll('.nav-item');
-const detailPanel = document.getElementById('detail-panel');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
 
@@ -27,14 +26,17 @@ let currentActiveContent = null;
 function showContent(targetId, item) {
     const nextContent = document.getElementById(targetId);
 
+    // Solo procede si el contenido es diferente al que ya está activo
     if (nextContent && nextContent !== currentActiveContent) {
+        
         // 1. Desactivar y animar salida del contenido actual (si existe)
         if (currentActiveContent) {
+            // Inicia la transición CSS (opacity y transform) para el contenido que sale
             currentActiveContent.classList.remove('active');
-            // Nota: El display:none es crucial para evitar que el contenido oculto ocupe espacio
-            // Se realiza después del fade-out para permitir la animación
+            
+            // Retrasa el cambio de display para permitir que la animación se complete
             setTimeout(() => {
-                detailContents.forEach(content => content.style.display = 'none');
+                currentActiveContent.style.display = 'none';
                 
                 // 2. Activar y animar entrada del nuevo contenido
                 nextContent.style.display = 'block';
@@ -42,9 +44,9 @@ function showContent(targetId, item) {
                 nextContent.offsetHeight; 
                 nextContent.classList.add('active');
                 currentActiveContent = nextContent;
-            }, 350); // Tiempo ligeramente mayor que la transición CSS (0.4s)
+            }, 350); // Tiempo ligeramente menor que la transición CSS (0.4s) para asegurar la continuidad
         } else {
-            // Caso inicial (al cargar la página)
+            // Caso inicial (al cargar la página): Mostrar el primero sin animación de salida
             detailContents.forEach(content => content.style.display = 'none');
             nextContent.style.display = 'block';
             nextContent.offsetHeight; 
@@ -58,11 +60,16 @@ function showContent(targetId, item) {
     }
 }
 
-// Inicializa el primer elemento como activo y lo muestra
-if (navItems.length > 0) {
-    const initialTarget = navItems[0].getAttribute('data-target');
-    showContent(initialTarget, navItems[0]); 
-}
+// Inicializa el sistema: Muestra el primer contenido y establece el currentActiveContent
+// Esto garantiza que al cargar la página, el contenido de "Tipos de inundaciones" esté visible.
+document.addEventListener('DOMContentLoaded', () => {
+    const initialItem = document.querySelector('.nav-item.active');
+    if (initialItem) {
+        const initialTarget = initialItem.getAttribute('data-target');
+        showContent(initialTarget, initialItem);
+    }
+});
+
 
 navItems.forEach(item => {
     const targetId = item.getAttribute('data-target');
@@ -72,7 +79,7 @@ navItems.forEach(item => {
         showContent(targetId, item);
     });
 
-    // Evento de click: (Para navegadores móviles)
+    // Evento de click: (Para navegadores móviles y fallback)
     item.addEventListener('click', (e) => {
         e.preventDefault();
         showContent(targetId, item);
@@ -97,12 +104,10 @@ problemaDetails.forEach(detail => {
         detail.open = true;
     });
 
-    // Opcional: Cerrar al salir (puede ser molesto, lo dejamos comentado para prueba)
-    /*
     detail.addEventListener('mouseleave', () => {
+        // Cierra el detalle actual al retirar el cursor
         detail.open = false;
     });
-    */
 });
 
 
