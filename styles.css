@@ -11,6 +11,21 @@
     --color-light-gray: rgba(41, 41, 41, 0.95); 
 }
 
+/* --- ANIMACIÓN 1: Fade-in al cargar --- */
+/* Desactiva las transiciones mientras se carga la página para evitar glitches */
+.preload * {
+    transition: none !important; 
+}
+/* Estado inicial: invisible */
+.hidden-on-load {
+    opacity: 0;
+    transition: opacity 1s ease-in-out; 
+}
+/* Estado final: visible (añadida por JS) */
+.visible-on-load {
+    opacity: 1;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
@@ -61,7 +76,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Capa oscura (opacidad 60%) */
+    background: rgba(0, 0, 0, 0.6); 
     z-index: 2; 
 }
 
@@ -70,11 +85,11 @@ main {
     top: 50%;
     left: 50%;
     width: 100vw; 
-    height: 56.25vw; /* 16:9 aspect ratio (9/16 = 0.5625) */
+    height: 56.25vw; 
     min-width: 100%;
     min-height: 100%;
     transform: translate(-50%, -50%);
-    pointer-events: none; /* Deshabilita la interacción del mouse con el video */
+    pointer-events: none; 
     border: none;
     z-index: 1;
 }
@@ -89,8 +104,8 @@ header {
     top: 0;
     z-index: 20; 
     background-color: rgba(0, 0, 0, 0.9); 
-    transition: all 0.3s ease; /* Transición para cambios suaves */
-    padding: 2.5rem 2.5rem; /* Padding normal */
+    transition: all 0.3s ease; 
+    padding: 2.5rem 2.5rem; 
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4); 
     color: var(--color-text-light); 
     text-align: left; 
@@ -101,7 +116,7 @@ header {
 .scrolled {
     background-color: rgba(18, 18, 18, 0.98); 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
-    padding: 1.5rem 2.5rem; /* Padding más pequeño al hacer scroll */
+    padding: 1.5rem 2.5rem; 
 }
 
 h1 { margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 0.8px; color: var(--color-text-light); transition: font-size 0.3s ease; }
@@ -120,12 +135,26 @@ h2 {
     font-weight: 400;
 }
 
+/* --- ANIMACIÓN 3: Efecto Hover Dinámico en Secciones --- */
+section { 
+    padding: 2.5rem; 
+    border-bottom: 1px solid var(--color-divider); 
+    /* Añade la transición para el hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+section:hover {
+    background-color: var(--color-light-gray); 
+    box-shadow: 0 0 15px rgba(121, 134, 203, 0.2); 
+    cursor: pointer; 
+}
+section:last-of-type { border-bottom: none; }
+
 section h2 { margin-top: 0; margin-bottom: 1.5rem; }
 h3 { font-size: 1.05rem; color: var(--color-text-light); margin-top: 2rem; font-weight: 700; }
 a { color: var(--color-navy-deep); text-decoration: none; font-weight: 500; border-bottom: 1px dotted var(--color-navy-deep); transition: color 0.2s; }
 a:hover { color: var(--color-accent-alert); border-bottom: 1px solid var(--color-accent-alert); }
-section { padding: 2.5rem; border-bottom: 1px solid var(--color-divider); }
-section:last-of-type { border-bottom: none; }
+
 footer { text-align: center; padding: 1.5rem; background-color: var(--color-light-gray); color: var(--color-text-light); font-size: 0.8rem; }
 footer a { color: var(--color-accent-alert); border-bottom: none; }
 aside { background-color: var(--color-light-gray); border-left: 3px solid var(--color-accent-alert); padding: 1.5rem; margin-top: 2.5rem; border-radius: 2px; }
@@ -139,22 +168,23 @@ details[open] summary::before { content: "−"; }
 details p, details ul, details ol { padding: 15px 20px; font-size: 0.95rem; }
 .weather-widget { margin: 20px auto; max-width: 450px; padding: 15px; background-color: var(--color-light-gray); border-radius: 4px; border: 1px solid var(--color-divider); }
 
+
 /* ==================================== */
 /* 3. Botón Volver Arriba (Scroll-to-Top) */
 /* ==================================== */
 #scrollToTopBtn {
-    display: none; /* Oculto por defecto, JS lo mostrará */
+    display: none; 
     position: fixed;
     bottom: 30px; 
     right: 30px; 
-    z-index: 99; /* Alto z-index para que esté sobre todo */
+    z-index: 99; 
     border: none;
     outline: none;
     background-color: var(--color-navy-deep);
     color: white;
     cursor: pointer;
     padding: 15px 20px;
-    border-radius: 50%; /* Forma redonda */
+    border-radius: 50%; 
     font-size: 24px;
     line-height: 1;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
@@ -165,4 +195,16 @@ details p, details ul, details ol { padding: 15px 20px; font-size: 0.95rem; }
 #scrollToTopBtn:hover {
     background-color: var(--color-accent-alert);
     opacity: 1;
+}
+
+/* --- ANIMACIÓN 2: Animación de Elementos al Hacer Scroll --- */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px); /* Ligeramente desplazado hacia abajo */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0); /* Vuelve a su posición normal */
 }
