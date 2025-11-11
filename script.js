@@ -18,7 +18,8 @@ window.addEventListener('scroll', handleScroll);
 // ===================================================================
 // 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (CONTENIDO ÚNICO)
 // ===================================================================
-const navItems = document.querySelectorAll('.nav-item');
+// CAMBIO CLAVE: Seleccionar la clase 'sub-item' para la interacción
+const navItems = document.querySelectorAll('.sub-item');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
 
@@ -27,27 +28,24 @@ function showContent(targetId, item) {
     const nextContent = document.getElementById(targetId);
 
     if (!nextContent || nextContent === currentActiveContent) {
-        return; // Evita el repintado si es el mismo contenido
+        return; 
     }
 
     // 1. Desactivar y animar salida del contenido actual
     if (currentActiveContent) {
-        // Inicia la animación de salida CSS
         currentActiveContent.classList.remove('active');
         
-        // Retrasa el cambio de display para permitir la transición de salida
         setTimeout(() => {
             currentActiveContent.style.display = 'none';
             
             // 2. Activar y animar entrada del nuevo contenido
             nextContent.style.display = 'block';
-            // Forzar reflow para reiniciar la animación CSS (es clave para que la transición funcione cada vez)
-            void nextContent.offsetWidth; 
+            void nextContent.offsetWidth; // Forzar reflow
             nextContent.classList.add('active');
             currentActiveContent = nextContent;
-        }, 400); // Tiempo que coincide con la transición CSS (0.5s)
+        }, 400); 
     } else {
-        // Caso inicial (al cargar la página): Mostrar el primer contenido de inmediato
+        // Caso inicial (al cargar la página)
         detailContents.forEach(content => {
             content.style.display = 'none';
             content.classList.remove('active');
@@ -59,17 +57,17 @@ function showContent(targetId, item) {
         currentActiveContent = nextContent;
     }
 
-    // Manejar el estado activo del botón de navegación
+    // Manejar el estado activo del botón de navegación (sub-items)
     navItems.forEach(i => i.classList.remove('active'));
     item.classList.add('active');
 }
 
 // Inicializa el sistema: Muestra el primer contenido al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-    const initialItem = document.querySelector('.nav-item.active');
+    // CAMBIO CLAVE: Seleccionar la clase 'sub-item' para la inicialización
+    const initialItem = document.querySelector('.sub-item.active'); 
     if (initialItem) {
         const initialTarget = initialItem.getAttribute('data-target');
-        // Usamos solo showContent para inicializar correctamente
         showContent(initialTarget, initialItem);
     }
 });
