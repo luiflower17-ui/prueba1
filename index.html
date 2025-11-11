@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico Profesional: Inundaciones en la Ciudad de México</title>
+    <title>App Digital: Detección Temprana de Inundaciones - CDMX</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
 
 </head>
-<body class="preload"> 
+<body>
 
 <div class="video-background">
     <div class="video-overlay"></div>
-    
     <iframe 
         id="youtube-background" 
         src="https://www.youtube.com/embed/RRrlmxeQlXo?controls=0&amp;showinfo=0&amp;rel=0&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;playlist=RRrlmxeQlXo"
@@ -24,113 +23,252 @@
     </iframe>
 </div>
 
-<main class="hidden-on-load">
+<main>
         <header>
-            <h1>Diagnóstico Profesional: Inundaciones en la Ciudad de México</h1>
-            <p>Análisis Histórico, Geográfico y Prevención de Riesgos | Publicado: <time datetime="2025-10-27">27 de Octubre de 2025</time></p>
+            <h1>App Digital: Detección Temprana de Desastres Naturales</h1>
+            <p>
+                **GOBIERNO DE LA CIUDAD DE MÉXICO** | **UNIVERSIDAD ROSARIO CASTELLANOS** | LICENCIATURA EN CIENCIA DE DATOS PARA NEGOCIOS
+            </p>
+            <p>
+                **Proyecto Prototípico:** Inundaciones en CDMX. Presentan: Aliza Ramírez, Giovanni Morales, Luis Flores.
+            </p>
         </header>
 
-        <section id="introduccion" class="reveal-on-scroll">
-            <h2>Contexto Geográfico e Histórico</h2>
-            <p>La CDMX presenta un alto índice de inundaciones significativas debido a que se encuentra delimitada por un sistema montañoso, siendo la zona baja de la cuenca la más urbanizada. Históricamente, los antiguos mexicas edificaron Tenochtitlán sobre el lago de Texcoco, el cual fue secado y sustituido por asfalto, lo que incrementó el riesgo de inundaciones por la poca filtración del agua hacia el subsuelo.</p>
+        <section id="introduccion" class="fade-in">
+            <h2>1. Problemas de la Investigación</h2>
+            <p>
+                A continuación se presentan las preguntas clave que guían el desarrollo de la aplicación y la investigación. Pasa el cursor sobre cada punto para ver el contexto.
+            </p>
+
+            <div id="problemas-grid">
+                <details class="problema-card">
+                    <summary>Tipos de inundaciones</summary>
+                    <p>Se debe clasificar el fenómeno (fluvial, pluvial, etc.) para aplicar la mitigación correcta. Entender la tipología es el primer paso en la modelación predictiva.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Cuáles son los principales factores que provocan las inundaciones recurrentes en la Ciudad de México?</summary>
+                    <p>Factores como la geomorfología de cuenca, el hundimiento de la ciudad y el clima extremo se combinan para generar un alto riesgo hídrico.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Cómo influye el crecimiento urbano desordenado en la capacidad del sistema de drenaje de la CDMX?</summary>
+                    <p>La impermeabilización del suelo por el asfalto y construcciones satura rápidamente el drenaje pluvial, superando la capacidad de la infraestructura actual.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué relación existe entre la acumulación de basura en vía pública y los encharcamientos durante la temporada de lluvias?</summary>
+                    <p>La basura obstruye las coladeras y reduce la eficiencia del sistema en más del 50% de los casos, convirtiéndose en un problema de responsabilidad social.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué zonas de la Ciudad de México presentan mayor vulnerabilidad ante inundaciones?</summary>
+                    <p>Identificar áreas de riesgo alto (Tlalpan, Iztapalapa, G.A. Madero, etc.) es esencial para focalizar las alertas tempranas y la respuesta de Protección Civil.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Cómo ha evolucionado el sistema de drenaje de la CDMX desde el siglo XVII hasta la actualidad?</summary>
+                    <p>Análisis de la transición de drenajes superficiales a sistemas combinados y al Gran Drenaje profundo, evaluando la eficiencia histórica y presente.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué impacto tienen las lluvias intensas en la movilidad urbana y los servicios públicos?</summary>
+                    <p>Evaluación de afectaciones a vías rápidas, el Metro, el AICM y otras infraestructuras críticas, cuantificando las pérdidas económicas.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué alcaldías presentan mayor frecuencia de inundaciones y por qué?</summary>
+                    <p>Identificar patrones geográficos, topográficos y demográficos que expliquen la alta incidencia en ciertas zonas para la correcta calibración del modelo predictivo.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Es posible predecir zonas de riesgo de inundación en la CDMX mediante modelos climáticos y urbanos?</summary>
+                    <p>Determinar la viabilidad de un algoritmo de predicción basado en datos meteorológicos y topográficos en tiempo real.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué tecnologías de monitoreo se utilizan para prevenir alguna inundación?</summary>
+                    <p>Revisión de la implementación de sensores, radares meteorológicos y sistemas de alerta temprana implementados por el SACMEX y el C5.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué tan efectivo sería un algoritmo de predicción para anticipar eventos de inundación en tiempo real?</summary>
+                    <p>Medición de la precisión y el tiempo de anticipación necesario para una alerta efectiva a la ciudadanía.</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué tan eficiente es el sistema de drenaje actual para mitigar las inundaciones en la CDMX?</summary>
+                    <p>Evaluación de la capacidad de desalojo del sistema ante eventos de lluvia extremos (lluvias atípicas).</p>
+                </details>
+                <details class="problema-card">
+                    <summary>¿Qué impacto han tenido las campañas de concienciación ciudadana en la reducción de encharcamientos?</summary>
+                    <p>Análisis de la correlación entre campañas de manejo de residuos y la disminución de obstrucciones en coladeras, evaluando la efectividad social.</p>
+                </details>
+            </div>
+        </section>
+
+        <section id="objetivos" class="fade-in">
+            <h2>2. Objetivo General y 3. Objetivos Específicos</h2>
             
-            <h3>Eventos Históricos Relevantes</h3>
+            <h3>Objetivo General</h3>
             <ul>
-                <li>La peor inundación conocida fue **"La Gran Inundación" o "Diluvio de San Mateo" en 1629**, la cual duró varios años, alcanzando niveles de hasta 2 metros que cubrieron toda la ciudad.</li>
-                <li>Otra gran inundación fue en **1951** el 16 de julio y afectó gran parte de la CDMX, incluyendo Tlalpan. Este desbordamiento duró tres meses y obligó a usar balsas de hule y lanchas para transportarse.</li>
-                <li>Posteriormente, en **septiembre de 1955**, el huracán Gladys causó el desbordamiento de ríos como el de los Remedios y Tlalnepantla, afectando a miles de personas en la zona sur.</li>
+                <li>Abordar el fenómeno de inundaciones en la Ciudad De México, mediante el análisis de los datos recabados.</li>
+                <li>Buscar reducir su impacto en la ciudadanía a través de una guía introductoria, donde contenga información actualizada sobre zonas más vulnerables, zonas seguras, hechos históricos, gráficos y un manual que ayude a atender y enfrentar un desastre natural de esta magnitud.</li>
+                <li>Desarrollar una página web que funcione como una herramienta integral, que concentre toda la información relevante sobre el fenómeno de las inundaciones.</li>
+                <li>Esta plataforma incluirá un algoritmo diseñado para apoyar en la prevención y en la predicción de eventos relacionados.</li>
+            </ul>
+
+            <h3>Objetivos Específicos</h3>
+            <ul>
+                <li>Identificar las zonas con mayor incidencia de inundaciones en la CDMX.</li>
+                <li>Evaluar el impacto del crecimiento urbano en la capacidad del sistema de drenaje.</li>
+                <li>Determinar el papel de la acumulación de residuos sólidos en la obstrucción de vías pluviales.</li>
+                <li>Analizar la eficiencia del sistema de drenaje actual frente a lluvias intensas.</li>
+                <li>Proponer recomendaciones basadas en los hallazgos para reducir el impacto de futuras inundaciones.</li>
             </ul>
         </section>
 
-        <section id="pronostico" class="reveal-on-scroll">
-            <h2>Pronóstico del Tiempo y Alerta ⛈️</h2>
-            <p>La información meteorológica en tiempo real es clave para la prevención de riesgos y la toma de decisiones.</p>
-            
-            <div class="weather-widget">
-                <div id="ww_a150564473865" v='1.3' loc='id' a='{"t":"responsive","lang":"es","sl_lpl":1,"ids":[],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>
-                    Más previsiones: <a href="https://tiempolargo.com/puente_alto_tiempo_25_dias/" id="ww_a150564473865_u" target="_blank">Temperatura Puente Alto </a>
-                </div>
-                <script async src="https://app3.weatherwidget.org/js/?id=ww_a150564473865"></script>
-                </div>
-        </section>
-
-        <section id="causas-interactiva" class="reveal-on-scroll">
-            <h2>Análisis de Causas y Vulnerabilidad Actual</h2>
+        <section id="tipologia" class="fade-in">
+            <h2>7. Concepto, Tipología y Factores Determinantes</h2>
 
             <details>
-                <summary><strong>1. Factores Ambientales y Estadísticas Clave 📊</strong></summary>
+                <summary><strong>7. Tipología de las Inundaciones</strong></summary>
                 
-                <p>Expertos señalan que las principales causas de las inundaciones son el calentamiento global, factores meteorológicos, el crecimiento urbano y la contaminación.</p>
-                
+                <h3>Clasificación según la Causa y Característica</h3>
                 <ul>
-                    <li>**Volumen Récord (2025):** Durante 2025, la CDMX ha registrado el mayor volumen de lluvias en más de 40 años, con un **aumento del 33%** en comparación con 1982.</li>
-                    <li>**Factor Basura:** Según datos del gobierno, el **50% de los encharcamientos** en temporada de lluvia es causado por la basura.</li>
-                    <li>**Drenaje:** El sistema de drenaje actual es de tipo combinado (residual y pluvial) y está diseñado para desalojar las aguas mediante bombeo hacia el estado de Hidalgo. Su construcción data desde 1608.</li>
+                    <li>**Fluviales:** Ocasionadas por el desborde de ríos debido al exceso de caudal.</li>
+                    <li>**Pluviales:** Producto de lluvias intensas que superan la capacidad del sistema de drenaje.</li>
+                    <li>**Costeras:** Generadas por el aumento del nivel del mar (mareas de tormenta o tsunamis).</li>
+                    <li>**Represarías:** Resultado de fallas estructurales o roturas en presas y embalses.</li>
+                </ul>
+                
+                <h3>Clasificación según la Rapidez</h3>
+                <ul>
+                    <li>**Repentinas:** Caracterizadas por su rápido desarrollo e imprevisibilidad.</li>
+                    <li>**Lentas:** Se desarrollan a lo largo de horas o días, permitiendo una mayor capacidad de respuesta.</li>
                 </ul>
             </details>
 
             <details>
-                <summary><strong>2. Zonas de Mayor Riesgo y Sistema de Alerta 📍</strong></summary>
+                <summary><strong>8. Factores Determinantes de las Inundaciones</strong></summary>
                 
-                <p>Las alcaldías de la CDMX con mayor vulnerabilidad a inundaciones son:</p>
-                
-                <ol>
-                    <li>Tlalpan</li>
-                    <li>Iztapalapa</li>
-                    <li>Gustavo A. Madero</li>
-                    <li>Tláhuac</li>
-                    <li>Venustiano Carranza</li>
-                    <li>Cuauhtémoc</li>
-                    <li>Álvaro Obregón</li>
-                </ol>
-                
-                <p>La **Secretaría de Gestión Integral de Riesgos y Protección Civil** tiene cinco niveles de alerta por lluvias:</p>
+                <h3>Factores Naturales y Meteorológicos</h3>
                 <ul>
-                    <li>**VERDE:** Menos de 15 milímetros.</li>
-                    <li>**AMARILLA:** De 16 a 29 milímetros.</li>
-                    <li>**NARANJA:** De 30 a 49 milímetros.</li>
-                    <li>**ROJA:** De 50 a 70 milímetros.</li>
-                    <li>**PÚRPURA:** Más de 70 milímetros.</li>
+                    <li>Lluvias torrenciales y Deshielo rápido.</li>
+                    <li>Mareas de tormenta.</li>
+                </ul>
+                
+                <h3>Factores Antropogénicos y de Infraestructura</h3>
+                <ul>
+                    <li>Fallos en la Infraestructura Hidráulica.</li>
+                    <li>**Urbanización Descontrolada:** Genera la impermeabilización del suelo.</li>
+                    <li>Deforestación y Alteración de Drenajes Naturales.</li>
+                    <li>**Acumulación de basura:** La disposición inadecuada de residuos sólidos obstruye las alcantarillas.</li>
                 </ul>
             </details>
         </section>
-        
-        <section id="prevencion" class="reveal-on-scroll">
-            <h2>Estrategias de Prevención y Guía de Acción</h2>
-            <p>La prevención permite a la gente actuar de manera adecuada en caso de ser necesario, previniendo el alto riesgo e informado el impacto que puede causar este desastre natural.</p>
 
-            <h3>Guía de Acción ante Inundaciones (Fuente: CENAPRED):</h3>
+        <section id="residuos" class="fade-in">
+            <h2>9. La Problemática Específica de la Obstrucción por Residuos Sólidos</h2>
+            
+            <img 
+                src="https://via.placeholder.com/300x200/404040/FFFFFF?text=Basura+en+Alcantarilla" 
+                alt="Fotografía de alcantarilla obstruida por residuos sólidos y basura en la Ciudad de México" 
+                class="img-float-right">
+            
+            <h3>Mecanismo de Obstrucción y Colapso del Drenaje</h3>
+            <p>La obstrucción por residuos es un factor crítico. Se ha estimado que **más del 50% de las inundaciones urbanas están relacionadas con la obstrucción por basura**.</p>
             <ul>
-                <li>**Antes (Prepárate):** Evita construir en zonas de riesgo, conoce tus rutas de evacuación, localiza refugios altos y prepara un kit de emergencia (documentos, agua, alimentos).</li>
-                <li>**Durante (Actúa):** Desaloja si es necesario (solo con lo indispensable), no uses automóvil en caminos inundados, mantén la calma y aléjate de cables eléctricos caídos.</li>
-                <li>**Después (Revisa):** Regresa a casa solo si no hay riesgo de derrumbe, extrema la higiene (alimentos y agua) y elimina agua estancada para prevenir enfermedades.</li>
+                <li>**Arrastre de Residuos:** El agua barre los residuos sólidos (plásticos, bolsas, botellas) dispersos en calles y barrancas.</li>
+                <li>**Obstrucción del Sistema:** Los desechos se acumulan en coladeras y ductos de drenaje, formando "tapones".</li>
+                <li>**Colapso del Sistema:** El agua no puede ser desalojada rápidamente, resultando en desborde e inundación.</li>
             </ul>
+            
+            <p class="image-caption">
+                *Nota.* Alcantarilla bloqueada por basura en la CDMX. **Reemplazar la URL de la imagen (placeholder) con una real de tu proyecto.** Recuperado de [Fuente o autor que tomaste la foto] (Año).
+            </p>
         </section>
 
-        <aside class="reveal-on-scroll">
-            <h3>Conclusión: Concientización y Propósito</h3>
-            <p>A pesar de la extensa infraestructura hídrica, las inundaciones persisten debido a motivos multifactoriales como el desarrollo urbano sin planificación, infraestructura vieja y la acumulación excesiva de desechos en las conducciones de desagüe. Este análisis busca fomentar la concienciación ciudadana para evitar este tipo de problemas para la comunidad, salvaguardando la integridad física de las personas a través de acciones preventivas.</p>
+        <section id="alcaldias-afectadas" class="fade-in">
+            <h2>13. Alcaldías más Afectadas y 15. Impacto en Infraestructura</h2>
+            
+            <img 
+                src="https://via.placeholder.com/300x200/404040/FFFFFF?text=Mapa+Zonas+Afectadas" 
+                alt="Mapa de la Ciudad de México con las alcaldías más afectadas por inundaciones resaltadas." 
+                class="img-float-left">
+            
+            <h3>13. Alcaldías más afectadas</h3>
+            <p>De acuerdo con datos del C5 (hasta junio de 2025), se recibieron más de 3,800 reportes vinculados con la temporada de lluvias, de los cuales 51.3% son inundaciones y 48.3% encharcamientos.</p>
+            
+            <ol>
+                <li>**Tlalpan:** Lidera la lista con casi 19% de los reportes.</li>
+                <li>**Iztapalapa:** Segundo lugar con 18% de incidencia.</li>
+                <li>**Gustavo A. Madero:** Tercer lugar con más del 10% de los reportes.</li>
+                <li>**Xochimilco:** Casi un 10% de los reportes, propenso a desbordamientos.</li>
+                <li>**Tláhuac:** Registra poco más del 9% de incidencias.</li>
+            </ol>
+            
+            <p class="image-caption">
+                *Nota.* Distribución de reportes por inundación en la CDMX. **Reemplazar la URL de la imagen (placeholder).** Adaptado de C5 (2025).
+            </p>
+            
+            <h3>15. Impacto de las lluvias en la infraestructura urbana y el transporte</h3>
+            <p>Se estima que el **33% de los daños a la infraestructura vial** es causada por las fuertes lluvias. Causan filtraciones en el Aeropuerto Internacional de la Ciudad de México y la interrupción parcial del servicio del Metro.</p>
+        </section>
+
+        <aside class="fade-in">
+            <h3>10. Consecuencias Derivadas de la Obstrucción Hídrica</h3>
+            <p>La obstrucción del drenaje y las inundaciones generan graves riesgos para la población y el medio ambiente:</p>
+            <ul>
+                <li>**Focos de Infección:** El agua estancada contaminada se transforma en un riesgo para la salud pública.</li>
+                <li>**Contaminación Socio Ambiental:** Los residuos arrastrados contaminan cuerpos de agua y el suelo.</li>
+                <li>**Daños Materiales:** Generan pérdidas económicas, afectando el patrimonio y la infraestructura.</li>
+            </ul>
         </aside>
 
-        <section id="referencias" class="reveal-on-scroll">
-            <h2>Fuentes de Consulta</h2>
-            <p>Las siguientes referencias sirvieron como base documental para la elaboración de este diagnóstico:</p>
-            <ul>
-                <li>[1] [Ciudad de México anegada]. (s. f.-a). Mediateca - Instituto Nacional de Antropología E Historia. <a href="https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176" target="_blank">https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176</a></li>
-                <li>[2] De Prevención de Desastres, C. N. (s. f.). La última gran inundación de la Ciudad de México. gob.mx. <a href="https://www.gob.mx/cenapred/articulos/la-ultima-gran-inundacion-de-la-ciudad-de-mexico" target="_blank">https://www.gob.mx/cenapred/articulos/la-ultima-gran-inundacion-de-la-ciudad-de-mexico</a></li>
-                <li>[3] Indicadores de lluvia. (s. f.). <a href="https://charcos.sacmex.cdmx.gob.mx/monthly-precipitation-graph" target="_blank">https://charcos.sacmex.cdmx.gob.mx/monthly-precipitation-graph</a></li>
-                <li>[4] Redacción. (2025, October 12). Lluvias 2025, las más intensas del siglo: experta UAM. CDMX MagacÍN. <a href="https://cdmx.info/lluvias-2025-las-mas-intensas-del-siglo-experta-uam__trashed/" target="_blank">https://cdmx.info/lluvias-2025-las-mas-intensas-del-siglo-experta-uam__trashed/</a></li>
-                <li>[5] Hernández-Espinosa, A., Otazo-Sánchez, E., Román-Gutiérrez, A., & Romo-Gómez, C. (2021, 5 julio). El Sistema de drenaje de la Ciudad de México. <a href="https://portal.amelica.org/ameli/journal/595/5952727008/html/" target="_blank">https://portal.amelica.org/ameli/journal/595/5952727008/html/</a></li>
-            </ul>
+        <section id="prevencion" class="fade-in">
+            <h2>19. Medidas Preventivas y 21. Alternativas</h2>
+            
+            <details>
+                <summary><strong>Medidas Preventivas (Antes de la Lluvia y Durante)</strong></summary>
+                <h3>Antes de la Lluvia</h3>
+                <ul>
+                    <li>**Consulta el clima:** Revisa reportes oficiales.</li>
+                    <li>**Limpia techos y drenajes:** Evita encharcamientos limpiando coladeras y azoteas.</li>
+                    <li>**Revisa la impermeabilización:** Asegura que techos y estructuras estén protegidos.</li>
+                    <li>**Reubica los vehículos:** No los dejes bajo árboles o cables de luz.</li>
+                </ul>
+                <h3>Durante la Lluvia</h3>
+                <ul>
+                    <li>No cruces corrientes de agua.</li>
+                    <li>Evita zonas de riesgo como laderas y cauces de ríos.</li>
+                    <li>Aléjate de árboles y estructuras frágiles.</li>
+                </ul>
+            </details>
+            
+            <details>
+                <summary><strong>Acciones Críticas (En caso de Inundación y Después de la Tormenta)</strong></summary>
+                <h3>En caso de Inundación</h3>
+                <ul>
+                    <li>Evacúa si te lo indican.</li>
+                    <li>No camines en zonas inundadas (puede haber cables sueltos).</li>
+                    <li>Desconecta la energía eléctrica.</li>
+                    <li>Acude a refugios temporales indicados por Protección Civil.</li>
+                </ul>
+                <h3>Después de la Tormenta</h3>
+                <ul>
+                    <li>Revisa tu casa por daños estructurales.</li>
+                    <li>Limpia y desinfecta para evitar enfermedades.</li>
+                    <li>Reporta daños a las autoridades.</li>
+                </ul>
+            </details>
+            
+            <details>
+                <summary><strong>21. Alternativas de Solución para la CDMX</strong></summary>
+                <ul>
+                    <li>**Infraestructura verde:** Techos verdes, jardines de lluvia y sistemas de filtración para la infiltración del agua hacia los acuíferos.</li>
+                    <li>**Recuperación de zonas verdes:** Crear espacios de absorción en parques y áreas públicas.</li>
+                    <li>**Soluciones hidráulicas innovadoras:** Ampliar el uso de dispositivos como válvulas de Tesla que reducen la velocidad del agua.</li>
+                </ul>
+            </details>
         </section>
 
         <footer>
-            <p>&copy; 2025 Artículo de Divulgación. Basado en Avance 1. PP2.pdf</p>
+            <p>&copy; 2025 Proyecto Prototípico. Licenciatura en Ciencia de Datos para Negocios - URC</p>
             <p><a href="#introduccion">Volver al inicio</a></p>
         </footer>
 </main>
 
-<button id="scrollToTopBtn" title="Volver al inicio">↑</button>
+<button id="scrollToTopBtn" title="Volver al inicio">↑</button> 
 
 <script src="script.js"></script>
 </body>
