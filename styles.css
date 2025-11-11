@@ -3,27 +3,15 @@
 /* ==================================== */
 :root {
     --color-bg: #121212; 
-    --color-main-bg: rgba(30, 30, 30, 0.95); /* El main es semitransparente sobre el video */
+    --color-main-bg: rgba(30, 30, 30, 0.95); 
     --color-text-light: #E0E0E0; 
-    --color-navy-deep: #7986CB; 
+    --color-navy-deep: #7986CB; /* Azul profesional */
+    --color-accent-vibrant: #64FFDA; /* Verde brillante para interactividad */
     --color-divider: #333333; 
-    --color-accent-alert: #FF5252; 
+    --color-accent-alert: #FF5252; /* Rojo para alertas */
     --color-light-gray: rgba(41, 41, 41, 0.95); 
-}
-
-/* --- ANIMACIÓN 1: Fade-in al cargar --- */
-/* Desactiva las transiciones mientras se carga la página para evitar glitches */
-.preload * {
-    transition: none !important; 
-}
-/* Estado inicial: invisible */
-.hidden-on-load {
-    opacity: 0;
-    transition: opacity 1s ease-in-out; 
-}
-/* Estado final: visible (añadida por JS) */
-.visible-on-load {
-    opacity: 1;
+    --shadow-subtle: 0 4px 10px rgba(0, 0, 0, 0.3);
+    --shadow-vibrant: 0 0 15px rgba(100, 255, 218, 0.3); /* Sombra vibrante */
 }
 
 body {
@@ -49,7 +37,7 @@ main {
     padding: 0; 
     background-color: var(--color-main-bg); 
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
-    border-radius: 4px;
+    border-radius: 8px; /* Bordes más suaves */
     overflow: hidden;
     border: 1px solid var(--color-divider);
     z-index: 10; 
@@ -95,82 +83,194 @@ main {
 }
 
 /* ==================================== */
-/* 2. Estilos del contenido (Dark Mode) */
+/* 2. Estilos Globales y HEADER         */
 /* ==================================== */
-
-/* --- CSS PARA HEADER FLOTANTE --- */
 header { 
     position: sticky; 
     top: 0;
     z-index: 20; 
     background-color: rgba(0, 0, 0, 0.9); 
-    transition: all 0.3s ease; 
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Curva de animación más suave */
     padding: 2.5rem 2.5rem; 
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4); 
     color: var(--color-text-light); 
     text-align: left; 
-    border-bottom: 2px solid var(--color-navy-deep); 
+    border-bottom: 3px solid var(--color-navy-deep); 
 }
 
-/* Estilo aplicado por JS cuando se hace scroll */
 .scrolled {
     background-color: rgba(18, 18, 18, 0.98); 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
-    padding: 1.5rem 2.5rem; 
+    padding: 1.2rem 2.5rem; /* Más compacto */
 }
 
-h1 { margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 0.8px; color: var(--color-text-light); transition: font-size 0.3s ease; }
-.scrolled h1 { font-size: 1.8rem; }
-header p { color: var(--color-divider); font-size: 0.9rem; margin: 0.5rem 0 0 0; transition: margin 0.3s ease; }
-.scrolled header p { margin: 0.3rem 0 0 0; }
+h1 { margin: 0; font-size: 2rem; font-weight: 300; letter-spacing: 0.5px; color: var(--color-text-light); transition: font-size 0.4s ease; }
+.scrolled h1 { font-size: 1.6rem; }
+header p { color: var(--color-divider); font-size: 0.85rem; margin: 0.5rem 0 0 0; transition: margin 0.4s ease; }
+.scrolled header p { margin: 0.2rem 0 0 0; }
 
 h2 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 2rem;
-    color: var(--color-text-light); 
+    color: var(--color-accent-vibrant); 
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-divider);
+    border-bottom: 2px solid var(--color-divider);
     font-weight: 400;
 }
 
-/* --- ANIMACIÓN 3: Efecto Hover Dinámico en Secciones --- */
-section { 
-    padding: 2.5rem; 
-    border-bottom: 1px solid var(--color-divider); 
-    /* Añade la transición para el hover */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
-}
-
-section:hover {
-    background-color: var(--color-light-gray); 
-    box-shadow: 0 0 15px rgba(121, 134, 203, 0.2); 
-    cursor: pointer; 
-}
+h3 { font-size: 1.2rem; color: var(--color-text-light); margin-top: 2rem; font-weight: 500; }
+a { color: var(--color-accent-vibrant); text-decoration: none; font-weight: 500; border-bottom: 1px dotted var(--color-accent-vibrant); transition: color 0.2s; }
+a:hover { color: var(--color-navy-deep); border-bottom: 1px solid var(--color-navy-deep); }
+section { padding: 2.5rem; border-bottom: 1px solid var(--color-divider); }
 section:last-of-type { border-bottom: none; }
-
-section h2 { margin-top: 0; margin-bottom: 1.5rem; }
-h3 { font-size: 1.05rem; color: var(--color-text-light); margin-top: 2rem; font-weight: 700; }
-a { color: var(--color-navy-deep); text-decoration: none; font-weight: 500; border-bottom: 1px dotted var(--color-navy-deep); transition: color 0.2s; }
-a:hover { color: var(--color-accent-alert); border-bottom: 1px solid var(--color-accent-alert); }
-
 footer { text-align: center; padding: 1.5rem; background-color: var(--color-light-gray); color: var(--color-text-light); font-size: 0.8rem; }
 footer a { color: var(--color-accent-alert); border-bottom: none; }
-aside { background-color: var(--color-light-gray); border-left: 3px solid var(--color-accent-alert); padding: 1.5rem; margin-top: 2.5rem; border-radius: 2px; }
+aside { background-color: var(--color-light-gray); border-left: 4px solid var(--color-accent-vibrant); padding: 2rem; margin-top: 2.5rem; border-radius: 4px; }
 aside h3 { margin-top: 0; color: var(--color-navy-deep); }
-details { border: 1px solid var(--color-divider); border-radius: 0; margin-bottom: 10px; background-color: var(--color-main-bg); }
-details:hover { background-color: var(--color-light-gray); }
-summary { padding: 15px 20px; background-color: var(--color-main-bg); color: var(--color-text-light); list-style: none; font-weight: 500; }
-summary::before { content: "+"; margin-right: 15px; font-size: 1.1em; color: var(--color-navy-deep); font-weight: 300; transition: transform 0.2s; }
-details[open] summary { border-bottom: 1px solid var(--color-divider); background-color: var(--color-light-gray); }
-details[open] summary::before { content: "−"; }
-details p, details ul, details ol { padding: 15px 20px; font-size: 0.95rem; }
-.weather-widget { margin: 20px auto; max-width: 450px; padding: 15px; background-color: var(--color-light-gray); border-radius: 4px; border: 1px solid var(--color-divider); }
+
+/* --- Estilos para los DETAILS estándar (Tipología/Prevención) --- */
+details { 
+    border: 1px solid var(--color-divider); 
+    border-radius: 4px; 
+    margin-bottom: 15px; 
+    background-color: var(--color-main-bg); 
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+details:hover { 
+    background-color: var(--color-light-gray); 
+    box-shadow: var(--shadow-subtle);
+}
+summary { 
+    padding: 15px 20px; 
+    background-color: var(--color-main-bg); 
+    color: var(--color-text-light); 
+    list-style: none; 
+    font-weight: 500; 
+    border-radius: 4px;
+    cursor: pointer;
+}
+summary::before { content: "▸"; margin-right: 15px; font-size: 1.1em; color: var(--color-navy-deep); font-weight: 700; transition: transform 0.2s; }
+details[open] summary { 
+    border-bottom: 1px solid var(--color-divider); 
+    background-color: var(--color-light-gray);
+    color: var(--color-accent-vibrant);
+}
+details[open] summary::before { content: "▾"; color: var(--color-accent-vibrant); }
+details p, details ul, details ol { padding: 15px 20px 20px 20px; font-size: 0.95rem; }
 
 
 /* ==================================== */
-/* 3. Botón Volver Arriba (Scroll-to-Top) */
+/* 3. Estilos de IMAGEN y APA 7         */
+/* ==================================== */
+.img-float-right {
+    float: right;
+    margin: 0 0 1.5rem 2rem;
+    max-width: 40%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.3s;
+}
+.img-float-right:hover {
+    transform: scale(1.02);
+}
+.img-float-left {
+    float: left;
+    margin: 0 2rem 1.5rem 0;
+    max-width: 40%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.3s;
+}
+.img-float-left:hover {
+    transform: scale(1.02);
+}
+.image-caption {
+    clear: both; /* Limpia el float para que no afecte el siguiente H2 */
+    font-size: 0.75rem;
+    color: var(--color-divider);
+    padding: 0 0 2rem 0;
+    font-style: italic;
+    line-height: 1.4;
+}
+/* Limpiar floats en el final de las secciones */
+#alcaldias-afectadas::after, #residuos::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* ==================================== */
+/* 4. SECCIÓN 1: PROBLEMAS (Hover/Grid) */
+/* ==================================== */
+#problemas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* 2 columnas en pantallas grandes */
+    gap: 15px;
+    margin-top: 1rem;
+}
+
+.problema-card {
+    /* HEREDA estilos base de details */
+    margin: 0; /* Anula el margin-bottom para usar el gap del grid */
+    border: 1px solid var(--color-divider);
+    border-radius: 6px;
+    transition: all 0.3s;
+    background-color: var(--color-light-gray);
+    box-shadow: none;
+}
+.problema-card:hover {
+    transform: translateY(-3px); /* Pequeño levante */
+    box-shadow: var(--shadow-vibrant); /* Sombra vibrante al pasar el mouse */
+    border-color: var(--color-accent-vibrant);
+}
+
+.problema-card summary {
+    font-weight: 700; /* Pregunta más fuerte */
+    background-color: transparent;
+    color: var(--color-text-light);
+    transition: color 0.3s;
+}
+
+.problema-card:hover summary {
+    color: var(--color-accent-vibrant); /* Resalta la pregunta activa */
+}
+
+/* Animación de apertura: Oculta el contenido de forma animada */
+.problema-card p {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
+
+.problema-card[open] p {
+    max-height: 300px; /* Altura suficiente para el contenido */
+    padding: 0 20px 20px 20px;
+}
+
+/* ==================================== */
+/* 5. Animación de Entrada (Fade In)    */
+/* ==================================== */
+
+/* Ocultar elementos al inicio */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Mostrar elementos cuando el JS añade la clase 'is-visible' */
+.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==================================== */
+/* 6. Botón Volver Arriba (Scroll-to-Top) */
 /* ==================================== */
 #scrollToTopBtn {
     display: none; 
@@ -180,31 +280,22 @@ details p, details ul, details ol { padding: 15px 20px; font-size: 0.95rem; }
     z-index: 99; 
     border: none;
     outline: none;
-    background-color: var(--color-navy-deep);
-    color: white;
+    background-color: var(--color-accent-vibrant); /* Color vibrante */
+    color: var(--color-bg); /* Texto oscuro */
     cursor: pointer;
     padding: 15px 20px;
     border-radius: 50%; 
     font-size: 24px;
     line-height: 1;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    transition: background-color 0.3s, opacity 0.3s;
-    opacity: 0.8;
+    box-shadow: 0 4px 15px rgba(100, 255, 218, 0.6); /* Sombra más fuerte */
+    transition: background-color 0.3s, transform 0.3s;
+    opacity: 0.9;
 }
 
 #scrollToTopBtn:hover {
-    background-color: var(--color-accent-alert);
+    background-color: var(--color-navy-deep);
+    color: white;
+    transform: scale(1.1);
     opacity: 1;
-}
-
-/* --- ANIMACIÓN 2: Animación de Elementos al Hacer Scroll --- */
-.reveal-on-scroll {
-    opacity: 0;
-    transform: translateY(20px); /* Ligeramente desplazado hacia abajo */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.reveal-on-scroll.is-visible {
-    opacity: 1;
-    transform: translateY(0); /* Vuelve a su posición normal */
+    box-shadow: 0 4px 15px rgba(121, 134, 203, 0.8);
 }
