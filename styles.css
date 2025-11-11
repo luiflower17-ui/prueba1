@@ -3,7 +3,7 @@
 /* ==================================== */
 :root {
     --color-bg: #0A0A0A; 
-    /* CAMBIO CLAVE: Hacemos el fondo del contenido principal semi-transparente (80% opacidad) */
+    /* CAMBIO CLAVE: Fondo principal semi-transparente (80% opacidad) */
     --color-main-bg: rgba(18, 18, 18, 0.85); 
     --color-text-light: #F0F0F0; 
     --color-accent-blue: #4A90E2; 
@@ -31,12 +31,12 @@ body {
 }
 
 main {
-    /* CAMBIO CLAVE: Aumentamos el ancho máximo a 80% del viewport */
+    /* CAMBIO CLAVE: Aumentamos el ancho a 80% y max-width para vista panorámica */
     width: 80%; 
-    max-width: 1100px; /* Un poco más ancho para el efecto panorámico */
+    max-width: 1100px; 
     margin: 4rem 2rem; 
     padding: 0; 
-    /* Usamos el color semitransparente */
+    /* Aplicamos la transparencia */
     background-color: var(--color-main-bg); 
     box-shadow: var(--shadow-subtle); 
     border-radius: 12px; 
@@ -44,18 +44,15 @@ main {
     border: 1px solid var(--color-divider);
     z-index: 10; 
     position: relative; 
-    /* Aseguramos que el contenido semitransparente se vea bien contra el video */
     backdrop-filter: blur(2px); 
 }
 
-/* El resto de los estilos se mantienen igual */
-
-/* AJUSTE PARA HEADER PEGADIZO: Le damos la misma transparencia para que el scroll sea uniforme */
+/* AJUSTE PARA HEADER PEGADIZO: Le damos la misma transparencia o más opaco */
 header { 
     position: sticky; 
     top: 0;
     z-index: 20; 
-    /* Cambiamos a la versión semi-transparente del color de fondo */
+    /* Usamos el color base semitransparente */
     background-color: var(--color-main-bg); 
     transition: all 0.3s ease-in-out; 
     padding: 2.5rem 3rem; 
@@ -65,25 +62,39 @@ header {
     border-bottom: 2px solid var(--color-accent-blue); 
 }
 .scrolled {
-    /* Mantenemos un fondo un poco más opaco al scrollear para legibilidad */
+    /* Un poco más opaco al scrollear para mejor legibilidad */
     background-color: rgba(10, 10, 10, 0.95); 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); 
     padding: 1.2rem 3rem; 
 }
 
-/* Estilo para la lista de referencias (Corrección de formato de las Referencias) */
-.references-list {
-    list-style-type: none;
-    padding: 0;
+
+/* SECCIÓN INTERACTIVA: Aseguramos que la barra lateral no sea demasiado grande */
+#interactive-content {
+    display: flex;
+    gap: 30px;
+    margin-top: 2rem;
+    min-height: 500px; 
 }
-.references-list li {
-    margin-bottom: 15px;
-    padding-left: 0;
-    line-height: 1.6;
-    font-size: 0.9rem;
-    font-weight: 400; /* Aseguramos que el texto normal no esté en negrita */
+
+/* Panel Izquierdo (Navegación) */
+#sidebar-nav {
+    /* Reducimos el tamaño de la barra lateral, ya que solo tendrá 8 elementos */
+    flex: 0 0 30%; 
+    padding-right: 20px;
+    border-right: 1px solid var(--color-divider);
+    transition: opacity 0.3s ease;
 }
-.references-list li::before {
-    content: none; 
+
+.nav-heading {
+    /* Esto ya no se usará, pero lo dejamos por si acaso */
+    display: none; 
 }
+/* Estilo específico para los 8 puntos principales (ahora serán los nav-item) */
+.nav-item {
+    font-size: 1.05rem; /* Los hacemos ligeramente más grandes */
+    font-weight: 500;
+}
+
+
 /* El resto del CSS se mantiene */
