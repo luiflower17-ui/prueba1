@@ -3,14 +3,14 @@
 /* ==================================== */
 :root {
     --color-bg: #0A0A0A; 
-    --color-main-bg: rgba(18, 18, 18, 0.85); 
+    --color-main-bg: rgba(18, 18, 18, 0.90); /* Aumentamos ligeramente la opacidad de la capa principal */
     --color-text-light: #F0F0F0; 
     --color-accent-blue: #4A90E2; 
     --color-accent-hover: #67A0E7; 
     --color-divider: #333333; 
-    --color-card-bg: rgba(24, 24, 24, 0.9); 
+    --color-card-bg: rgba(24, 24, 24, 0.95); /* Más opaco para mejor contraste del contenido */
     --color-card-hover: #252525; 
-    --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.7);
+    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.8); /* Sombra más fuerte */
 }
 
 body {
@@ -29,7 +29,7 @@ body {
 }
 
 /* ==================================== */
-/* 1. VIDEO DE FONDO (VERIFICADO Y CORREGIDO) */
+/* 1. VIDEO DE FONDO (VERIFICADO Y CORRECTO) */
 /* ==================================== */
 .video-background {
     position: fixed; 
@@ -64,86 +64,86 @@ body {
 }
 
 /* ==================================== */
-/* 2. CONTENIDO PRINCIPAL (Panorámico y Transparente) */
+/* 2. CONTENIDO PRINCIPAL (90% Panorámico y Transparente) */
 /* ==================================== */
 main {
-    width: 80%; 
-    max-width: 1100px; 
+    /* CAMBIO CLAVE: Ampliamos el ancho a 90% */
+    width: 90%; 
+    max-width: 1300px; /* Aumentamos el máximo para la sensación panorámica */
     margin: 4rem 2rem; 
     padding: 0; 
     background-color: var(--color-main-bg); 
     box-shadow: var(--shadow-subtle); 
-    border-radius: 12px; 
+    border-radius: 15px; /* Bordes más suaves */
     overflow: hidden;
     border: 1px solid var(--color-divider);
     z-index: 10; 
     position: relative; 
-    backdrop-filter: blur(2px); 
+    backdrop-filter: blur(3px); /* Aumentamos el desenfoque */
 }
 
 /* ==================================== */
-/* 4. SECCIÓN INTERACTIVA (Panel Lateral) */
+/* 4. SECCIÓN INTERACTIVA (8 TEMAS) */
 /* ==================================== */
 #interactive-content {
     display: flex;
-    gap: 30px;
+    gap: 35px; /* Más espacio entre los paneles */
     margin-top: 2rem;
     padding: 0 3rem 3rem 3rem; 
     min-height: 600px; 
 }
 
-/* Encabezados de los 8 puntos principales (NO interactivos, solo separadores) */
-.nav-heading {
-    list-style: none;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--color-accent-blue);
-    padding: 20px 0 5px 0;
-    margin-top: 10px;
-    border-bottom: 1px solid var(--color-divider);
-    text-transform: uppercase;
+/* Panel Izquierdo (Navegación de los 8 puntos) */
+#sidebar-nav {
+    flex: 0 0 30%; /* Mantenemos 30% para la barra lateral */
+    padding-right: 25px;
+    border-right: 2px solid var(--color-divider); /* Separador más notorio */
 }
 
-/* Subtemas (ITEM INTERACTIVO) */
-.sub-item {
+#sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+
+.nav-item {
     display: block;
     color: var(--color-text-light);
     background-color: transparent;
-    padding: 8px 5px 8px 15px; /* Más indentación para sub-item */
+    padding: 15px 10px; /* Más padding para que se vean grandes y llamativos */
     cursor: pointer;
-    transition: all 0.3s ease; 
-    font-size: 0.95rem; 
-    font-weight: 400;
+    transition: all 0.4s ease-out; /* Animación más suave */
+    font-size: 1.15rem; 
+    font-weight: 500;
     opacity: 0.9; 
     position: relative; 
+    border-radius: 8px; /* Borde redondeado */
 }
 
-.sub-item:hover, .sub-item.active {
-    color: var(--color-accent-hover);
+.nav-item:hover, .nav-item.active {
+    color: var(--color-accent-blue);
     background-color: var(--color-card-hover);
-    padding-left: 25px; /* Animación de movimiento */
+    transform: scale(1.03); /* Animación de zoom/escala */
     opacity: 1;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.4); /* Sombra de brillo al hacer hover/activo */
 }
 
-.sub-item.active::before {
-    content: '';
+.nav-item.active::before {
+    content: '★'; /* Ícono más llamativo */
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px; 
-    background-color: var(--color-accent-blue);
-    transition: background-color 0.3s;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #FFD700; /* Dorado para destacar */
+    opacity: 1;
+    transition: all 0.3s ease;
 }
 
 /* Panel Derecho (Contenido) y Animaciones */
 #detail-panel {
     flex: 1; 
     background-color: var(--color-card-bg);
-    padding: 25px;
-    border-radius: 8px;
+    padding: 30px; /* Más padding interno */
+    border-radius: 10px;
     border: 1px solid var(--color-divider);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden; 
 }
@@ -151,8 +151,8 @@ main {
 .content-detail {
     display: none;
     opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out; 
+    transform: translateY(20px); /* Aumentamos el desplazamiento inicial */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Animación principal más lenta */
     padding-bottom: 20px; 
 }
 .content-detail.active {
@@ -162,42 +162,65 @@ main {
     animation: backgroundPulse 0.6s ease-out; 
 }
 
+/* Animación de fondo al cambiar de pestaña */
 @keyframes backgroundPulse {
     0% { background-color: rgba(24, 24, 24, 0.8); }
-    50% { background-color: rgba(30, 30, 30, 0.9); }
+    50% { background-color: rgba(35, 35, 35, 0.95); }
     100% { background-color: var(--color-card-bg); }
 }
 
 .content-detail h3 {
     color: var(--color-accent-blue);
-    font-size: 1.5rem;
-    border-bottom: 2px solid var(--color-divider);
+    font-size: 1.6rem;
+    border-bottom: 3px solid var(--color-accent-blue); /* Línea divisoria destacada */
     padding-bottom: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-weight: 700;
+    /* Animación extra para el H3 al aparecer */
+    animation: bounceIn 0.5s ease-out;
 }
 
-/* Animación y estilo de bloques internos */
+@keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.9) translateY(-10px); }
+    80% { opacity: 1; transform: scale(1.02) translateY(5px); }
+    100% { transform: scale(1) translateY(0); }
+}
+
+/* Animación y estilo de bloques internos (info-block) */
 .info-block {
-    margin-bottom: 20px;
-    padding: 15px;
-    border-left: 3px solid var(--color-accent-hover);
-    background-color: rgba(40, 40, 40, 0.2); 
-    border-radius: 4px;
+    margin-bottom: 25px;
+    padding: 20px;
+    border-left: 4px solid var(--color-accent-hover);
+    background-color: rgba(40, 40, 40, 0.3); 
+    border-radius: 6px;
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.4s ease-out forwards;
+    transform: translateY(15px);
+    animation: fadeInUp 0.5s ease-out forwards; /* Más lenta la animación del info-block */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 /* Retraso de animación para los bloques internos (asegura animación fluida) */
-.content-detail.active .info-block { animation-delay: 0.1s; }
 .content-detail.active .info-block:nth-child(2) { animation-delay: 0.2s; }
 .content-detail.active .info-block:nth-child(3) { animation-delay: 0.3s; }
 .content-detail.active .info-block:nth-child(4) { animation-delay: 0.4s; }
+/* ... continúa según el número de bloques ... */
 
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* El resto de estilos se mantiene igual */
+/* Estilo para las listas dentro de info-block */
+.info-block ul {
+    list-style-type: '👉 '; /* Viñetas personalizadas */
+    padding-left: 20px;
+}
+
+/* Otros estilos... */
+footer {
+    padding: 20px 3rem;
+    text-align: center;
+    border-top: 1px solid var(--color-divider);
+    background-color: rgba(10, 10, 10, 0.95); 
+    font-size: 0.85rem;
+}
