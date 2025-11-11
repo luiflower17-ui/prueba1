@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,135 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diagnóstico Profesional: Inundaciones en la Ciudad de México</title>
     
-    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    <style>
-        /* ==================================== */
-        /* 0. Paleta y Tipografía (Fondo Oscuro)*/
-        /* ==================================== */
-        :root {
-            --color-bg: #121212; 
-            --color-main-bg: rgba(30, 30, 30, 0.95); /* El main es semitransparente sobre el video */
-            --color-text-light: #E0E0E0; 
-            --color-navy-deep: #7986CB; 
-            --color-divider: #333333; 
-            --color-accent-alert: #FF5252; 
-            --color-light-gray: rgba(41, 41, 41, 0.95); 
-        }
+    <link rel="stylesheet" href="css/styles.css">
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 400;
-            line-height: 1.65; 
-            margin: 0;
-            padding: 0;
-            color: var(--color-text-light); 
-            min-height: 100vh;
-            background-color: #000000; 
-            display: flex;
-            justify-content: center;
-            padding: 4rem 0; 
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        main {
-            width: 100%;
-            max-width: 850px; 
-            margin: 0 2rem;
-            padding: 0; 
-            background-color: var(--color-main-bg); 
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid var(--color-divider);
-            z-index: 10; 
-            position: relative; 
-        }
-
-        /* ==================================== */
-        /* 1. VIDEO DE FONDO Y OVERLAY          */
-        /* ==================================== */
-
-        .video-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            z-index: 1; 
-        }
-
-        /* La capa oscura ayuda a que el texto blanco sea legible sobre el video */
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6); /* Capa oscura (opacidad 60%) */
-            z-index: 2; 
-        }
-
-        #youtube-background {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100vw; 
-            height: 56.25vw; /* 16:9 aspect ratio (9/16 = 0.5625) */
-            min-width: 100%;
-            min-height: 100%;
-            transform: translate(-50%, -50%);
-            pointer-events: none; /* Deshabilita la interacción del mouse con el video */
-            border: none;
-            z-index: 1;
-        }
-        
-        /* ==================================== */
-        /* 2. Estilos del contenido (Dark Mode) */
-        /* ==================================== */
-
-        h1, h2, h3 {
-            font-weight: 500;
-            color: var(--color-navy-deep);
-            line-height: 1.2;
-        }
-
-        h2 {
-            font-size: 1.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 2rem;
-            color: var(--color-text-light); 
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--color-divider);
-            font-weight: 400;
-        }
-
-        section h2 { margin-top: 0; margin-bottom: 1.5rem; }
-        h3 { font-size: 1.05rem; color: var(--color-text-light); margin-top: 2rem; font-weight: 700; }
-        a { color: var(--color-navy-deep); text-decoration: none; font-weight: 500; border-bottom: 1px dotted var(--color-navy-deep); transition: color 0.2s; }
-        a:hover { color: var(--color-accent-alert); border-bottom: 1px solid var(--color-accent-alert); }
-        section { padding: 2.5rem; border-bottom: 1px solid var(--color-divider); }
-        section:last-of-type { border-bottom: none; }
-        header { background-color: rgba(0, 0, 0, 0.85); color: var(--color-text-light); padding: 3.5rem 2.5rem; text-align: left; border-bottom: 2px solid var(--color-navy-deep); }
-        header h1 { margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 0.8px; color: var(--color-text-light); }
-        header p { color: var(--color-divider); font-size: 0.9rem; margin: 0.5rem 0 0 0; }
-        footer { text-align: center; padding: 1.5rem; background-color: var(--color-light-gray); color: var(--color-text-light); font-size: 0.8rem; }
-        footer a { color: var(--color-accent-alert); border-bottom: none; }
-        aside { background-color: var(--color-light-gray); border-left: 3px solid var(--color-accent-alert); padding: 1.5rem; margin-top: 2.5rem; border-radius: 2px; }
-        aside h3 { margin-top: 0; color: var(--color-navy-deep); }
-        details { border: 1px solid var(--color-divider); border-radius: 0; margin-bottom: 10px; background-color: var(--color-main-bg); }
-        details:hover { background-color: var(--color-light-gray); }
-        summary { padding: 15px 20px; background-color: var(--color-main-bg); color: var(--color-text-light); list-style: none; font-weight: 500; }
-        summary::before { content: "+"; margin-right: 15px; font-size: 1.1em; color: var(--color-navy-deep); font-weight: 300; transition: transform 0.2s; }
-        details[open] summary { border-bottom: 1px solid var(--color-divider); background-color: var(--color-light-gray); }
-        details[open] summary::before { content: "−"; }
-        details p, details ul, details ol { padding: 15px 20px; font-size: 0.95rem; }
-        .weather-widget { margin: 20px auto; max-width: 450px; padding: 15px; background-color: var(--color-light-gray); border-radius: 4px; border: 1px solid var(--color-divider); }
-    </style>
 </head>
 <body>
 
@@ -256,20 +130,6 @@
         </footer>
 </main>
 
-    <script>
-        // Script para manejar el acordeón (detalles)
-        const details = document.querySelectorAll("details");
-        details.forEach((targetDetail) => {
-            targetDetail.addEventListener("toggle", () => {
-                if (targetDetail.open) {
-                    details.forEach((detail) => {
-                        if (detail !== targetDetail) {
-                            detail.open = false;
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+<script src="js/script.js"></script>
 </body>
 </html>
