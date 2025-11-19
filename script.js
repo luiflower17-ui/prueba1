@@ -2,7 +2,7 @@
 // 1. FUNCIONALIDAD DE AUDIO (CLICK)
 // ===============================================
 function playClickSound() {
-    // Genera un tono sutil usando la Web Audio API (no requiere archivo de audio externo)
+    // Tono sutil para navegación
     try {
         const context = new (window.AudioContext || window.webkitAudioContext)();
         if (context.state === 'suspended') {
@@ -15,11 +15,33 @@ function playClickSound() {
         gainNode.connect(context.destination);
 
         oscillator.type = 'sine'; // Tono suave
-        oscillator.frequency.setValueAtTime(440, context.currentTime); // Frecuencia
+        oscillator.frequency.setValueAtTime(440, context.currentTime); 
         gainNode.gain.setValueAtTime(0.1, context.currentTime); // Volumen bajo
 
         oscillator.start();
-        oscillator.stop(context.currentTime + 0.05); // Duración muy corta
+        oscillator.stop(context.currentTime + 0.05); 
+    } catch (e) {
+        console.log("Web Audio API no soportada o bloqueada.");
+    }
+}
+
+function playActionSound() {
+    // Tono más distintivo e intensivo para acciones clave (e.g., calcular)
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') context.resume();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+
+        oscillator.type = 'square'; // Tono más duro
+        oscillator.frequency.setValueAtTime(600, context.currentTime); 
+        gainNode.gain.setValueAtTime(0.15, context.currentTime); // Volumen un poco más alto
+
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.10); // Más largo
     } catch (e) {
         console.log("Web Audio API no soportada o bloqueada.");
     }
@@ -42,7 +64,7 @@ window.addEventListener('scroll', () => {
 
 scrollToTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    playClickSound();
+    playClickSound(); // Sonido de navegación
 });
 
 
@@ -56,32 +78,25 @@ let currentActiveContent = null;
 function showContent(targetId) {
     const nextContent = document.getElementById(targetId);
     
-    // Evita recargar el mismo contenido
     if (!nextContent || nextContent === currentActiveContent) return;
 
-    // Reproducir sonido al cambiar de sección
-    playClickSound();
+    playClickSound(); // Sonido de navegación
 
-    // 1. Desactivar el contenido actual
     if (currentActiveContent) {
         currentActiveContent.classList.remove('active');
-        // Usamos un pequeño timeout para que la animación de salida se complete
         setTimeout(() => {
             currentActiveContent.style.display = 'none';
             
-            // 2. Mostrar el nuevo contenido con animación de entrada
             nextContent.style.display = 'block';
-            void nextContent.offsetWidth; // Forzar reflow para reiniciar la animación
+            void nextContent.offsetWidth; 
             nextContent.classList.add('active');
             currentActiveContent = nextContent;
             
-            // Si el contenido es la sección de alcaldías, ejecutar la función de barras
             if (targetId === 'content-impacto') {
                 animateAlcaldiasBars();
             }
         }, 300); 
     } else {
-        // Lógica de inicialización al cargar la página
         detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
         
         nextContent.style.display = 'block';
@@ -136,16 +151,14 @@ function moveToCard(index) {
 
 if (nextBtn && carouselTrack) {
     nextBtn.addEventListener('click', () => {
-        playClickSound();
+        playClickSound(); // Sonido de navegación
         const totalCards = carouselTrack.children.length;
-        // Se ajusta el límite para el número total de tarjetas (10)
         const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / cardWidth);
 
         if (currentCardIndex < maxIndex) {
             currentCardIndex++;
             moveToCard(currentCardIndex);
         } else if (currentCardIndex >= maxIndex) {
-            // Regresar al inicio
             currentCardIndex = 0; 
             moveToCard(currentCardIndex);
         }
@@ -154,7 +167,7 @@ if (nextBtn && carouselTrack) {
 
 if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-        playClickSound();
+        playClickSound(); // Sonido de navegación
         if (currentCardIndex > 0) {
             currentCardIndex--;
             moveToCard(currentCardIndex);
@@ -167,7 +180,7 @@ if (prevBtn) {
 // 4. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - Lógica de riesgo ajustada
 // ===============================================
 function calcularRiesgo() {
-    playClickSound();
+    playActionSound(); // <--- Sonido más intensivo para la acción
     
     // 1. Obtener valores de los inputs
     const M = parseFloat(document.getElementById('alcaldia-select').value);
@@ -178,7 +191,7 @@ function calcularRiesgo() {
     // 2. FÓRMULA CLAVE: R = C + P + (E × M)
     const R = C + P + (E * M);
 
-    // 3. Clasificación de riesgo (Ajustada según solicitud: C=0 es CERO RIESGO)
+    // 3. Clasificación de riesgo (Ajustada: C=0 es CERO RIESGO)
     let riesgoText;
     let riesgoClass;
 
