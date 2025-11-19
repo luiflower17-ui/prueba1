@@ -1,8 +1,8 @@
 // ===============================================
 // 1. FUNCIONALIDAD DE AUDIO (CLICK)
 // ===============================================
-function playClickSound() {
-    // Tono sutil para navegación
+function createClickSound(frequency = 1000, duration = 0.02) {
+    // Genera un sonido de click de mouse más claro (tono alto y corto)
     try {
         const context = new (window.AudioContext || window.webkitAudioContext)();
         if (context.state === 'suspended') {
@@ -14,37 +14,25 @@ function playClickSound() {
         oscillator.connect(gainNode);
         gainNode.connect(context.destination);
 
-        oscillator.type = 'sine'; // Tono suave
-        oscillator.frequency.setValueAtTime(440, context.currentTime); 
+        oscillator.type = 'square'; // Tono más definido
+        oscillator.frequency.setValueAtTime(frequency, context.currentTime); 
         gainNode.gain.setValueAtTime(0.1, context.currentTime); // Volumen bajo
 
         oscillator.start();
-        oscillator.stop(context.currentTime + 0.05); 
+        oscillator.stop(context.currentTime + duration); 
     } catch (e) {
-        console.log("Web Audio API no soportada o bloqueada.");
+        console.warn("Web Audio API no soportada o bloqueada.");
     }
 }
 
+function playClickSound() {
+    // Click suave para navegación
+    createClickSound(800, 0.05); 
+}
+
 function playActionSound() {
-    // Tono más distintivo e intensivo para acciones clave (e.g., calcular)
-    try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
-        if (context.state === 'suspended') context.resume();
-        const oscillator = context.createOscillator();
-        const gainNode = context.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(context.destination);
-
-        oscillator.type = 'square'; // Tono más duro
-        oscillator.frequency.setValueAtTime(600, context.currentTime); 
-        gainNode.gain.setValueAtTime(0.15, context.currentTime); // Volumen un poco más alto
-
-        oscillator.start();
-        oscillator.stop(context.currentTime + 0.10); // Más largo
-    } catch (e) {
-        console.log("Web Audio API no soportada o bloqueada.");
-    }
+    // Click más notorio para acciones clave (e.g., calcular)
+    createClickSound(1200, 0.1); 
 }
 
 
@@ -69,40 +57,64 @@ scrollToTopBtn.addEventListener("click", () => {
 
 
 // ===============================================
-// 3. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL)
+// 3. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL Y ANIMACIONES)
 // ===============================================
 const carouselCards = document.querySelectorAll('.carousel-card');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
+
+function animateInfoBlocks(contentElement) {
+    const infoBlocks = contentElement.querySelectorAll('.info-block');
+    infoBlocks.forEach((block, index) => {
+        block.style.animation = `none`; 
+        block.offsetHeight; // Truco para forzar el reflow
+        block.style.animation = `fadeInUp 0.6s ease-out forwards`;
+        block.style.animationDelay = `${0.2 + index * 0.1}s`; // Efecto escalonado
+    });
+}
 
 function showContent(targetId) {
     const nextContent = document.getElementById(targetId);
     
     if (!nextContent || nextContent === currentActiveContent) return;
 
-    playClickSound(); // Sonido de navegación
+    playClickSound(); 
 
     if (currentActiveContent) {
+        // Desactivar el contenido actual con una animación de salida
         currentActiveContent.classList.remove('active');
+        currentActiveContent.style.opacity = '0';
+        currentActiveContent.style.transform = 'translateY(-20px)';
+
+
         setTimeout(() => {
             currentActiveContent.style.display = 'none';
             
+            // Activar el nuevo contenido con la animación de entrada
             nextContent.style.display = 'block';
-            void nextContent.offsetWidth; 
+            nextContent.style.opacity = '0'; // Reiniciar opacidad para la nueva animación
+            void nextContent.offsetWidth; // Forzar reflow
             nextContent.classList.add('active');
+            
             currentActiveContent = nextContent;
             
+            // Iniciar animación escalonada de los info-blocks
+            animateInfoBlocks(nextContent);
+
             if (targetId === 'content-impacto') {
                 animateAlcaldiasBars();
             }
         }, 300); 
     } else {
+        // Primera carga
         detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
         
         nextContent.style.display = 'block';
         void nextContent.offsetWidth;
         nextContent.classList.add('active');
         currentActiveContent = nextContent;
+
+        animateInfoBlocks(nextContent); // Iniciar animación escalonada
 
         if (targetId === 'content-impacto') {
             animateAlcaldiasBars();
