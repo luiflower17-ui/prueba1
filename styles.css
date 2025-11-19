@@ -116,7 +116,7 @@ header h1 {
     font-size: 1.05rem; padding: 0 3.5rem; margin-bottom: 2rem; color: var(--color-text-secondary);
 }
 
-/* Contenido Detallado Títulos (corregida capitalización) */
+/* Contenido Detallado Títulos */
 .content-detail h3 {
     font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 2.2rem; 
     border-bottom: 3px solid var(--color-accent-blue); padding-bottom: 15px; margin-bottom: 30px; 
@@ -271,20 +271,16 @@ input[type="range"]::-webkit-slider-thumb {
 /* ==================================== */
 #interactive-content {
     padding: 0 3.5rem 3.5rem 3.5rem; min-height: 600px; 
-    display: block; /* Vuelve a ser un contenedor de bloque simple */
+    display: block; 
 }
-
-/* El panel ocupa todo el ancho sin sidebar */
 #detail-panel {
     background-color: var(--color-card-bg); padding: 35px; border-radius: 12px;
     border: 1px solid rgba(0, 191, 255, 0.5); 
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6); 
     max-height: calc(100vh - 5rem - 2rem - 150px); 
     overflow-y: auto; 
-    width: 100%; /* Asegura que ocupe todo el espacio disponible */
+    width: 100%; 
 }
-
-/* Contenido del Panel */
 .content-detail {
     display: none; opacity: 0; transform: translateY(30px); 
     transition: opacity 0.6s ease-out, transform 0.6s ease-out; padding-bottom: 25px; 
@@ -304,14 +300,38 @@ input[type="range"]::-webkit-slider-thumb {
     grid-template-columns: 1fr 1fr;
 }
 .info-block {
-    background-color: rgba(30, 30, 30, 0.7); padding: 25px; border-radius: 10px; 
-    border: 1px solid rgba(0, 191, 255, 0.2); 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+    /* Mejora Estética de los recuadros */
+    background-color: rgba(30, 30, 30, 0.7); padding: 25px; border-radius: 12px; 
+    border: 1px solid rgba(0, 191, 255, 0.3); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); /* Sombra más profunda */
     transition: all 0.3s ease-in-out; opacity: 0; transform: translateY(30px); 
     animation: fadeInUp 0.6s ease-out forwards; 
 }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
+
+/* Sección de Imágenes y Citas (APA 7) */
+.project-figure {
+    margin: 20px 0; padding: 15px; background-color: rgba(0, 0, 0, 0.5); border-radius: 8px;
+    border: 1px dashed var(--color-text-secondary);
+}
+.project-figure img {
+    width: 100%; height: auto; border-radius: 4px; display: block; margin-bottom: 10px;
+    border: 1px solid var(--color-divider);
+    /* PLACEHOLDER - Debería ser reemplazada por la URL real */
+    background-color: #555; 
+    min-height: 150px; 
+    object-fit: cover;
+}
+.project-figure figcaption {
+    font-size: 0.85rem; color: var(--color-text-secondary); padding-top: 10px; border-top: 1px solid var(--color-divider);
+}
+.project-figure figcaption p {
+    margin: 0; line-height: 1.4;
+}
+.project-figure figcaption strong {
+    color: var(--color-accent-blue);
+}
 
 /* Listas de Alcaldías (Barra de progreso) */
 .alcaldias-list { list-style-type: none; padding: 0; }
@@ -348,7 +368,7 @@ footer {
 }
 
 #scrollToTopBtn {
-    display: none; position: fixed; bottom: 30px; right: 30px; z-index: 100; border: none; outline: none;
+    display: none; position: fixed; bottom: 33px; right: 33px; z-index: 100; border: none; outline: none;
     background-color: var(--color-accent-blue); color: var(--color-bg); cursor: pointer; padding: 15px 20px;
     border-radius: 50%; font-size: 18px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
     transition: background-color 0.3s, transform 0.3s;
