@@ -3,19 +3,20 @@
 /* ==================================== */
 :root {
     --color-bg: #0A0A0A; 
-    --color-main-bg: rgba(18, 18, 18, 0.9); /* Aumenta la opacidad para mejor contraste */
+    --color-main-bg: rgba(18, 18, 18, 0.9); 
     --color-text-light: #F0F0F0; 
-    --color-text-secondary: #AAAAAA; /* Gris un poco más claro para mejor contraste */
+    --color-text-secondary: #AAAAAA; 
     --color-accent-blue: #4A90E2; 
     --color-accent-hover: #67A0E7; 
     --color-divider: #333333; 
-    --color-card-bg: rgba(24, 24, 24, 0.85); /* Aumenta la opacidad de las tarjetas */
+    --color-card-bg: rgba(24, 24, 24, 0.85); 
     --color-card-hover: #252525; 
     --shadow-subtle: 0 6px 25px rgba(0, 0, 0, 0.95); 
     --shadow-neon: 0 0 18px rgba(74, 144, 226, 0.9), 0 0 40px rgba(74, 144, 226, 0.5); 
     --spacing-margin: 5rem; 
     --font-content: 'Space Grotesk', sans-serif;
     --font-heading: 'Montserrat', sans-serif;
+    --percentage: 0%; /* Variable CSS para las barras de alcaldías */
 }
 
 body {
@@ -42,7 +43,7 @@ a {
 }
 a:hover {
     color: var(--color-accent-hover);
-    text-decoration: underline; /* Mejora la accesibilidad en hover */
+    text-decoration: underline; 
 }
 
 /* ==================================== */
@@ -92,7 +93,7 @@ main {
 header { 
     position: sticky; top: 0; z-index: 20; 
     background-color: var(--color-main-bg); 
-    transition: all 0.4s ease-in-out; 
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     padding: 3rem 3.5rem; 
     color: var(--color-text-light); 
     border-bottom: 2px solid var(--color-accent-blue); 
@@ -100,13 +101,14 @@ header {
 
 /* Estilo para encabezado pegajoso (scroll down) */
 header.scrolled {
-    padding: 1.5rem 3.5rem; /* Compacta el padding */
-    background-color: rgba(10, 10, 10, 0.98); /* Fondo casi opaco */
+    padding: 1rem 3.5rem; 
+    background-color: rgba(10, 10, 10, 0.98); 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
 }
 header.scrolled h1 {
-    font-size: 1.8rem; /* Reduce el tamaño del título al hacer scroll */
+    font-size: 1.8rem; 
+    letter-spacing: 0.05em; 
 }
 
 header h1 {
@@ -117,16 +119,18 @@ header h1 {
     margin: 0 0 0.9rem 0;
     letter-spacing: 0.08em; 
     text-shadow: 0 0 10px rgba(74, 144, 226, 0.7); 
-    transition: font-size 0.4s ease; /* Transición para suavizar el cambio al hacer scroll */
-    animation: slideInDown 0.8s ease-out;
+    transition: font-size 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), letter-spacing 0.4s ease; 
+    animation: headerTitleEntry 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
-@keyframes slideInDown {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Animación de entrada mejorada para el título (más sutil) */
+@keyframes headerTitleEntry {
+    from { opacity: 0; transform: translateY(-20px); letter-spacing: 0.2em; }
+    to { opacity: 1; transform: translateY(0); letter-spacing: 0.08em; }
 }
+
 .header-subtitle, .header-authors {
     font-size: 1.05rem; color: var(--color-text-secondary);
-    animation: fadeIn 1s ease-out; animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards;
+    animation: fadeIn 1s ease-out; animation-delay: 0.8s; opacity: 0; animation-fill-mode: forwards;
 }
 .section-title {
     font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 2rem;
@@ -152,7 +156,7 @@ header h1 {
 
 #detail-panel {
     flex: 1; background-color: var(--color-card-bg); padding: 35px; border-radius: 12px;
-    border: 1px solid rgba(74, 144, 226, 0.5); /* Borde más visible */
+    border: 1px solid rgba(74, 144, 226, 0.5); 
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4); 
     position: relative; overflow-y: auto; 
     max-height: calc(100vh - 5rem - 2rem - 150px); 
@@ -167,7 +171,7 @@ header h1 {
     display: flex; align-items: center; color: var(--color-text-light);
     background-color: rgba(40, 40, 40, 0.7); padding: 15px 18px; margin-bottom: 12px; 
     cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    font-family: var(--font-heading); font-size: 1.1rem; /* Ligeramente más pequeño */
+    font-family: var(--font-heading); font-size: 1.1rem; 
     font-weight: 600; opacity: 1; 
     position: relative; border-radius: 10px; border: 1px solid rgba(74, 144, 226, 0.3); 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); overflow: hidden; 
@@ -177,6 +181,7 @@ header h1 {
     font-size: 1.3em;
     margin-right: 15px;
     color: var(--color-accent-blue);
+    transition: color 0.4s ease;
 }
 
 .nav-item:hover {
@@ -187,7 +192,7 @@ header h1 {
 .nav-item.active {
     background: linear-gradient(90deg, var(--color-accent-blue), rgba(74, 144, 226, 0.75)); 
     transform: scale(1.03) translateY(-3px); box-shadow: var(--shadow-neon); border-color: #ffffff; font-weight: 700; 
-    color: var(--color-bg); /* Texto oscuro sobre fondo claro (para contraste) */
+    color: var(--color-bg); 
 }
 .nav-item.active i.fas {
     color: var(--color-bg);
@@ -246,7 +251,7 @@ header h1 {
 }
 .info-block p, .info-block ul li { font-size: 1.05rem; color: var(--color-text-light); }
 .info-block strong {
-    color: var(--color-accent-blue); /* Resalta palabras clave */
+    color: var(--color-accent-blue); 
 }
 
 /* Listas de Alcaldías con Visualización de Datos (Barras de Progreso) */
@@ -262,6 +267,20 @@ header h1 {
     overflow: hidden;
     color: var(--color-text-light);
 }
+
+/* Barra de relleno (utiliza la variable --percentage inyectada por JS) */
+.alcaldias-list li::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background-color: rgba(74, 144, 226, 0.3);
+    width: var(--percentage, 0%); /* ¡Aquí se usa la variable JS! */
+    transition: width 0.8s ease-out;
+    z-index: -1;
+}
+
+/* Porcentaje de texto */
 .alcaldias-list li::after {
     content: attr(data-percentage); /* Muestra el porcentaje */
     position: absolute;
@@ -273,21 +292,7 @@ header h1 {
     display: flex;
     align-items: center;
     font-weight: 700;
-    /* Calcula el ancho de la barra */
-    width: calc(attr(data-percentage) - 15px); /* Se ajusta con JS si fuera dinámico */
-}
-/* Estilo de barra de relleno para la lista de alcaldías */
-.alcaldias-list li::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    height: 100%;
-    background-color: rgba(74, 144, 226, 0.3);
-    /* Se debe controlar el ancho con JS para una implementación 100% precisa, 
-       pero se puede simular con los porcentajes de data-percentage */
-    width: var(--percentage, 0%); /* Usaremos una variable CSS si fuera dinámico */
-    transition: width 0.8s ease-out;
-    z-index: -1;
+    /* Asegura que el texto del porcentaje esté siempre en el borde derecho */
 }
 
 /* Simulación de Interfaz de Datos (Medidor de Riesgo) */
@@ -313,15 +318,15 @@ header h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 .risk-gauge.high {
-    background-color: #E74C3C; /* Rojo de riesgo */
+    background-color: #E74C3C; 
     color: #FFF;
     box-shadow: 0 0 20px #E74C3C;
 }
 .risk-gauge.medium {
-    background-color: #F39C12; /* Naranja */
+    background-color: #F39C12; 
 }
 .risk-gauge.low {
-    background-color: #2ECC71; /* Verde */
+    background-color: #2ECC71; 
 }
 .gauge-label i {
     margin-right: 10px;
