@@ -2,9 +2,9 @@
 /* 0. Paleta y Tipografía */
 /* ==================================== */
 :root {
-    --color-bg: #0C0C0C; /* Fondo más oscuro */
-    --color-main-bg: rgba(20, 20, 20, 0.95); /* Fondo principal casi negro */
-    --color-text-light: #F8F8F8; /* Texto muy claro */
+    --color-bg: #0C0C0C; 
+    --color-main-bg: rgba(20, 20, 20, 0.95); 
+    --color-text-light: #F8F8F8; 
     --color-text-secondary: #909090; 
     --color-accent-blue: #00BFFF; /* Azul vibrante (Cian) */
     --color-accent-hover: #1E90FF; 
@@ -13,8 +13,8 @@
     --color-card-hover: #3D3D3D; 
     --shadow-subtle: 0 8px 30px rgba(0, 0, 0, 0.95); 
     --spacing-margin: 5rem; 
-    --font-content: 'Roboto', sans-serif; /* Fuente clara para cuerpo */
-    --font-heading: 'Montserrat', sans-serif; /* Fuente fuerte para títulos */
+    --font-content: 'Roboto', sans-serif; 
+    --font-heading: 'Montserrat', sans-serif; 
     --percentage: 0%; 
 }
 
@@ -129,14 +129,14 @@ header h1 {
 .full-width { grid-column: 1 / -1; }
 
 /* ==================================== */
-/* 3. SIMULADOR */
+/* 3. SIMULADOR (Integrado en el contenido detallado) */
 /* ==================================== */
 #simulation-area {
-    padding: 30px 3.5rem;
+    padding: 30px;
     background-color: rgba(10, 10, 10, 0.9);
     border: 2px solid var(--color-accent-blue);
     border-radius: 12px;
-    margin: 0 3.5rem 40px 3.5rem;
+    margin-bottom: 40px;
 }
 .sim-inputs {
     display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 20px;
@@ -190,19 +190,36 @@ input[type="range"]::-webkit-slider-thumb {
 #riesgo-texto {
     font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; margin-bottom: 5px;
     padding: 10px 0; text-align: center; border-radius: 4px; color: var(--color-bg);
+    text-shadow: none; /* Elimina la sombra para mejorar la visibilidad del texto sobre el color */
 }
+
+/* CLASES DE RIESGO ACTUALIZADAS */
 .risk-level.pending { background-color: var(--color-text-secondary); color: var(--color-bg); }
-.risk-level.low { background-color: #2ECC71; } /* Verde */
-.risk-level.medium { background-color: #F39C12; } /* Naranja */
-.risk-level.high { background-color: #E67E22; } /* Rojo-Naranja */
-.risk-level.catastrophic { background-color: #E74C3C; box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); } /* Rojo vivo */
-.risk-value { font-size: 1rem; color: var(--color-accent-blue); text-align: center; }
+.risk-level.zero { background-color: #2ECC71; } /* VERDE: Cero Riesgo */
+.risk-level.low { background-color: #F1C40F; } /* AMARILLO: Riesgo Bajo */
+.risk-level.medium { background-color: #F39C12; } /* NARANJA: Riesgo Medio */
+.risk-level.high { background-color: #E74C3C; box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); } /* ROJO: Riesgo Alto */
+
+.colab-link-text {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+.colab-link-text i {
+    color: var(--color-accent-blue);
+    margin-right: 5px;
+}
+.colab-link-text a {
+    font-weight: 600;
+}
 
 /* Fórmulas matemáticas */
 .formula-block {
     text-align: center;
     font-size: 1.5rem;
-    font-family: 'Times New Roman', serif; /* Fuente más clásica para matemáticas */
+    font-family: 'Times New Roman', serif; 
+    margin-bottom: 30px;
 }
 
 /* ==================================== */
@@ -216,7 +233,7 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex; gap: 20px; transition: transform 0.5s ease-in-out;
 }
 .carousel-card {
-    flex: 0 0 330px; /* Ancho fijo para las cards */
+    flex: 0 0 330px; 
     padding: 25px; background-color: var(--color-card-bg); border-radius: 10px;
     border: 1px solid rgba(0, 191, 255, 0.2); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     cursor: pointer; transition: all 0.3s ease-in-out; position: relative;
@@ -250,43 +267,21 @@ input[type="range"]::-webkit-slider-thumb {
 
 
 /* ==================================== */
-/* 5. PANEL DETALLADO Y SIDEBAR */
+/* 5. PANEL DETALLADO (ANCHO COMPLETO) */
 /* ==================================== */
 #interactive-content {
-    display: flex; gap: 40px; padding: 0 3.5rem 3.5rem 3.5rem; min-height: 600px; 
+    padding: 0 3.5rem 3.5rem 3.5rem; min-height: 600px; 
+    display: block; /* Vuelve a ser un contenedor de bloque simple */
 }
-#sidebar-nav {
-    flex: 0 0 25%; padding-right: 30px; border-right: 2px solid var(--color-divider); 
-}
-#sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+
+/* El panel ocupa todo el ancho sin sidebar */
 #detail-panel {
-    flex: 1; background-color: var(--color-card-bg); padding: 35px; border-radius: 12px;
+    background-color: var(--color-card-bg); padding: 35px; border-radius: 12px;
     border: 1px solid rgba(0, 191, 255, 0.5); 
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6); 
     max-height: calc(100vh - 5rem - 2rem - 150px); 
     overflow-y: auto; 
-}
-
-/* NAV-ITEM */
-.nav-item {
-    display: block; color: var(--color-text-light);
-    background-color: rgba(30, 30, 30, 0.8); padding: 15px 18px; margin-bottom: 10px; 
-    cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    font-family: var(--font-content); font-size: 1rem; 
-    font-weight: 500; opacity: 1; border-radius: 6px; border-left: 5px solid transparent; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); 
-}
-.nav-item:hover {
-    background-color: var(--color-card-hover); 
-    border-left-color: var(--color-accent-hover);
-    transform: translateX(3px);
-}
-.nav-item.active {
-    background: var(--color-accent-blue); 
-    border-left-color: #ffffff; 
-    font-weight: 700; 
-    color: var(--color-bg); 
-    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.5);
+    width: 100%; /* Asegura que ocupe todo el espacio disponible */
 }
 
 /* Contenido del Panel */
@@ -362,11 +357,6 @@ footer {
 /* ==================================== */
 /* 6. MEDIA QUERIES (Responsivo) */
 /* ==================================== */
-@media (max-width: 1200px) {
-    .sim-inputs {
-        justify-content: center;
-    }
-}
 @media (max-width: 900px) {
     main { margin: 2rem 1rem; }
     header { padding: 1.5rem 1.5rem; flex-direction: column; align-items: flex-start; }
@@ -375,17 +365,17 @@ footer {
     .section-title { padding-left: 1.5rem; padding-right: 1.5rem; }
     .section-intro { padding-left: 1.5rem; padding-right: 1.5rem; }
     
-    #simulation-area { margin-left: 1.5rem; margin-right: 1.5rem; padding: 20px 1.5rem; }
-    .sim-inputs { flex-direction: column; gap: 15px; }
-
     .carousel-container { margin-left: 1.5rem; margin-right: 1.5rem; }
     .carousel-track { overflow-x: scroll; scroll-snap-type: x mandatory; }
     .carousel-card { flex: 0 0 80%; scroll-snap-align: start; }
     .carousel-btn { display: none; } 
 
-    #interactive-content { flex-direction: column; padding: 0 1.5rem 1.5rem 1.5rem; }
-    #sidebar-nav { flex: 1 1 100%; padding-right: 0; border-right: none; border-bottom: 2px solid var(--color-divider); margin-bottom: 20px; }
-    #detail-panel { max-height: none; }
+    /* Ajuste de contenido detallado para móvil */
+    #interactive-content { display: block; padding: 0 1.5rem 1.5rem 1.5rem; }
+    #detail-panel { max-height: none; padding: 20px; }
     .info-grid { grid-template-columns: 1fr; }
     .info-grid.two-columns { grid-template-columns: 1fr; }
+
+    /* Simulador en móvil */
+    .sim-inputs { flex-direction: column; gap: 15px; }
 }
