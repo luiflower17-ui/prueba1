@@ -1,13 +1,19 @@
-// 1. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE
+// 1. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER)
 const header = document.querySelector('header');
 const scrollThreshold = 100;
 
 window.addEventListener('scroll', () => {
     if (window.scrollY > scrollThreshold) {
-        // Añade la clase 'scrolled' para cambiar el padding y el tamaño del título vía CSS
         header.classList.add('scrolled'); 
     } else {
         header.classList.remove('scrolled');
+    }
+    
+    // También verifica si el botón de scroll debe aparecer
+    if (window.scrollY > 300) {
+        scrollToTopBtn.style.display = "block";
+    } else {
+        scrollToTopBtn.style.display = "none";
     }
 });
 
@@ -34,6 +40,11 @@ function showContent(targetId, item) {
             void nextContent.offsetWidth; // Forzar reflow para reiniciar la animación
             nextContent.classList.add('active');
             currentActiveContent = nextContent;
+            
+            // Si el contenido es la sección de alcaldías, ejecutar la función de barras
+            if (targetId === 'content-alcaldias') {
+                animateAlcaldiasBars();
+            }
         }, 300); // 300ms es el tiempo de la transición del CSS
     } else {
         // Lógica de inicialización al cargar la página
@@ -43,6 +54,10 @@ function showContent(targetId, item) {
         void nextContent.offsetWidth;
         nextContent.classList.add('active');
         currentActiveContent = nextContent;
+
+        if (targetId === 'content-alcaldias') {
+            animateAlcaldiasBars();
+        }
     }
 
     // Actualizar el estado activo del menú y ARIA
@@ -54,6 +69,17 @@ function showContent(targetId, item) {
     item.setAttribute('aria-current', 'page'); // Mejora la accesibilidad
 }
 
+// 3. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS
+function animateAlcaldiasBars() {
+    const alcaldias = document.querySelectorAll('.alcaldias-list li');
+    alcaldias.forEach(li => {
+        const percentage = li.getAttribute('data-percentage');
+        // Inyecta el valor del atributo (ej: "19%") a la variable CSS --percentage
+        li.style.setProperty('--percentage', percentage);
+    });
+}
+
+
 // Inicializar al cargar: activa el primer elemento por defecto
 document.addEventListener('DOMContentLoaded', () => {
     const initialItem = document.querySelector('.nav-item.active');
@@ -62,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Eventos (Mantenemos mouseenter y click como se especificó en el código original)
+// Eventos (mouseenter y click) - Mantenidos según la solicitud original
 navItems.forEach(item => {
     const targetId = item.getAttribute('data-target');
     
@@ -76,17 +102,8 @@ navItems.forEach(item => {
     });
 });
 
-// 3. BOTÓN VOLVER ARRIBA
+// 4. BOTÓN VOLVER ARRIBA
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-const scrollDistance = 300; 
-
-window.addEventListener("scroll", () => {
-    if (window.scrollY > scrollDistance) {
-        scrollToTopBtn.style.display = "block";
-    } else {
-        scrollToTopBtn.style.display = "none";
-    }
-});
 
 scrollToTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
