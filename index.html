@@ -34,32 +34,32 @@
         <div class="header-branding">
             <h1>Predicción de inundaciones en CDMX</h1>
             <p class="header-subtitle">
-                Herramienta digital para la detección temprana de riesgo hídrico.
+                Herramienta digital para la detección temprana de riesgo de inundación.
             </p>
         </div>
         <div class="header-meta">
-            <p class="meta-line">Gobierno de la Ciudad de México | Universidad Nacional Rosario Castellanos (UNRC)</p>
+            <p class="meta-line">Gobierno de la Ciudad de México | Universidad Rosario Castellanos (URC)</p>
             <p class="meta-line">Proyecto Prototípico: Aliza Ramírez, Giovanni Morales, Luis Flores</p>
         </div>
     </header>
 
     <section id="project-overview" class="fade-in">
         
-        <h2 class="section-title"><i class="fas fa-book-open"></i> Puntos clave del proyecto (navegación interactiva)</h2>
+        <h2 class="section-title"><i class="fas fa-book-open"></i> Puntos clave del proyecto</h2>
         <div class="carousel-container">
             <div class="carousel-track" id="carousel-track">
                 
                 <div class="carousel-card" data-target="content-problema">
                     <h4>1. Problema y antecedentes</h4>
                     <i class="fas fa-exclamation-triangle card-icon"></i>
-                    <p>La CDMX sufre de alta vulnerabilidad a inundaciones debido a su ubicación lacustre, crecimiento urbano y el cambio climático. <strong>Más del 50% de los bloqueos son por basura.</strong></p>
+                    <p>La CDMX sufre de alta vulnerabilidad a inundaciones. <strong>Más del 50% de los bloqueos son por basura.</strong></p>
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
 
                 <div class="carousel-card" data-target="content-objetivos">
                     <h4>2. Objetivos y justificación</h4>
                     <i class="fas fa-bullseye card-icon"></i>
-                    <p>Desarrollar una plataforma predictiva que reduzca el impacto del riesgo hídrico, usando datos del C5 y SACMEX.</p>
+                    <p>Desarrollar una plataforma predictiva que reduzca el impacto del riesgo de inundación, usando datos del C5 y SACMEX.</p>
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
 
@@ -84,24 +84,24 @@
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
 
-                <div class="carousel-card" data-target="content-algoritmo">
-                    <h4>6. Diseño del algoritmo (Simulador)</h4>
-                    <i class="fas fa-code card-icon"></i>
-                    <p>El modelo utiliza la fórmula conceptual: $R = C + P + (E \times M)$ para clasificar el riesgo en tres niveles.</p>
+                <div class="carousel-card" data-target="content-prediccion">
+                    <h4>6. Modelos de predicción</h4>
+                    <i class="fas fa-chart-line card-icon"></i>
+                    <p>Se utilizan referencias como el Atlas de Riesgos del EDOMEX y el Mapa Hidrográfico Urbano (MHU) de la UNAM.</p>
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
 
-                <div class="carousel-card" data-target="content-prediccion">
-                    <h4>7. Modelos de predicción</h4>
-                    <i class="fas fa-chart-line card-icon"></i>
-                    <p>Se utilizan referencias como el Atlas de Riesgos del EDOMEX y el Mapa Hidrográfico Urbano (MHU) de la UNAM.</p>
+                <div class="carousel-card" data-target="content-algoritmo">
+                    <h4>7. Diseño del algoritmo (Simulador)</h4>
+                    <i class="fas fa-code card-icon"></i>
+                    <p>El modelo utiliza la fórmula conceptual: $R = C + P + (E \times M)$ para clasificar el riesgo en niveles de alerta.</p>
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
 
                 <div class="carousel-card" data-target="content-preventivas">
                     <h4>8. Medidas preventivas</h4>
                     <i class="fas fa-hands-helping card-icon"></i>
-                    <p>La prevención incluye la limpieza de cañadas y no tirar basura en la vía pública, clave para evitar el colapso.</p>
+                    <p>La prevención incluye la limpieza de cañadas y la implementación de <strong>infraestructura verde</strong>.</p>
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
                 
@@ -109,6 +109,13 @@
                     <h4>9. Referencias</h4>
                     <i class="fas fa-clipboard-list card-icon"></i>
                     <p>Listado de fuentes bibliográficas utilizadas en la investigación y el desarrollo del prototipo.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+                </div>
+
+                <div class="carousel-card" data-target="content-conclusiones">
+                    <h4>10. Conclusiones</h4>
+                    <i class="fas fa-check-circle card-icon"></i>
+                    <p>Resumen de los hallazgos clave y el impacto potencial de la herramienta en la gestión urbana.</p>
                     <span class="card-action-hint">Haz clic para ver más...</span>
                 </div>
 
@@ -121,7 +128,9 @@
         <h2 class="section-title" style="margin-top: 50px;"><i class="fas fa-file-alt"></i> Documentación detallada del proyecto de investigación</h2>
 
         <div id="interactive-content">
-            <div id="detail-panel" class="detail-panel-full"> <div id="content-problema" class="content-detail active">
+            <div id="detail-panel" class="detail-panel-full"> 
+
+                <div id="content-problema" class="content-detail active">
                     <h3>1. Problema de investigación y antecedentes</h3>
                     <p class="section-intro">El proyecto aborda la creciente vulnerabilidad de la CDMX ante las inundaciones, un fenómeno que combina factores geológicos, climáticos y sociales. </p>
 
@@ -132,7 +141,7 @@
                         </div>
                         <div class="info-block">
                             <h4>Antecedentes (raíces históricas y geográficas)</h4>
-                            <p>La urbe se construyó sobre el antiguo <strong>lago de Texcoco</strong>, un subsuelo lacustre que, al ser desecado y cubierto con infraestructura, ha perdido capacidad de filtración y sufre de <strong>hundimiento diferencial</strong>. El reto hídrico ha requerido obras de gran magnitud, como el Túnel Emisor Oriente (TEO), para intentar mitigar la insuficiencia del sistema actual.</p>
+                            <p>La urbe se construyó sobre el antiguo <strong>lago de Texcoco</strong>, un subsuelo lacustre que, al ser desecado y cubierto con infraestructura, ha perdido capacidad de filtración y sufre de <strong>hundimiento diferencial</strong>. El reto de la gestión del agua ha requerido obras de gran magnitud, como el Túnel Emisor Oriente (TEO), para intentar mitigar la insuficiencia del sistema actual.</p>
                         </div>
                         <div class="info-block">
                             <h4>Propósito de la herramienta</h4>
@@ -148,7 +157,7 @@
                     <div class="info-grid two-columns">
                         <div class="info-block">
                             <h4>Objetivo general</h4>
-                            <p>Analizar los factores geológicos, hídricos y sociales que detonan las inundaciones en la CDMX para <strong>reducir el impacto</strong> en la vida y el patrimonio de los ciudadanos mediante una herramienta de alerta temprana.</p>
+                            <p>Analizar los factores geológicos y sociales que detonan las inundaciones en la CDMX para <strong>reducir el impacto</strong> en la vida y el patrimonio de los ciudadanos mediante una herramienta de alerta temprana.</p>
                         </div>
                         <div class="info-block">
                             <h4>Justificación (la necesidad del proyecto)</h4>
@@ -168,12 +177,17 @@
 
                 <div id="content-marco" class="content-detail">
                     <h3>3. Marco teórico</h3>
-                    <p class="section-intro">Definiciones clave para el análisis del riesgo hídrico, incluyendo la tipología de inundaciones y las principales causas.</p>
+                    <p class="section-intro">Definiciones clave para el análisis del riesgo de inundación, incluyendo la tipología y las principales causas.</p>
 
                     <div class="info-grid">
                         <div class="info-block">
                             <h4>Concepto y tipología de las inundaciones</h4>
-                            <p>Las inundaciones son eventos naturales en los que el agua cubre terrenos que normalmente están secos. Este proyecto se enfoca principalmente en las <strong>inundaciones pluviales</strong>, aquellas originadas por lluvias que exceden la capacidad de diseño y operación de la infraestructura de desalojo. Se agravan por la falta de infiltración y la acumulación de escorrentía superficial.</p>
+                            <p>Las inundaciones son eventos naturales en los que el agua cubre terrenos que normalmente están secos. Este proyecto se enfoca en tres tipos principales:</p>
+                            <ul>
+                                <li><strong>Inundaciones Pluviales:</strong> Originadas por lluvias intensas que exceden la capacidad del drenaje. Son el foco principal del estudio.</li>
+                                <li><strong>Inundaciones Fluviales:</strong> Causadas por el desbordamiento de ríos o cuerpos de agua naturales (menos comunes en el centro de la CDMX).</li>
+                                <li><strong>Inundaciones Urbanas:</strong> Combina las dos anteriores y se agrava por la impermeabilización del suelo, generando escorrentía superficial masiva.</li>
+                            </ul>
                         </div>
                         <div class="info-block">
                             <h4>Factores determinantes de las inundaciones</h4>
@@ -186,8 +200,8 @@
                         </div>
                         <div class="info-block full-width">
                             <h4>La problemática específica de la obstrucción por residuos sólidos</h4>
-                            <p>La acumulación de basura es responsable de <strong>más del 50%</strong> de los bloqueos en alcantarillas y colectores. Este factor es directamente controlable por la ciudadanía y tiene un impacto desproporcionado en la eficiencia del sistema hídrico. <strong>Dato clave:</strong> Aproximadamente el 13% de las 86,000 toneladas diarias de basura generadas en el país quedan en la vía pública, terminando en el drenaje.</p>
-                            <h4>Consecuencias derivadas de la obstrucción hídrica</h4>
+                            <p>La acumulación de basura es responsable de <strong>más del 50%</strong> de los bloqueos en alcantarillas y colectores. Este factor es directamente controlable por la ciudadanía y tiene un impacto desproporcionado en la eficiencia del sistema de drenaje. <strong>Dato clave:</strong> Aproximadamente el 13% de las 86,000 toneladas diarias de basura generadas en el país quedan en la vía pública, terminando en el drenaje.</p>
+                            <h4>Consecuencias derivadas de la obstrucción del drenaje</h4>
                             <p>Las inundaciones no solo causan daños materiales, sino que representan un <strong>riesgo sanitario grave</strong> debido al contacto con aguas residuales, y provocan un <strong>colapso en la movilidad</strong> urbana.</p>
                         </div>
                     </div>
@@ -195,7 +209,7 @@
 
                 <div id="content-geohidrico" class="content-detail">
                     <h3>4. Factores geohídricos críticos</h3>
-                    <p class="section-intro">El análisis geológico revela que el hundimiento del subsuelo es un factor estructural que amplifica el riesgo en la infraestructura hídrica. </p>
+                    <p class="section-intro">El análisis geológico revela que el hundimiento del subsuelo es un factor estructural que amplifica el riesgo en la infraestructura del drenaje. </p>
 
                     <div class="info-grid two-columns">
                         <div class="info-block">
@@ -232,8 +246,24 @@
                     </div>
                 </div>
 
+                <div id="content-prediccion" class="content-detail">
+                    <h3>6. Modelos de predicción</h3>
+                    <p class="section-intro">El proyecto se basa en la conceptualización y uso de herramientas existentes para la gestión de riesgos en la cuenca.</p>
+
+                    <div class="info-grid two-columns">
+                        <div class="info-block">
+                            <h4>Mapa hidrográfico urbano (MHU)</h4>
+                            <p>Herramienta clave desarrollada por la UNAM que permite la localización de áreas sensibles al encharcamiento, usando información topográfica y datos de pendientes. El MHU es una base esencial para definir las variables <strong>M</strong> (Multiplicador de Vulnerabilidad) en nuestro algoritmo.</p>
+                        </div>
+                        <div class="info-block">
+                            <h4>Atlas de riesgos</h4>
+                            <p>Los Atlas de Riesgos, especialmente los del Estado de México, proporcionan una zonificación de peligros que complementa la visión del MHU, incorporando riesgos geológicos y socio-económicos que influyen en la variable <strong>E</strong> (Exposición).</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="content-algoritmo" class="content-detail">
-                    <h3>6. Diseño del algoritmo (Simulador)</h3>
+                    <h3>7. Diseño del algoritmo (Simulador)</h3>
                     <p class="section-intro">Detalles técnicos del modelo conceptual de predicción y la herramienta de simulación utilizada en este proyecto.</p>
                     
                     <div id="simulation-area" class="simulation-card">
@@ -275,7 +305,7 @@
                         <div id="sim-result" class="result-box">
                             <p>Resultado del simulador:</p>
                             <p id="riesgo-texto" class="risk-level pending">Esperando datos...</p>
-                            </div>
+                        </div>
 
                         <p class="colab-link-text">
                             <i class="fas fa-code"></i> Consulta el código original de la simulación en: 
@@ -301,9 +331,9 @@
                         <div class="info-block">
                             <h4>Clasificación de riesgo</h4>
                             <ul>
-                                <li><strong>Riesgo: Cero:</strong> R &lt; 2.0 (Verde)</li>
-                                <li><strong>Riesgo: Bajo:</strong> 2.0 ≤ R &lt; 4.0 (Amarillo)</li>
-                                <li><strong>Riesgo: Medio:</strong> 4.0 ≤ R &lt; 6.0 (Naranja)</li>
+                                <li><strong>Riesgo: Cero:</strong> C = 0.0 (Verde)</li>
+                                <li><strong>Riesgo: Bajo:</strong> C > 0.0 y R < 4.0 (Amarillo)</li>
+                                <li><strong>Riesgo: Medio:</strong> 4.0 ≤ R < 6.0 (Naranja)</li>
                                 <li><strong>Riesgo: Alto:</strong> R ≥ 6.0 (Rojo)</li>
                             </ul>
                             <p>El valor de R es un índice normalizado que permite la toma de decisiones por niveles de alerta.</p>
@@ -312,25 +342,9 @@
                 </div>
 
 
-                <div id="content-prediccion" class="content-detail">
-                    <h3>7. Modelos de predicción</h3>
-                    <p class="section-intro">El proyecto se basa en la conceptualización y uso de herramientas existentes para la gestión de riesgos en la cuenca.</p>
-
-                    <div class="info-grid two-columns">
-                        <div class="info-block">
-                            <h4>Mapa hidrográfico urbano (MHU)</h4>
-                            <p>Herramienta clave desarrollada por la UNAM que permite la localización de áreas sensibles al encharcamiento, usando información topográfica y datos de pendientes. El MHU es una base esencial para definir las variables <strong>M</strong> (Multiplicador de Vulnerabilidad) en nuestro algoritmo.</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>Atlas de riesgos</h4>
-                            <p>Los Atlas de Riesgos, especialmente los del Estado de México, proporcionan una zonificación de peligros que complementa la visión del MHU, incorporando riesgos geológicos y socio-económicos que influyen en la variable <strong>E</strong> (Exposición).</p>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="content-preventivas" class="content-detail">
                     <h3>8. Medidas preventivas</h3>
-                    <p class="section-intro">Recomendaciones clave para la ciudadanía y las autoridades para mitigar el riesgo hídrico.</p>
+                    <p class="section-intro">Recomendaciones clave para la ciudadanía y las autoridades para mitigar el riesgo de inundación.</p>
 
                     <div class="info-grid">
                         <div class="info-block">
@@ -350,8 +364,8 @@
                             </ul>
                         </div>
                         <div class="info-block full-width">
-                            <h4>Soluciones complementarias</h4>
-                            <p>El proyecto sugiere la adopción de <strong>infraestructura verde</strong> (techos verdes, pavimentos permeables, jardines de lluvia) para aumentar la infiltración y reducir la carga sobre el sistema de drenaje.</p>
+                            <h4>Infraestructura Verde (Zonas Verdes) como Solución</h4>
+                            <p>El proyecto sugiere la adopción de <strong>infraestructura verde</strong> (techos verdes, pavimentos permeables, jardines de lluvia) para aumentar la infiltración y reducir la carga sobre el sistema de drenaje. Las **Zonas Verdes Urbanas** funcionan como esponjas naturales, absorbiendo el exceso de agua pluvial y mitigando el efecto de la escorrentía superficial.</p>
                         </div>
                     </div>
                 </div>
@@ -370,9 +384,25 @@
                         <li>Mercado Libre. (2025, 30 de julio). Re: Alcaldías CDMX que más se inundan 2025. <em>Mercado Libre Blog</em>. <a href="https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025" target="_blank">https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025</a></li>
                         <li>Redacción. (2025, 2 de noviembre). ¿Qué es el Mapa Hidrográfico Urbano de la CDMX? Así funciona la herramienta para prevenir daños por inundaciones: esto dice la UNAM. <em>Eje Central</em>. <a href="https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam" target="_blank">https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam</a></li>
                         <li>Redacción. (2025, 1 de noviembre). Lluvias 2025, las más intensas del siglo: experta UAM. <em>CDMX Magacín</em>. <a href="https://cdmx.info/lluvias-2025-las-masintensas-del-siglo-experta-uam/" target="_blank">https://cdmx.info/lluvias-2025-las-masintensas-del-siglo-experta-uam/</a></li>
-                        <li>Torres, B. (2025, 1 de agosto). ¿Dónde llueve más y por qué? Mapeo de inundaciones en CDMX desde el espacio. <em>UNAM Global</em>. <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/</a></li>
+                        <li>Torres, B. (2025, 1 de agosto). ¿Dónde llueve más y por qué? Mapeo de inundaciones en CDMX desde el espacio. <em>UNAM Global</em>. <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/</a></li>
                         <li><em>La última gran inundación de la Ciudad de México</em>. (s. f.). Centro Nacional de Prevención de Desastres (CENAPRED). <a href="https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico" target="_blank">https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico</a></li>
                     </ul>
+                </div>
+
+                 <div id="content-conclusiones" class="content-detail">
+                    <h3>10. Conclusiones</h3>
+                    <p class="section-intro">El proyecto prototípico demuestra la viabilidad de utilizar variables geográficas, sociales y climáticas para crear un índice de riesgo de inundación dinámico.</p>
+
+                    <div class="info-grid two-columns">
+                        <div class="info-block">
+                            <h4>Impacto y utilidad de la herramienta</h4>
+                            <p>El simulador algorítmico ofrece una perspectiva clara sobre cómo la conjunción de factores (especialmente la obstrucción por basura, 'P', y la vulnerabilidad histórica, 'M') puede elevar rápidamente el riesgo en picos de precipitación. Esta herramienta es esencial para la **planificación de recursos** de emergencia antes y durante la temporada de lluvias.</p>
+                        </div>
+                        <div class="info-block">
+                            <h4>Siguientes pasos recomendados</h4>
+                            <p>Para la implementación real, se recomienda la integración del modelo con un sistema de información geográfica (SIG) que permita el monitoreo de los valores 'C' y 'P' en tiempo real. Además, la promoción de la **Infraestructura Verde** debe ser un pilar de la mitigación urbana a largo plazo para reducir la impermeabilización del suelo en las áreas críticas.</p>
+                        </div>
+                    </div>
                 </div>
 
             </div> 
