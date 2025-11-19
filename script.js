@@ -1,10 +1,10 @@
 // ===============================================
-// 1. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER)
+// 1. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
 // ===============================================
-const header = document.querySelector('header');
-const scrollThreshold = 100;
+const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
 window.addEventListener('scroll', () => {
+    // Muestra el botón de scroll al bajar
     if (window.scrollY > 300) {
         scrollToTopBtn.style.display = "block";
     } else {
@@ -12,21 +12,25 @@ window.addEventListener('scroll', () => {
     }
 });
 
+scrollToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+
 // ===============================================
-// 2. LÓGICA DEL PANEL LATERAL INTERACTIVO (SIDEBAR Y CARRUSEL)
+// 2. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL)
 // ===============================================
-const navItems = document.querySelectorAll('.nav-item');
 const carouselCards = document.querySelectorAll('.carousel-card');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
 
-function showContent(targetId, item) {
+function showContent(targetId) {
     const nextContent = document.getElementById(targetId);
     
     // Evita recargar el mismo contenido
     if (!nextContent || nextContent === currentActiveContent) return;
 
-    // 1. Desactivar el contenido y nav item actual
+    // 1. Desactivar el contenido actual
     if (currentActiveContent) {
         currentActiveContent.classList.remove('active');
         // Usamos un pequeño timeout para que la animación de salida se complete
@@ -57,40 +61,27 @@ function showContent(targetId, item) {
             animateAlcaldiasBars();
         }
     }
-
-    // Actualizar el estado activo del menú lateral y ARIA
-    navItems.forEach(i => {
-        i.classList.remove('active');
-        i.removeAttribute('aria-current');
-    });
-    // Buscar y activar el item de navegación lateral correspondiente
-    const targetNavItem = document.querySelector(`.nav-item[data-target="${targetId}"]`);
-    if(targetNavItem) {
-        targetNavItem.classList.add('active');
-        targetNavItem.setAttribute('aria-current', 'page');
-    }
 }
 
 // Inicializar al cargar: activa el primer elemento por defecto
 document.addEventListener('DOMContentLoaded', () => {
-    const initialItem = document.querySelector('.nav-item.active');
-    if (initialItem) {
-        showContent(initialItem.getAttribute('data-target'), initialItem);
+    // Obtener el ID del primer contenido (content-problema)
+    const initialTargetId = detailContents[0]?.id; 
+    if (initialTargetId) {
+        showContent(initialTargetId);
     }
-});
-
-// Eventos para la navegación lateral (click para ser más accesible)
-navItems.forEach(item => {
-    item.addEventListener('click', (e) => { 
-        e.preventDefault(); 
-        showContent(item.getAttribute('data-target'), item); 
-    });
 });
 
 // Eventos para las tarjetas del carrusel (click)
 carouselCards.forEach(card => {
     card.addEventListener('click', () => { 
-        showContent(card.getAttribute('data-target'), card); 
+        // Ocultar la tarjeta de carga de la simulación si se navega a otro lado
+        if (card.getAttribute('data-target') !== 'content-algoritmo') {
+            document.getElementById('riesgo-texto').textContent = "Esperando datos...";
+            document.getElementById('riesgo-texto').className = `risk-level pending`; 
+        }
+
+        showContent(card.getAttribute('data-target')); 
     });
 });
 
@@ -102,7 +93,7 @@ const carouselTrack = document.getElementById('carousel-track');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
 let currentCardIndex = 0;
-// Ancho de la tarjeta + gap (330px + 20px = 350px, ajusta si cambias el CSS)
+// Ancho de la tarjeta + gap (330px + 20px = 350px)
 const cardWidth = 350; 
 
 function moveToCard(index) {
@@ -115,15 +106,14 @@ function moveToCard(index) {
 if (nextBtn && carouselTrack) {
     nextBtn.addEventListener('click', () => {
         const totalCards = carouselTrack.children.length;
-        // Asumiendo que 3 tarjetas son visibles en desktop (1000px ancho / 350px card = 2.8)
-        // La condición debe evitar que el carrusel se desplace demasiado lejos
+        // Asumiendo que 3 tarjetas son visibles en desktop (ajuste para no mostrar espacio vacío)
         const maxIndex = totalCards - 3; 
 
         if (currentCardIndex < maxIndex) {
             currentCardIndex++;
             moveToCard(currentCardIndex);
         } else if (currentCardIndex >= maxIndex) {
-            // Regresar al inicio opcionalmente
+            // Regresar al inicio
             currentCardIndex = 0; 
             moveToCard(currentCardIndex);
         }
@@ -141,7 +131,7 @@ if (prevBtn) {
 
 
 // ===============================================
-// 3. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - NO MODIFICADA
+// 3. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - Lógica de riesgo actualizada
 // ===============================================
 function calcularRiesgo() {
     // 1. Obtener valores de los inputs
@@ -153,32 +143,30 @@ function calcularRiesgo() {
     // 2. FÓRMULA CLAVE: R = C + P + (E × M)
     const R = C + P + (E * M);
 
-    // 3. Clasificación de riesgo
+    // 3. Clasificación de riesgo (Actualizada según solicitud: Cero, Bajo, Medio, Alto)
     let riesgoText;
     let riesgoClass;
 
-    // Estos límites deben coincidir con la documentación (Sección 8)
-    if (R >= 8.5) {
-        riesgoText = "Riesgo: PELIGRO CATASTRÓFICO";
-        riesgoClass = "catastrophic";
-    } else if (R >= 6.0) {
-        riesgoText = "Riesgo: ALTO";
+    if (R >= 6.0) {
+        riesgoText = "Riesgo: ALTO"; // ROJO
         riesgoClass = "high";
     } else if (R >= 4.0) {
-        riesgoText = "Riesgo: MEDIO";
+        riesgoText = "Riesgo: MEDIO"; // NARANJA
         riesgoClass = "medium";
-    } else {
-        riesgoText = "Riesgo: BAJO";
+    } else if (R >= 2.0) {
+        riesgoText = "Riesgo: BAJO"; // AMARILLO
         riesgoClass = "low";
+    } else {
+        riesgoText = "Riesgo: CERO RIESGO"; // VERDE
+        riesgoClass = "zero";
     }
 
     // 4. Actualizar el display
     const riesgoTextoEl = document.getElementById('riesgo-texto');
-    const riesgoValorEl = document.getElementById('riesgo-valor');
     
-    riesgoTextoEl.textContent = riesgoText;
+    // Muestra el valor R y la clasificación en el texto principal
+    riesgoTextoEl.textContent = `${riesgoText} (Valor R: ${R.toFixed(2)})`;
     riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
-    riesgoValorEl.innerHTML = `Fórmula: R = C + P + (E &times; M) | Valor R: ${R.toFixed(2)}`;
 }
 
 
@@ -193,12 +181,3 @@ function animateAlcaldiasBars() {
         li.style.setProperty('--percentage', percentage);
     });
 }
-
-
-// ===============================================
-// 5. BOTÓN VOLVER ARRIBA
-// ===============================================
-const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-scrollToTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-});
