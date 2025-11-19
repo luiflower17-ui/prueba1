@@ -1,5 +1,33 @@
 // ===============================================
-// 1. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
+// 1. FUNCIONALIDAD DE AUDIO (CLICK)
+// ===============================================
+function playClickSound() {
+    // Genera un tono sutil usando la Web Audio API (no requiere archivo de audio externo)
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') {
+            context.resume();
+        }
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+
+        oscillator.type = 'sine'; // Tono suave
+        oscillator.frequency.setValueAtTime(440, context.currentTime); // Frecuencia
+        gainNode.gain.setValueAtTime(0.1, context.currentTime); // Volumen bajo
+
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.05); // Duración muy corta
+    } catch (e) {
+        console.log("Web Audio API no soportada o bloqueada.");
+    }
+}
+
+
+// ===============================================
+// 2. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
 // ===============================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
@@ -14,11 +42,12 @@ window.addEventListener('scroll', () => {
 
 scrollToTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    playClickSound();
 });
 
 
 // ===============================================
-// 2. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL)
+// 3. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL)
 // ===============================================
 const carouselCards = document.querySelectorAll('.carousel-card');
 const detailContents = document.querySelectorAll('.content-detail');
@@ -29,6 +58,9 @@ function showContent(targetId) {
     
     // Evita recargar el mismo contenido
     if (!nextContent || nextContent === currentActiveContent) return;
+
+    // Reproducir sonido al cambiar de sección
+    playClickSound();
 
     // 1. Desactivar el contenido actual
     if (currentActiveContent) {
@@ -65,7 +97,6 @@ function showContent(targetId) {
 
 // Inicializar al cargar: activa el primer elemento por defecto
 document.addEventListener('DOMContentLoaded', () => {
-    // Obtener el ID del primer contenido (content-problema)
     const initialTargetId = detailContents[0]?.id; 
     if (initialTargetId) {
         showContent(initialTargetId);
@@ -105,9 +136,10 @@ function moveToCard(index) {
 
 if (nextBtn && carouselTrack) {
     nextBtn.addEventListener('click', () => {
+        playClickSound();
         const totalCards = carouselTrack.children.length;
-        // Asumiendo que 3 tarjetas son visibles en desktop (ajuste para no mostrar espacio vacío)
-        const maxIndex = totalCards - 3; 
+        // Se ajusta el límite para el número total de tarjetas (10)
+        const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / cardWidth);
 
         if (currentCardIndex < maxIndex) {
             currentCardIndex++;
@@ -122,6 +154,7 @@ if (nextBtn && carouselTrack) {
 
 if (prevBtn) {
     prevBtn.addEventListener('click', () => {
+        playClickSound();
         if (currentCardIndex > 0) {
             currentCardIndex--;
             moveToCard(currentCardIndex);
@@ -131,9 +164,11 @@ if (prevBtn) {
 
 
 // ===============================================
-// 3. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - Lógica de riesgo actualizada
+// 4. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - Lógica de riesgo ajustada
 // ===============================================
 function calcularRiesgo() {
+    playClickSound();
+    
     // 1. Obtener valores de los inputs
     const M = parseFloat(document.getElementById('alcaldia-select').value);
     const C = parseFloat(document.getElementById('lluvia-input').value);
@@ -143,35 +178,34 @@ function calcularRiesgo() {
     // 2. FÓRMULA CLAVE: R = C + P + (E × M)
     const R = C + P + (E * M);
 
-    // 3. Clasificación de riesgo (Actualizada según solicitud: Cero, Bajo, Medio, Alto)
+    // 3. Clasificación de riesgo (Ajustada según solicitud: C=0 es CERO RIESGO)
     let riesgoText;
     let riesgoClass;
 
-    if (R >= 6.0) {
+    if (C === 0) {
+        riesgoText = "Riesgo: CERO RIESGO (Sistema Estable)"; // VERDE - Solo si no hay lluvia
+        riesgoClass = "zero";
+    } else if (R >= 6.0) {
         riesgoText = "Riesgo: ALTO"; // ROJO
         riesgoClass = "high";
     } else if (R >= 4.0) {
         riesgoText = "Riesgo: MEDIO"; // NARANJA
         riesgoClass = "medium";
-    } else if (R >= 2.0) {
-        riesgoText = "Riesgo: BAJO"; // AMARILLO
+    } else { // C > 0 y R < 4.0
+        riesgoText = "Riesgo: BAJO"; // AMARILLO - El riesgo existe por haber lluvia
         riesgoClass = "low";
-    } else {
-        riesgoText = "Riesgo: CERO RIESGO"; // VERDE
-        riesgoClass = "zero";
     }
 
     // 4. Actualizar el display
     const riesgoTextoEl = document.getElementById('riesgo-texto');
     
-    // Muestra el valor R y la clasificación en el texto principal
     riesgoTextoEl.textContent = `${riesgoText} (Valor R: ${R.toFixed(2)})`;
     riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
 }
 
 
 // ===============================================
-// 4. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS
+// 5. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS
 // ===============================================
 function animateAlcaldiasBars() {
     const alcaldias = document.querySelectorAll('.alcaldias-list li');
