@@ -1,230 +1,205 @@
-// ===============================================
-// 1. FUNCIONALIDAD DE AUDIO (CLICK)
-// ===============================================
-function playClickSound() {
-    // Tono sutil para navegación
-    try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
-        if (context.state === 'suspended') {
-            context.resume();
-        }
-        const oscillator = context.createOscillator();
-        const gainNode = context.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(context.destination);
-
-        oscillator.type = 'sine'; // Tono suave
-        oscillator.frequency.setValueAtTime(440, context.currentTime); 
-        gainNode.gain.setValueAtTime(0.1, context.currentTime); // Volumen bajo
-
-        oscillator.start();
-        oscillator.stop(context.currentTime + 0.05); 
-    } catch (e) {
-        console.log("Web Audio API no soportada o bloqueada.");
-    }
-}
-
-function playActionSound() {
-    // Tono más distintivo e intensivo para acciones clave (e.g., calcular)
-    try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
-        if (context.state === 'suspended') context.resume();
-        const oscillator = context.createOscillator();
-        const gainNode = context.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(context.destination);
-
-        oscillator.type = 'square'; // Tono más duro
-        oscillator.frequency.setValueAtTime(600, context.currentTime); 
-        gainNode.gain.setValueAtTime(0.15, context.currentTime); // Volumen un poco más alto
-
-        oscillator.start();
-        oscillator.stop(context.currentTime + 0.10); // Más largo
-    } catch (e) {
-        console.log("Web Audio API no soportada o bloqueada.");
-    }
-}
-
-
-// ===============================================
-// 2. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
-// ===============================================
-const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-
-window.addEventListener('scroll', () => {
-    // Muestra el botón de scroll al bajar
-    if (window.scrollY > 300) {
-        scrollToTopBtn.style.display = "block";
-    } else {
-        scrollToTopBtn.style.display = "none";
-    }
-});
-
-scrollToTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    playClickSound(); // Sonido de navegación
-});
-
-
-// ===============================================
-// 3. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL)
-// ===============================================
-const carouselCards = document.querySelectorAll('.carousel-card');
-const detailContents = document.querySelectorAll('.content-detail');
-let currentActiveContent = null;
-
-function showContent(targetId) {
-    const nextContent = document.getElementById(targetId);
+document.addEventListener('DOMContentLoaded', function() {
     
-    if (!nextContent || nextContent === currentActiveContent) return;
+    // ==========================================================
+    // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (LOCALSTORAGE)
+    // ==========================================================
+    const checkbox = document.getElementById('theme-checkbox');
+    const root = document.documentElement; // El elemento <html>
+    const themeLabel = document.getElementById('theme-label');
 
-    playClickSound(); // Sonido de navegación
+    // Función para aplicar el tema
+    function applyTheme(isLight) {
+        if (isLight) {
+            root.classList.add('light-mode');
+            themeLabel.textContent = 'Modo Oscuro';
+            localStorage.setItem('theme', 'light');
+        } else {
+            root.classList.remove('light-mode');
+            themeLabel.textContent = 'Modo Claro';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
 
-    if (currentActiveContent) {
-        currentActiveContent.classList.remove('active');
-        setTimeout(() => {
-            currentActiveContent.style.display = 'none';
-            
-            nextContent.style.display = 'block';
-            void nextContent.offsetWidth; 
-            nextContent.classList.add('active');
-            currentActiveContent = nextContent;
-            
-            if (targetId === 'content-impacto') {
-                animateAlcaldiasBars();
-            }
-        }, 300); 
+    // Cargar la preferencia del usuario al inicio
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        checkbox.checked = true;
+        applyTheme(true);
     } else {
-        detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
+        // Por defecto, aplica el modo oscuro
+        applyTheme(false); 
+    }
+    
+    // Manejar el evento de cambio
+    checkbox.addEventListener('change', function() {
+        applyTheme(this.checked);
+    });
+
+    // ==========================================================
+    // B. LÓGICA DEL SIMULADOR Y ALGORITMO
+    // ==========================================================
+    
+    const cValueInput = document.getElementById('c-value');
+    const pValueInput = document.getElementById('p-value');
+    const eValueInput = document.getElementById('e-value');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const riskResultDiv = document.getElementById('risk-result');
+    const riskOutput = document.getElementById('risk-output');
+    const cLabel = document.getElementById('c-label');
+    const pLabel = document.getElementById('p-label');
+    const eLabel = document.getElementById('e-label');
+
+    // Mapeo de valores numéricos a etiquetas descriptivas
+    function getLabel(value) {
+        const labels = {
+            '0': 'Nulo/Mínimo',
+            '1': 'Bajo/Moderado',
+            '2': 'Medio/Alto',
+            '3': 'Crítico/Extremo'
+        };
+        return value + " (" + labels[value] + ")";
+    }
+
+    function updateLabels() {
+        cLabel.textContent = getLabel(cValueInput.value);
+        pLabel.textContent = getLabel(pValueInput.value);
+        eLabel.textContent = getLabel(eValueInput.value);
+    }
+
+    function calcularRiesgo() {
+        const C = parseFloat(cValueInput.value);
+        const P = parseFloat(pValueInput.value);
+        const E = parseFloat(eValueInput.value);
+
+        // Algoritmo de Lógica Difusa Simplificado (para demostración)
+        // Multiplicador: El riesgo es el producto de las 3 variables, con P y E teniendo más peso.
+        // Se escala a un máximo teórico de 5.0 (Riesgo total: 3*3*3 = 27 -> escalado / 5.4)
         
-        nextContent.style.display = 'block';
-        void nextContent.offsetWidth;
-        nextContent.classList.add('active');
-        currentActiveContent = nextContent;
+        // Ponderación de variables:
+        // C (Capacidad) actúa como atenuador: Menos C = Mayor Riesgo. Se invierte: (3 - C)
+        const C_Inverso = 3 - C; // C=0 -> 3; C=3 -> 0
+        const P_Factor = P * 1.5; // La lluvia es un factor importante
+        const E_Factor = E * 1.2; // La exposición amplifica el riesgo
 
-        if (targetId === 'content-impacto') {
-            animateAlcaldiasBars();
+        // Riesgo Bruto (Max. teórico: (3*1.5 + 3*1.2) * (3-0) = 8.1 * 3 = 24.3)
+        let riesgoBruto = (P_Factor + E_Factor) * C_Inverso; 
+        
+        // Escalar el resultado a un rango de 0.0 a 5.0 (Máximo teórico 24.3 / 4.86 = 5.0)
+        let riesgoFinal = Math.min(5.0, riesgoBruto / 4.86); 
+        
+        // Redondear a un decimal
+        riesgoFinal = riesgoFinal.toFixed(1);
+
+        let riskClass = '';
+        let riskText = '';
+
+        if (riesgoFinal <= 1.0) {
+            riskClass = 'zero';
+            riskText = `BAJO (Seguro)`;
+        } else if (riesgoFinal <= 2.5) {
+            riskClass = 'low';
+            riskText = `MODERADO`;
+        } else if (riesgoFinal <= 4.0) {
+            riskClass = 'medium';
+            riskText = `ALTO`;
+        } else {
+            riskClass = 'high';
+            riskText = `CRÍTICO`;
         }
+
+        // Actualizar la interfaz
+        riskResultDiv.className = 'risk-level ' + riskClass;
+        riskOutput.innerHTML = `${riskText} <br> (${riesgoFinal} / 5.0)`;
     }
-}
 
-// Inicializar al cargar: activa el primer elemento por defecto
-document.addEventListener('DOMContentLoaded', () => {
-    const initialTargetId = detailContents[0]?.id; 
-    if (initialTargetId) {
-        showContent(initialTargetId);
-    }
-});
-
-// Eventos para las tarjetas del carrusel (click)
-carouselCards.forEach(card => {
-    card.addEventListener('click', () => { 
-        // Ocultar la tarjeta de carga de la simulación si se navega a otro lado
-        if (card.getAttribute('data-target') !== 'content-algoritmo') {
-            document.getElementById('riesgo-texto').textContent = "Esperando datos...";
-            document.getElementById('riesgo-texto').className = `risk-level pending`; 
-        }
-
-        showContent(card.getAttribute('data-target')); 
-    });
-});
-
-
-// ------------------------------------
-// Lógica de navegación del Carrusel
-// ------------------------------------
-const carouselTrack = document.getElementById('carousel-track');
-const prevBtn = document.querySelector('.prev-btn');
-const nextBtn = document.querySelector('.next-btn');
-let currentCardIndex = 0;
-// Ancho de la tarjeta + gap (330px + 20px = 350px)
-const cardWidth = 350; 
-
-function moveToCard(index) {
-    if (carouselTrack) {
-        const offset = -index * cardWidth;
-        carouselTrack.style.transform = `translateX(${offset}px)`;
-    }
-}
-
-if (nextBtn && carouselTrack) {
-    nextBtn.addEventListener('click', () => {
-        playClickSound(); // Sonido de navegación
-        const totalCards = carouselTrack.children.length;
-        const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / cardWidth);
-
-        if (currentCardIndex < maxIndex) {
-            currentCardIndex++;
-            moveToCard(currentCardIndex);
-        } else if (currentCardIndex >= maxIndex) {
-            currentCardIndex = 0; 
-            moveToCard(currentCardIndex);
-        }
-    });
-}
-
-if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-        playClickSound(); // Sonido de navegación
-        if (currentCardIndex > 0) {
-            currentCardIndex--;
-            moveToCard(currentCardIndex);
-        }
-    });
-}
-
-
-// ===============================================
-// 4. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - Lógica de riesgo ajustada
-// ===============================================
-function calcularRiesgo() {
-    playActionSound(); // <--- Sonido más intensivo para la acción
+    // Event Listeners para el simulador
+    cValueInput.addEventListener('input', updateLabels);
+    pValueInput.addEventListener('input', updateLabels);
+    eValueInput.addEventListener('input', updateLabels);
     
-    // 1. Obtener valores de los inputs
-    const M = parseFloat(document.getElementById('alcaldia-select').value);
-    const C = parseFloat(document.getElementById('lluvia-input').value);
-    const P = parseFloat(document.getElementById('obstruccion-input').value);
-    const E = parseFloat(document.getElementById('exposicion-input').value);
+    // Botón de cálculo
+    if (calculateBtn) {
+        calculateBtn.addEventListener('click', calcularRiesgo);
+    }
+    
+    // Asegurar que las etiquetas se actualicen al cargar y al cambiar de pestaña
+    updateLabels();
 
-    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
-    const R = C + P + (E * M);
+    // ==========================================================
+    // C. LÓGICA DE NAVEGACIÓN Y CARRUSEL
+    // ==========================================================
+    
+    const contentDetails = document.querySelectorAll('.content-detail');
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    const carouselCards = document.querySelectorAll('.carousel-card');
 
-    // 3. Clasificación de riesgo (Ajustada: C=0 es CERO RIESGO)
-    let riesgoText;
-    let riesgoClass;
+    function showContent(targetId) {
+        // Desactivar todos
+        contentDetails.forEach(detail => detail.classList.remove('active'));
+        sidebarItems.forEach(item => item.classList.remove('active'));
 
-    if (C === 0) {
-        riesgoText = "Riesgo: CERO RIESGO (Sistema Estable)"; // VERDE - Solo si no hay lluvia
-        riesgoClass = "zero";
-    } else if (R >= 6.0) {
-        riesgoText = "Riesgo: ALTO"; // ROJO
-        riesgoClass = "high";
-    } else if (R >= 4.0) {
-        riesgoText = "Riesgo: MEDIO"; // NARANJA
-        riesgoClass = "medium";
-    } else { // C > 0 y R < 4.0
-        riesgoText = "Riesgo: BAJO"; // AMARILLO - El riesgo existe por haber lluvia
-        riesgoClass = "low";
+        // Activar el contenido y el item del sidebar
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.classList.add('active');
+        }
+        document.querySelector(`.sidebar-item[data-target="${targetId}"]`)?.classList.add('active');
+        
+        // Si el contenido activo es el simulador, calcular el riesgo al mostrar
+        if (targetId === 'content-algoritmo') {
+            calcularRiesgo(); 
+        }
     }
 
-    // 4. Actualizar el display
-    const riesgoTextoEl = document.getElementById('riesgo-texto');
-    
-    riesgoTextoEl.textContent = `${riesgoText} (Valor R: ${R.toFixed(2)})`;
-    riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
-}
-
-
-// ===============================================
-// 5. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS
-// ===============================================
-function animateAlcaldiasBars() {
-    const alcaldias = document.querySelectorAll('.alcaldias-list li');
-    alcaldias.forEach(li => {
-        const percentage = li.getAttribute('data-percentage');
-        // Inyecta el valor del atributo (ej: "19%") a la variable CSS --percentage
-        li.style.setProperty('--percentage', percentage);
+    // 1. Navegación del Sidebar
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('data-target');
+            showContent(targetId);
+        });
     });
-}
+
+    // 2. Navegación del Carrusel
+    carouselCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            showContent(targetId);
+        });
+    });
+    
+    // Lógica del Carrusel (Scroll Horizontal)
+    const carouselContainer = document.querySelector('.carousel-cards');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    const scrollAmount = 300; // Cuánto desplazar
+
+    if (carouselContainer) {
+        prevBtn.addEventListener('click', () => {
+            carouselContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            carouselContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+    }
+
+    // 3. Scroll to Top
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+    window.onscroll = function() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scrollToTopBtn.style.display = "block";
+        } else {
+            scrollToTopBtn.style.display = "none";
+        }
+    };
+
+    scrollToTopBtn.addEventListener('click', function() {
+        document.body.scrollTop = 0; // Para Safari
+        document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
+    });
+
+    // Mostrar el contenido inicial (Introducción)
+    showContent('content-introduccion');
+});
