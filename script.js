@@ -1,155 +1,213 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // -----------------------------------------------------------------
-    // 1. CAROUSEL Y NAVEGACIÓN ENTRE SECCIONES (TABS)
-    // -----------------------------------------------------------------
-    const track = document.getElementById('carousel-track');
-    const cards = Array.from(document.querySelectorAll('.carousel-card'));
-    const prevBtn = document.querySelector('.prev-btn');
-    const nextBtn = document.querySelector('.next-btn');
-    const detailPanel = document.getElementById('interactive-content');
-    const clickSound = document.getElementById('click-sound');
+<script>
+    // **********************************************
+    // LÓGICA DE INTERACCIÓN, NAVEGACIÓN Y TEMA
+    // **********************************************
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // ==========================================================
+        // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (LOCALSTORAGE)
+        // ==========================================================
+        const checkbox = document.getElementById('theme-checkbox');
+        const root = document.documentElement; // El elemento <html>
+        const themeLabel = document.getElementById('theme-label');
 
-    let currentCardIndex = 0;
-
-    // Función para reproducir el sonido de clic
-    function playClickSound() {
-        if (clickSound) {
-            clickSound.currentTime = 0; // Reiniciar para permitir clics rápidos
-            clickSound.play().catch(e => console.log("Audio play prevented:", e));
-        }
-    }
-
-    // Función para actualizar la posición visual del carrusel
-    function updateCarousel() {
-        if (cards.length > 0) {
-            const cardWidth = cards[0].offsetWidth + 20; // Ancho de la tarjeta + margin-right
-            track.style.transform = `translateX(-${currentCardIndex * cardWidth}px)`;
-            
-            // Ocultar/mostrar botones si se llega a los límites
-            prevBtn.style.visibility = currentCardIndex === 0 ? 'hidden' : 'visible';
-            nextBtn.style.visibility = currentCardIndex === cards.length - 1 ? 'hidden' : 'visible';
-        }
-    }
-
-    // Función para cambiar el contenido de la documentación
-    function changeContent(targetId) {
-        // 1. Ocultar todos los contenidos de detalle
-        document.querySelectorAll('.content-detail').forEach(content => {
-            content.classList.remove('active');
-        });
-
-        // 2. Mostrar el contenido objetivo
-        const targetContent = document.getElementById(targetId);
-        if (targetContent) {
-            targetContent.classList.add('active');
-            // Asegurarse de que MathJax renderice el contenido si es el algoritmo
-            if (window.MathJax) {
-                window.MathJax.typeset();
+        // Función para aplicar el tema
+        function applyTheme(isLight) {
+            if (isLight) {
+                root.classList.add('light-mode');
+                if (themeLabel) themeLabel.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                root.classList.remove('light-mode');
+                if (themeLabel) themeLabel.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'dark');
             }
         }
-    }
 
-    // Event Listeners para las tarjetas del carrusel
-    cards.forEach((card, index) => {
-        card.addEventListener('click', () => {
-            playClickSound();
+        // Cargar la preferencia del usuario al inicio
+        const savedTheme = localStorage.getItem('theme');
+        if (checkbox) {
+            if (savedTheme === 'light') {
+                checkbox.checked = true;
+                applyTheme(true);
+            } else {
+                // Por defecto, aplica el modo oscuro
+                applyTheme(false); 
+            }
             
-            // 1. Actualizar el carrusel y el índice activo
-            cards.forEach(c => c.classList.remove('active-card'));
-            card.classList.add('active-card');
-            currentCardIndex = index;
-            // updateCarousel(); // Opcional: Centrar la tarjeta, pero lo quitamos para simplificar.
+            // Manejar el evento de cambio
+            checkbox.addEventListener('change', function() {
+                applyTheme(this.checked);
+            });
+        }
 
-            // 2. Cambiar el contenido de la documentación
-            const targetId = card.getAttribute('data-target');
-            changeContent(targetId);
+
+        // ==========================================================
+        // B. LÓGICA DE NAVEGACIÓN Y CARRUSEL
+        // ==========================================================
+        const carouselCards = document.querySelectorAll('.carousel-card');
+        const detailSections = document.querySelectorAll('.content-detail');
+        const clickSound = document.getElementById('click-sound');
+
+        // Función para cambiar la sección visible
+        const showSection = (targetId) => {
+            detailSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Actualizar el estado 'active' en las tarjetas del carrusel
+            carouselCards.forEach(card => {
+                card.classList.remove('active-card');
+                if (card.getAttribute('data-target') === targetId) {
+                    card.classList.add('active-card');
+                }
+            });
+
+            // Forzar el desplazamiento al inicio del panel de detalles
+            const detailPanel = document.getElementById('detail-panel');
+            if (detailPanel) {
+                detailPanel.scrollTop = 0;
+            }
+            
+            // Si es la sección del simulador, ejecutar cálculo inicial
+            if (targetId === 'content-algoritmo') {
+                // Se llama la función que está definida globalmente
+                window.calcularRiesgo(); 
+            }
+        };
+
+        // Escuchadores de eventos para las tarjetas del carrusel
+        carouselCards.forEach(card => {
+            card.addEventListener('click', () => {
+                if (clickSound) {
+                    clickSound.play().catch(e => console.log("Audio play prevented: ", e));
+                }
+                const targetId = card.getAttribute('data-target');
+                // La variable targetId contiene el ID correcto de la sección (ej. "content-problema")
+                showSection(targetId);
+            });
         });
-    });
 
-    // Event Listeners para los botones del carrusel (movimiento)
-    prevBtn.addEventListener('click', () => {
-        playClickSound();
-        if (currentCardIndex > 0) {
-            currentCardIndex--;
-            // La tarjeta activa sigue siendo la misma, solo se mueve la vista
-            updateCarousel();
+        // Lógica de navegación del carrusel
+        const carouselTrack = document.getElementById('carousel-track');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        let currentIndex = 0;
+        // La tarjeta tiene un ancho de 200px + 20px de margen = 220px
+        const cardWidth = 220; 
+        const maxIndex = carouselCards.length - 1;
+
+        const updateCarouselPosition = () => {
+             // Calcula el desplazamiento solo para la tarjeta actual
+            carouselTrack.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        };
+
+        nextBtn.addEventListener('click', () => {
+            if (clickSound) {
+                clickSound.play().catch(e => console.log("Audio play prevented: ", e));
+            }
+            if (currentIndex < maxIndex) { 
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Loop al inicio
+            }
+            updateCarouselPosition();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (clickSound) {
+                clickSound.play().catch(e => console.log("Audio play prevented: ", e));
+            }
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = maxIndex; // Loop al final
+            }
+            updateCarouselPosition();
+        });
+
+        // Inicializar mostrando la primera sección
+        if (carouselCards.length > 0) {
+            const initialTarget = carouselCards[0].getAttribute('data-target');
+            showSection(initialTarget);
         }
-    });
 
-    nextBtn.addEventListener('click', () => {
-        playClickSound();
-        if (currentCardIndex < cards.length - 1) {
-            currentCardIndex++;
-            // La tarjeta activa sigue siendo la misma, solo se mueve la vista
-            updateCarousel();
-        }
-    });
-
-    // Inicialización del carrusel
-    updateCarousel();
-    
-    // Inicializar el contenido con la tarjeta activa por defecto (la primera)
-    if (cards.length > 0) {
-        changeContent(cards[0].getAttribute('data-target'));
-    }
-
-    // -----------------------------------------------------------------
-    // 2. SIMULACIÓN DEL ALGORITMO R = C + P + E * M
-    // -----------------------------------------------------------------
-    
-    // Función global para calcular el riesgo, accesible desde el HTML
-    window.calcularRiesgo = function() {
-        playClickSound();
-
+        // ==========================================================
+        // C. MANEJO DE INPUTS DEL SIMULADOR (Para actualizar al mover slider)
+        // ==========================================================
         const lluviaInput = document.getElementById('lluvia-input');
         const obstruccionInput = document.getElementById('obstruccion-input');
         const exposicionInput = document.getElementById('exposicion-input');
         const alcaldiaSelect = document.getElementById('alcaldia-select');
-        const riesgoTexto = document.getElementById('riesgo-texto');
         
-        if (!lluviaInput || !obstruccionInput || !exposicionInput || !alcaldiaSelect || !riesgoTexto) {
-             console.error("Faltan elementos del simulador.");
-             return;
+        // Función para actualizar los valores de la simulación al cambiar cualquier input
+        function updateSimulationState() {
+            // Se asegura de que los span de valor se actualicen 
+            document.getElementById('lluvia-val').textContent = lluviaInput.value;
+            document.getElementById('obstruccion-val').textContent = obstruccionInput.value;
+            document.getElementById('exposicion-val').textContent = exposicionInput.value;
+            
+            // Llamar a la función de cálculo inmediatamente
+            window.calcularRiesgo(); 
         }
 
-        // Obtener valores y parsear a números
-        const C = parseFloat(lluviaInput.value);      // Clima (Lluvia)
-        const P = parseFloat(obstruccionInput.value); // Obstrucción (Basura)
-        const E = parseFloat(exposicionInput.value);  // Exposición (Vulnerabilidad local)
-        const M = parseFloat(alcaldiaSelect.value);   // Multiplicador histórico (Alcaldía)
+        if (lluviaInput && obstruccionInput && exposicionInput && alcaldiaSelect) {
+            // Ejecutar cálculo al cambiar cualquier input (slider o select)
+            lluviaInput.addEventListener('input', updateSimulationState);
+            obstruccionInput.addEventListener('input', updateSimulationState);
+            exposicionInput.addEventListener('input', updateSimulationState);
+            alcaldiaSelect.addEventListener('change', updateSimulationState);
+        }
+    });
 
-        // Aplicar la fórmula conceptual: R = C + P + E * M
+    // **********************************************
+    // LÓGICA DE LA SIMULACIÓN (Global, llamada por HTML y JS)
+    // **********************************************
+    // Se mantiene global para ser llamada por el 'onclick' del botón en el HTML.
+    window.calcularRiesgo = function() {
+        const C = parseFloat(document.getElementById('lluvia-input').value); // Clima/Lluvia
+        const P = parseFloat(document.getElementById('obstruccion-input').value); // Obstrucción/Basura
+        const E = parseFloat(document.getElementById('exposicion-input').value); // Exposición/Vulnerabilidad
+        const M = parseFloat(document.getElementById('alcaldia-select').value); // Multiplicador de riesgo (M)
+        const resultadoDiv = document.getElementById('riesgo-texto');
+        const resultadoSim = document.getElementById('sim-result');
+
+        // Fórmula conceptual: R = C + P + E * M
         const R = C + P + (E * M);
-        
-        // Redondear el resultado a dos decimales
-        const riesgoFinal = R.toFixed(2);
-        
-        let nivelRiesgo = 'Nivel Indefinido';
-        let className = 'pending';
 
-        // Clasificación de riesgo (Reglas definidas en el HTML)
+        let nivelRiesgo = "";
+        let colorClass = "";
+
         if (C === 0.0) {
-            nivelRiesgo = `Riesgo CERO (${riesgoFinal})`;
-            className = 'low'; // Se usa 'low' por el estilo verde/bajo
-        } else if (R >= 6.0) {
-            nivelRiesgo = `ALERTA ROJA (R=${riesgoFinal})`;
-            className = 'high';
+            nivelRiesgo = "Riesgo Cero";
+            colorClass = "risk-zero"; // Verde
+        } else if (R < 4.0) {
+            nivelRiesgo = "Riesgo Bajo (Amarillo)";
+            colorClass = "risk-low"; // Amarillo
         } else if (R >= 4.0 && R < 6.0) {
-            nivelRiesgo = `ALERTA NARANJA (R=${riesgoFinal})`;
-            className = 'medium';
-        } else if (R > 0.0 && R < 4.0) {
-            nivelRiesgo = `ALERTA AMARILLA (R=${riesgoFinal})`;
-            className = 'low';
-        } else {
-            nivelRiesgo = `Esperando Datos (R=${riesgoFinal})`;
-            className = 'pending';
+            nivelRiesgo = "Riesgo Medio (Naranja)";
+            colorClass = "risk-medium"; // Naranja
+        } else { // R >= 6.0
+            nivelRiesgo = "Riesgo Alto (Rojo)";
+            colorClass = "risk-high"; // Rojo
         }
 
-        // Actualizar el DOM
-        riesgoTexto.textContent = nivelRiesgo;
-        riesgoTexto.className = 'risk-level ' + className;
-    };
-    
-    // Se ejecuta al cargar para mostrar un resultado inicial (o "Esperando Datos")
-    window.calcularRiesgo(); 
-});
+        resultadoDiv.textContent = `${nivelRiesgo} | Valor R: ${R.toFixed(2)}`;
+        resultadoDiv.className = colorClass; // Aplicar clase de color
+
+        // Mostrar el resultado de la simulación
+        resultadoSim.style.display = 'block';
+
+        // Opcional: Sonido al calcular (si se incluyó en el HTML)
+        const clickSound = document.getElementById('click-sound');
+        if (clickSound) {
+            clickSound.currentTime = 0; // Reinicia el sonido si se hace clic muy rápido
+            clickSound.play().catch(e => console.log("Audio play prevented: ", e));
+        }
+    }
+</script>
