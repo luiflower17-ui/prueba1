@@ -1,503 +1,600 @@
-/* VARIABLES GLOBALES */
+/* ======================================= */
+/* 1. VARIABLES DE COLOR (Modo Oscuro/Claro) */
+/* ======================================= */
 :root {
-    --color-primary: #007bff; /* Azul institucional */
-    --color-secondary: #6c757d; /* Gris */
-    --color-text-main: #333;
-    --color-text-light: #f8f9fa;
-    --color-bg-light: #f8f9fa;
-    --color-bg-dark: #212529;
-    --color-alert-green: #28a745;
-    --color-alert-yellow: #ffc107;
-    --color-alert-orange: #fd7e14;
-    --color-alert-red: #dc3545;
-    --color-alert-pending: #404040;
-    --font-header: 'Montserrat', sans-serif;
-    --font-body: 'Roboto', sans-serif;
-    --transition-speed: 0.3s;
+    /* Modo Oscuro (Dark Mode) - Por defecto */
+    --color-bg-main: #0a0a0a;        /* Fondo principal (body) */
+    --color-bg-secondary: #1e1e1e;   /* Fondos de paneles/tarjetas */
+    --color-text-main: #f0f0f0;      /* Texto principal */
+    --color-text-secondary: #aaaaaa; /* Texto secundario (descripciones) */
+    --color-accent-blue: #337ab7;    /* Azul de acento (botones, títulos) */
+    --color-border: #333333;         /* Borde y líneas divisorias */
+    --color-box-shadow: rgba(0, 0, 0, 0.6); /* Sombra */
+    
+    /* Colores de Riesgo */
+    --color-risk-zero: #28a745;  /* Verde */
+    --color-risk-low: #ffc107;   /* Amarillo */
+    --color-risk-medium: #fd7e14;/* Naranja */
+    --color-risk-high: #dc3545;  /* Rojo */
 }
 
-/* Base del cuerpo */
+/* Selector para aplicar el modo claro */
+html.light-mode {
+    --color-bg-main: #f4f4f4;
+    --color-bg-secondary: #ffffff;
+    --color-text-main: #333333;
+    --color-text-secondary: #555555;
+    --color-accent-blue: #0056b3; 
+    --color-border: #cccccc;
+    --color-box-shadow: rgba(0, 0, 0, 0.15);
+}
+
+/* ======================================= */
+/* 2. ESTILOS BASE Y DE TIPOGRAFÍA */
+/* ======================================= */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: var(--font-body);
+    background-color: var(--color-bg-main);
     color: var(--color-text-main);
-    background-color: var(--color-bg-light);
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    line-height: 1.6;
-    transition: background-color var(--transition-speed), color var(--transition-speed);
+    transition: background-color 0.5s, color 0.5s; 
+    min-height: 100vh;
 }
 
-main {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+a {
+    color: var(--color-accent-blue);
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-/* Fondo de Video (CDMX) */
+a:hover {
+    color: #0056b3;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--color-text-main);
+}
+
+/* ======================================= */
+/* 3. VIDEO DE FONDO Y ENCABEZADO */
+/* ======================================= */
 .video-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: -2; 
     overflow: hidden;
-    z-index: -2;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-main);
+    opacity: 0.8; /* Controla la oscuridad del video */
+    z-index: -1;
+    transition: background 0.5s;
 }
 
 #youtube-background {
     width: 100vw;
     height: 56.25vw; /* Ratio 16:9 */
     min-height: 100vh;
-    min-width: 177.77vh;
+    min-width: 177.77vh; /* Ratio 16:9 */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 
-.video-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.75); /* Oscurecer el video */
-    z-index: -1;
-}
-
-/* HEADER */
 header {
-    background: rgba(33, 37, 41, 0.95);
-    color: var(--color-text-light);
-    padding: 30px 20px;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
+    background-color: transparent;
+    padding: 40px 5% 20px 5%;
+    color: white;
+    text-align: center;
+    border-bottom: 2px solid var(--color-accent-blue);
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px var(--color-box-shadow);
 }
 
 .header-branding h1 {
-    font-family: var(--font-header);
-    font-weight: 800;
-    font-size: 2.2em;
-    margin: 0 0 5px 0;
-    color: var(--color-alert-red); /* Color de alerta */
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    color: white; /* Siempre blanco para contraste con el video */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 .header-subtitle {
-    font-size: 1.1em;
-    font-weight: 400;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px;
+    font-size: 1.1rem;
+    color: var(--color-text-main);
+    margin: 0;
 }
 
 .header-meta {
-    font-size: 0.9em;
-    font-weight: 300;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
 }
 
-.meta-line {
+.header-meta .meta-line {
     margin: 3px 0;
 }
 
-/* SECCIÓN DE OVERVIEW */
-#project-overview {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    transition: background-color var(--transition-speed);
+/* ======================================= */
+/* 4. SECCIONES GENERALES */
+/* ======================================= */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 90%;
 }
 
 .section-title {
-    font-family: var(--font-header);
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-top: 0;
-    margin-bottom: 20px;
-    text-align: center;
+    font-size: 1.5rem;
+    color: var(--color-accent-blue);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 10px;
+    margin-top: 40px;
+    margin-bottom: 25px;
 }
 
-/* CARRUSEL */
+/* ======================================= */
+/* 5. CARRUSEL DE NAVEGACIÓN */
+/* ======================================= */
 .carousel-container {
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 30px;
-    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-bg-secondary);
+    padding: 15px 5px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px var(--color-box-shadow);
 }
 
 .carousel-track {
     display: flex;
-    transition: transform 0.5s ease-in-out;
-    padding: 10px 0;
+    overflow-x: hidden;
+    scroll-snap-type: x mandatory;
+    padding: 0 10px;
+    gap: 20px;
+    transition: transform 0.4s ease-in-out;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
 }
 
 .carousel-card {
-    min-width: 250px;
-    flex: 0 0 auto;
-    margin-right: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    flex: 0 0 200px; /* Ancho fijo de la tarjeta */
+    background-color: var(--color-bg-main);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--color-box-shadow);
     cursor: pointer;
-    text-align: center;
-    transition: all var(--transition-speed);
+    scroll-snap-align: start;
+    border: 2px solid var(--color-bg-main);
+    transition: transform 0.3s, border-color 0.3s, background-color 0.5s;
+    min-height: 180px;
 }
 
-.carousel-card:hover, .carousel-card.active-card {
-    transform: translateY(-5px);
-    border-color: var(--color-primary);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.carousel-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent-blue);
+}
+
+.carousel-card.active-card {
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 0 15px rgba(51, 122, 183, 0.8);
 }
 
 .carousel-card h4 {
-    font-family: var(--font-header);
-    font-size: 1.1em;
-    color: var(--color-text-main);
-    margin-top: 5px;
+    color: var(--color-accent-blue);
+    margin-top: 0;
+    font-size: 1rem;
+    padding-bottom: 5px;
 }
 
 .card-icon {
-    font-size: 2.5em;
-    color: var(--color-alert-red);
-    margin-bottom: 10px;
-    display: block;
-}
-
-.carousel-card p {
-    font-size: 0.9em;
-    color: var(--color-secondary);
-    min-height: 40px;
+    font-size: 1.8rem;
+    color: var(--color-text-secondary);
+    float: right;
+    margin-left: 10px;
 }
 
 .card-action-hint {
     display: block;
     margin-top: 10px;
-    font-size: 0.8em;
-    color: var(--color-primary);
-    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
 }
 
 .carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
+    background: none;
     border: none;
-    padding: 10px;
+    color: var(--color-accent-blue);
+    font-size: 1.5rem;
     cursor: pointer;
-    z-index: 10;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background var(--transition-speed);
+    padding: 10px;
+    transition: color 0.3s;
+    flex-shrink: 0;
 }
 
 .carousel-btn:hover {
-    background: var(--color-primary);
+    color: var(--color-text-main);
 }
 
-.prev-btn { left: 0; }
-.next-btn { right: 0; }
 
-/* PANEL DE CONTENIDO DETALLADO */
+/* ======================================= */
+/* 6. PANELES DE CONTENIDO (DETALLE) */
+/* ======================================= */
 #interactive-content {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 #detail-panel {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: var(--color-bg-secondary);
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-    transition: background-color var(--transition-speed);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px var(--color-box-shadow);
+    transition: background-color 0.5s, box-shadow 0.5s;
 }
 
 .content-detail {
     display: none;
-    animation: fadeIn 0.5s ease-out;
+    min-height: 500px;
 }
 
 .content-detail.active {
     display: block;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 .content-detail h3 {
-    font-family: var(--font-header);
-    color: var(--color-primary);
-    border-bottom: 2px solid var(--color-primary);
+    font-size: 1.8rem;
+    border-bottom: 3px solid var(--color-accent-blue);
     padding-bottom: 10px;
-    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--color-text-main);
 }
 
 .section-intro {
-    font-size: 1.1em;
+    font-style: italic;
+    color: var(--color-text-secondary);
     margin-bottom: 25px;
-    font-weight: 500;
 }
 
-/* GRID Y BLOQUES DE INFORMACIÓN */
+/* Info Grid */
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    margin-bottom: 30px;
+    margin: 20px 0;
 }
 
 .info-grid.two-columns {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.info-grid.single-column {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 .info-block {
-    background-color: #f1f1f1;
+    background-color: var(--color-bg-main);
     padding: 20px;
-    border-radius: 6px;
-    border-left: 5px solid var(--color-secondary);
+    border-radius: 8px;
+    border-left: 5px solid var(--color-accent-blue);
+    box-shadow: 0 1px 5px var(--color-box-shadow);
 }
 
 .info-block h4 {
-    font-family: var(--font-header);
-    color: var(--color-text-main);
+    color: var(--color-accent-blue);
     margin-top: 0;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
 }
 
 .info-block.full-width {
     grid-column: 1 / -1;
-    border-left: 5px solid var(--color-alert-red);
 }
 
-.alcaldias-list {
-    list-style: none;
-    padding: 0;
+.info-block ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.info-block ul li {
+    margin-bottom: 8px;
+    padding-left: 1.5em;
+    position: relative;
+}
+
+.info-block ul li::before {
+    content: "\f058"; /* Check-circle icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--color-risk-zero); /* Green */
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .alcaldias-list li {
-    background-color: #e9ecef;
-    margin-bottom: 5px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
+    font-size: 1.05rem;
+    font-weight: 500;
 }
 
-/* CITAS Y NOTAS */
-.note-quote {
-    background-color: #fff3cd;
-    border-left: 5px solid #ffc107;
-    padding: 15px;
-    margin: 20px 0;
-    font-style: italic;
-    color: #856404;
+/* Estilos de las tablas */
+.alert-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
 }
 
-.step-title {
-    color: var(--color-alert-red);
-    border-bottom: 1px dotted #ccc;
-    padding-bottom: 5px;
-    margin-top: 30px;
+.alert-table th, .alert-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--color-border);
 }
 
-/* SIMULADOR */
+.alert-table th {
+    background-color: var(--color-accent-blue);
+    color: white;
+}
+
+.alert-table tr:nth-child(even) {
+    background-color: var(--color-border);
+}
+
+.alert-green { background-color: rgba(40, 167, 69, 0.2); }
+.alert-yellow { background-color: rgba(255, 193, 7, 0.2); }
+.alert-orange { background-color: rgba(253, 126, 20, 0.2); }
+.alert-red { background-color: rgba(220, 53, 69, 0.2); }
+
+
+/* Bloques de Fórmulas */
+.formula-block {
+    text-align: center;
+    border: 2px dashed var(--color-text-secondary);
+    background-color: var(--color-bg-secondary);
+}
+
+/* ======================================= */
+/* 7. ESTILOS DEL SIMULADOR */
+/* ======================================= */
 .simulation-card {
-    background-color: #e9f5ff;
-    border: 1px solid var(--color-primary);
-    padding: 30px;
-    border-radius: 8px;
+    background-color: var(--color-bg-main);
+    padding: 25px;
+    border-radius: 10px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--color-box-shadow);
+}
+
+.sim-inputs {
+    margin-bottom: 20px;
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .input-group label {
     display: block;
-    font-weight: 600;
+    font-weight: bold;
     margin-bottom: 5px;
-    color: var(--color-primary);
+    color: var(--color-text-main);
 }
 
-.input-group i {
-    margin-right: 5px;
-}
-
-input[type="range"] {
-    width: 100%;
-    height: 10px;
-    background: #ddd;
-    border-radius: 5px;
-    outline: none;
-    opacity: 0.7;
-    transition: opacity .2s;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--color-alert-red);
-    cursor: pointer;
-}
-
-select {
+.input-group select {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-main);
 }
 
 .range-value {
     display: block;
     margin-top: 5px;
-    font-size: 0.9em;
-    font-weight: bold;
-    color: var(--color-secondary);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
 }
 
-/* BOTÓN DE CÁLCULO */
-.simulation-card button {
-    background-color: var(--color-alert-red);
+input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 8px;
+    background: var(--color-border);
+    border-radius: 4px;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent-blue);
+    cursor: pointer;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: var(--color-accent-blue);
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 1.1em;
-    font-weight: 700;
-    width: 100%;
-    transition: background-color var(--transition-speed);
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
 }
 
-.simulation-card button:hover {
-    background-color: #a71d2a;
+button:hover {
+    background-color: #215e98;
 }
 
-/* RESULTADO */
 .result-box {
-    text-align: center;
     margin-top: 25px;
     padding: 20px;
-    border-radius: 6px;
-    background-color: #fff;
-    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    text-align: center;
 }
 
 .result-box p {
     margin: 5px 0;
-    font-size: 1.1em;
+    font-size: 1.1rem;
+    color: var(--color-text-main);
 }
 
 #riesgo-texto {
-    font-family: var(--font-header);
-    font-size: 2.5em;
-    font-weight: 900;
-    padding: 10px 0;
-    border-radius: 5px;
-    display: block;
-    color: white;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 4px;
+    color: white; /* El texto de riesgo siempre es blanco para contraste */
+    transition: background-color 0.5s;
 }
 
-/* Estilos de Nivel de Riesgo */
-.risk-level.pending { background-color: var(--color-alert-pending); }
-.risk-level.low { background-color: var(--color-alert-yellow); color: var(--color-text-main) !important; }
-.risk-level.medium { background-color: var(--color-alert-orange); }
-.risk-level.high { background-color: var(--color-alert-red); }
+.risk-level.pending { background-color: var(--color-border); }
+.risk-level.risk-zero { background-color: var(--color-risk-zero); }
+.risk-level.risk-low { background-color: var(--color-risk-low); color: var(--color-text-main);} /* Texto oscuro en fondo claro */
+.risk-level.risk-medium { background-color: var(--color-risk-medium); }
+.risk-level.risk-high { background-color: var(--color-risk-high); }
 
-/* TABLA DE ALERTAS */
-.alert-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+.colab-link-text {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
 }
 
-.alert-table th, .alert-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
+
+/* ======================================= */
+/* 8. ESTILOS DEL SWITCH DE TEMA */
+/* ======================================= */
+
+.theme-switch-wrapper {
+    position: absolute;
+    top: 50px; 
+    right: 5%;
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+    font-size: 0.9rem;
+    color: white; 
+    z-index: 10;
 }
 
-.alert-table th {
-    background-color: #f1f1f1;
-    font-weight: 600;
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 45px; 
+    height: 25px; 
+    margin: 0;
 }
 
-.alert-green { background-color: #eafaea; border-left: 5px solid var(--color-alert-green); }
-.alert-yellow { background-color: #fffceb; border-left: 5px solid var(--color-alert-yellow); }
-.alert-orange { background-color: #fcefe6; border-left: 5px solid var(--color-alert-orange); }
-.alert-red { background-color: #faeaea; border-left: 5px solid var(--color-alert-red); }
+/* Ocultar el input checkbox real */
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-/* REFERENCIAS */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc; 
+    transition: 0.4s;
+}
+
+/* El círculo (thumb) */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+/* Cuando el checkbox está marcado (Modo Claro) */
+input:checked + .slider {
+    background-color: var(--color-accent-blue); 
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px); 
+}
+
+/* Estilo Redondo */
+.slider.round {
+    border-radius: 25px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* ======================================= */
+/* 9. Estilos de Referencias */
+/* ======================================= */
 .references-list {
-    list-style-type: none;
-    padding: 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 .references-list li {
     margin-bottom: 15px;
-    padding-left: 15px;
-    position: relative;
+    line-height: 1.6;
+    border-bottom: 1px dashed var(--color-border);
+    padding-bottom: 10px;
 }
 
-.references-list li::before {
-    content: "•";
-    color: var(--color-alert-red);
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
-/* MATHJAX */
-.formula-block {
-    text-align: center;
-    font-size: 1.2em;
-    background-color: #eaf7ff;
-    border-left: 5px solid var(--color-primary);
-}
-
-/* ENLACES COLAB */
-.colab-link-text {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9em;
-}
-
-/* Responsive Design */
-@media (max-width: 992px) {
-    .info-grid {
-        grid-template-columns: 1fr;
+/* ======================================= */
+/* 10. Responsive */
+/* ======================================= */
+@media (max-width: 900px) {
+    .header-branding h1 {
+        font-size: 1.8rem;
+    }
+    .header-meta {
+        display: none;
+    }
+    .theme-switch-wrapper {
+        top: 20px;
+        right: 20px;
     }
     .carousel-track {
-        /* Permite desplazamiento horizontal en pantallas más pequeñas */
         overflow-x: scroll;
         scroll-snap-type: x mandatory;
     }
-    .carousel-card {
-        scroll-snap-align: center;
-        min-width: 80%;
-    }
     .carousel-btn {
-        display: none; /* Ocultar botones en móvil, usar swipe */
+        display: none; /* Ocultar botones de navegación en móvil si se permite scroll */
+    }
+    .info-grid.two-columns {
+        grid-template-columns: 1fr;
+    }
+    .carousel-card {
+        flex: 0 0 80%; /* Hacer tarjetas más grandes en móvil */
     }
 }
