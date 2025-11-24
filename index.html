@@ -45,7 +45,14 @@
             <p class="meta-line">Proyecto Prototípico: Aliza Ramírez, Giovanni Morales, Luis Flores</p>
         </div>
     </header>
-
+    
+    <div class="theme-switch-wrapper">
+        <label for="theme-checkbox" id="theme-label">Modo Claro</label>
+        <label class="theme-switch" for="theme-checkbox">
+            <input type="checkbox" id="theme-checkbox" />
+            <div class="slider round"></div>
+        </label>
+    </div>
     <section id="project-overview" class="fade-in">
         
         <h2 class="section-title"><i class="fas fa-book-open"></i> Puntos clave del proyecto</h2>
@@ -409,7 +416,7 @@
                             <ul>
                                 <li>No intentar cruzar corrientes de agua.</li>
                                 <li>Desconectar la energía eléctrica en caso de encharcamiento grave.</li>
-                                <li>Evitar caminar o conducir por zonas inundadas.</li>
+                                <li>Evitar caminar o conducir por corrientes de agua.</li>
                                 <li>Reportar de inmediato a las autoridades (C5) cualquier encharcamiento.</li>
                             </ul>
                         </div>
@@ -424,7 +431,7 @@
                     <h3>9. Referencias bibliográficas</h3>
                     <ul class="references-list">
                         <li>(2019, 26 de abril). Causas de las inundaciones. *Tierra y Tecnología*. <a href="https://www.icog.es/TyT/index.php/2014/10/causas-las-inundaciones/" target="_blank">https://www.icog.es/TyT/index.php/2014/10/causas-las-inundaciones/</a></li>
-                        <li>*<b>[Ciudad de México anegada]</b>*. (s. f.). Mediateca - Instituto Nacional de Antropología e Historia. <a href="https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176" target="_blank">https://mediateca.inah.gob.mx/islandora/object/mapa:176</a></li>
+                        <li>*<b>[Ciudad de México anegada]</b>*. (s. f.). Mediateca - Instituto Nacional de Antropología e Historia. <a href="https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176" target="_blank">https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176</a></li>
                         <li>Coordinación General de Protección Civil y Gestión Integral del Riesgo. (s. f.). *Atlas de riesgos del Estado de México*. <a href="https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos" target="_blank">https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos</a></li>
                         <li>EcoExploratorio. (2022, 31 de agosto). Tipos de inundación. *EcoExploratorio: Museo de Ciencias de Puerto Rico*. <a href="https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/" target="_blank">https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/</a></li>
                         <li>Estrada, L. (2025, 3 de septiembre). CDMX frente al agua: inundaciones, causas y vías para actuar. *Tecnológico de Monterrey*. <a href="https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar" target="_blank">https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar"</a></li>
@@ -470,9 +477,51 @@
 
 <script>
     // **********************************************
-    // LÓGICA DE INTERACCIÓN Y NAVEGACIÓN
+    // LÓGICA DE INTERACCIÓN, NAVEGACIÓN Y TEMA
     // **********************************************
     document.addEventListener('DOMContentLoaded', () => {
+        
+        // ==========================================================
+        // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (LOCALSTORAGE)
+        // ==========================================================
+        const checkbox = document.getElementById('theme-checkbox');
+        const root = document.documentElement; // El elemento <html>
+        const themeLabel = document.getElementById('theme-label');
+
+        // Función para aplicar el tema
+        function applyTheme(isLight) {
+            if (isLight) {
+                root.classList.add('light-mode');
+                if (themeLabel) themeLabel.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                root.classList.remove('light-mode');
+                if (themeLabel) themeLabel.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Cargar la preferencia del usuario al inicio
+        const savedTheme = localStorage.getItem('theme');
+        if (checkbox) {
+            if (savedTheme === 'light') {
+                checkbox.checked = true;
+                applyTheme(true);
+            } else {
+                // Por defecto, aplica el modo oscuro
+                applyTheme(false); 
+            }
+            
+            // Manejar el evento de cambio
+            checkbox.addEventListener('change', function() {
+                applyTheme(this.checked);
+            });
+        }
+
+
+        // ==========================================================
+        // B. LÓGICA DE NAVEGACIÓN Y CARRUSEL
+        // ==========================================================
         const carouselCards = document.querySelectorAll('.carousel-card');
         const detailSections = document.querySelectorAll('.content-detail');
         const clickSound = document.getElementById('click-sound');
@@ -500,6 +549,12 @@
             if (detailPanel) {
                 detailPanel.scrollTop = 0;
             }
+            
+            // Si es la sección del simulador, ejecutar cálculo inicial
+            if (targetId === 'content-algoritmo') {
+                // Se llama la función que está definida globalmente
+                window.calcularRiesgo(); 
+            }
         };
 
         // Escuchadores de eventos para las tarjetas del carrusel
@@ -509,7 +564,6 @@
                     clickSound.play().catch(e => console.log("Audio play prevented: ", e));
                 }
                 const targetId = card.getAttribute('data-target');
-                // La variable targetId contiene el ID correcto de la sección (ej. "content-problema")
                 showSection(targetId);
             });
         });
@@ -520,19 +574,15 @@
         const nextBtn = document.querySelector('.next-btn');
 
         let currentIndex = 0;
-        // La tarjeta tiene un ancho de 200px + 20px de margen = 220px
         const cardWidth = 220; 
         const maxIndex = carouselCards.length - 1;
 
         const updateCarouselPosition = () => {
-             // Calcula el desplazamiento solo para la tarjeta actual
             carouselTrack.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
         };
 
         nextBtn.addEventListener('click', () => {
-            if (clickSound) {
-                clickSound.play().catch(e => console.log("Audio play prevented: ", e));
-            }
+            if (clickSound) { clickSound.play().catch(e => {}); }
             if (currentIndex < maxIndex) { 
                 currentIndex++;
             } else {
@@ -542,9 +592,7 @@
         });
 
         prevBtn.addEventListener('click', () => {
-            if (clickSound) {
-                clickSound.play().catch(e => console.log("Audio play prevented: ", e));
-            }
+            if (clickSound) { clickSound.play().catch(e => {}); }
             if (currentIndex > 0) {
                 currentIndex--;
             } else {
@@ -558,10 +606,37 @@
             const initialTarget = carouselCards[0].getAttribute('data-target');
             showSection(initialTarget);
         }
+
+        // ==========================================================
+        // C. MANEJO DE INPUTS DEL SIMULADOR (Para actualizar al mover slider)
+        // ==========================================================
+        const lluviaInput = document.getElementById('lluvia-input');
+        const obstruccionInput = document.getElementById('obstruccion-input');
+        const exposicionInput = document.getElementById('exposicion-input');
+        const alcaldiaSelect = document.getElementById('alcaldia-select');
+        
+        // Función para actualizar los valores de la simulación al cambiar cualquier input
+        function updateSimulationState() {
+            // Se asegura de que los span de valor se actualicen 
+            if(lluviaInput) document.getElementById('lluvia-val').textContent = lluviaInput.value;
+            if(obstruccionInput) document.getElementById('obstruccion-val').textContent = obstruccionInput.value;
+            if(exposicionInput) document.getElementById('exposicion-val').textContent = exposicionInput.value;
+            
+            // Llamar a la función de cálculo inmediatamente
+            window.calcularRiesgo(); 
+        }
+
+        if (lluviaInput && obstruccionInput && exposicionInput && alcaldiaSelect) {
+            // Ejecutar cálculo al cambiar cualquier input (slider o select)
+            lluviaInput.addEventListener('input', updateSimulationState);
+            obstruccionInput.addEventListener('input', updateSimulationState);
+            exposicionInput.addEventListener('input', updateSimulationState);
+            alcaldiaSelect.addEventListener('change', updateSimulationState);
+        }
     });
 
     // **********************************************
-    // LÓGICA DE LA SIMULACIÓN
+    // LÓGICA DE LA SIMULACIÓN (Global, llamada por HTML y JS)
     // **********************************************
     function calcularRiesgo() {
         const C = parseFloat(document.getElementById('lluvia-input').value); // Clima/Lluvia
@@ -600,6 +675,7 @@
         // Opcional: Sonido al calcular (si se incluyó en el HTML)
         const clickSound = document.getElementById('click-sound');
         if (clickSound) {
+            clickSound.currentTime = 0; 
             clickSound.play().catch(e => console.log("Audio play prevented: ", e));
         }
     }
