@@ -5,7 +5,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         
         // ==========================================================
-        // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (LOCALSTORAGE)
+        // A. LÓGICA EL CAMBIO DE TEMA Y ALMACENAMIENTO (LOCALSTORAGE)
         // ==========================================================
         const checkbox = document.getElementById('theme-checkbox');
         const root = document.documentElement; // El elemento <html>
@@ -211,3 +211,4 @@
         }
     }
 </script>
+
