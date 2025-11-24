@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ==========================================================
-    // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (LOCALSTORAGE)
+    // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO
     // ==========================================================
     const checkbox = document.getElementById('theme-checkbox');
-    const root = document.documentElement; // El elemento <html>
+    const root = document.documentElement; 
     const themeLabel = document.getElementById('theme-label');
 
-    // Función para aplicar el tema
     function applyTheme(isLight) {
         if (isLight) {
             root.classList.add('light-mode');
@@ -20,18 +19,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Cargar la preferencia del usuario al inicio
     const savedTheme = localStorage.getItem('theme');
     if (checkbox) {
         if (savedTheme === 'light') {
             checkbox.checked = true;
             applyTheme(true);
         } else {
-            // Por defecto, aplica el modo oscuro
             applyTheme(false); 
         }
         
-        // Manejar el evento de cambio
         checkbox.addEventListener('change', function() {
             applyTheme(this.checked);
         });
@@ -39,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // ==========================================================
-    // B. LÓGICA DEL SIMULADOR Y ALGORITMO
+    // B. LÓGICA DEL SIMULADOR Y ALGORITMO (FUNCIONAL)
     // ==========================================================
     
     const cValueInput = document.getElementById('c-value');
@@ -52,17 +48,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const pLabel = document.getElementById('p-label');
     const eLabel = document.getElementById('e-label');
 
-    // Mapeo de valores numéricos a etiquetas descriptivas
     function getLabel(value) {
         const labels = {
-            '0': 'Nulo/Mínimo',
-            '1': 'Bajo/Moderado',
-            '2': 'Medio/Alto',
-            '3': 'Crítico/Extremo'
+            '0': 'Nulo/Mínimo', '1': 'Bajo/Moderado',
+            '2': 'Medio/Alto', '3': 'Crítico/Extremo'
         };
         return value + " (" + labels[value] + ")";
     }
 
+    // Función que actualiza sliders Y dispara el cálculo (SOLUCIÓN AL FALLO DE SIMULACIÓN)
     function updateLabels() {
         if (!cValueInput || !pValueInput || !eValueInput) return; 
         
@@ -70,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (pLabel) pLabel.textContent = getLabel(pValueInput.value);
         if (eLabel) eLabel.textContent = getLabel(eValueInput.value);
         
+        // Disparar el cálculo inmediatamente
         calcularRiesgo(); 
     }
 
@@ -80,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const P = parseFloat(pValueInput.value);
         const E = parseFloat(eValueInput.value);
 
+        // Algoritmo (Lógica Difusa Simplificada)
         const C_Inverso = 3 - C; 
         const P_Factor = P * 1.5; 
         const E_Factor = E * 1.2; 
@@ -94,17 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let riskText = '';
 
         if (riesgoFinal <= 1.0) {
-            riskClass = 'zero';
-            riskText = `BAJO (Seguro)`;
+            riskClass = 'zero'; riskText = `BAJO (Seguro)`;
         } else if (riesgoFinal <= 2.5) {
-            riskClass = 'low';
-            riskText = `MODERADO`;
+            riskClass = 'low'; riskText = `MODERADO`;
         } else if (riesgoFinal <= 4.0) {
-            riskClass = 'medium';
-            riskText = `ALTO`;
+            riskClass = 'medium'; riskText = `ALTO`;
         } else {
-            riskClass = 'high';
-            riskText = `CRÍTICO`;
+            riskClass = 'high'; riskText = `CRÍTICO`;
         }
 
         if (riskResultDiv) riskResultDiv.className = 'risk-level ' + riskClass;
@@ -123,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ==========================================================
-    // C. LÓGICA DE NAVEGACIÓN Y CARRUSEL (CORREGIDA)
+    // C. LÓGICA DE NAVEGACIÓN Y CARRUSEL (APARTADOS CORREGIDOS)
     // ==========================================================
     
     const contentDetails = document.querySelectorAll('.content-detail');
@@ -131,22 +123,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const carouselCards = document.querySelectorAll('.carousel-card');
 
     function showContent(targetId) {
-        // Desactivar todos los contenidos
         contentDetails.forEach(detail => detail.classList.remove('active'));
-        
-        // Desactivar todos los items del sidebar
         sidebarItems.forEach(item => item.classList.remove('active'));
 
-        // Activar el contenido y el item del sidebar correspondiente
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
             targetElement.classList.add('active');
         }
         
-        // Usar la coincidencia de data-target para activar el menú lateral
+        // Activa el item del sidebar usando el atributo data-target
         document.querySelector(`.sidebar-item[data-target="${targetId}"]`)?.classList.add('active');
         
-        // Si el contenido activo es el simulador, inicializar la simulación
+        // Inicializar el simulador si entramos a la sección
         if (targetId === 'content-algoritmo' && cValueInput) {
             updateLabels(); 
         }
@@ -176,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const scrollAmount = 300; 
 
     if (carouselContainer) {
+        // Solo añade botones si existen
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 carouselContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -188,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 3. Scroll to Top (Se mantiene la lógica anterior)
+    // 3. Scroll to Top
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
     window.onscroll = function() {
@@ -208,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ** [CORRECCIÓN APLICADA AQUÍ] **
-    // Mostrar el contenido inicial (Introducción) SOLO después de que todos los listeners estén listos.
+    // Inicializa la vista en "Introducción"
     showContent('content-introduccion');
 });
