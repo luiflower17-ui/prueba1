@@ -267,7 +267,17 @@
             <section id="content-1" class="content-section active">
                 <h2>1. Introducción y Problema</h2>
                 <p>Este proyecto aborda la creciente amenaza de inundaciones urbanas mediante un sistema de detección temprana. Nuestro objetivo es minimizar el impacto en la población y la infraestructura de las áreas más afectadas a nivel nacional.</p>
-                <p>El problema central es la falta de una herramienta predictiva en tiempo real que integre diversas fuentes de datos (clima, topografía, infraestructura) para generar alertas preventivas.</p>
+                <p>El problema central es la falta de una herramienta predictiva en tiempo real que integre diversas fuentes de datos (clima, topografía, infraestructura) para generar alertas preventivas. La solución es una aplicación digital centrada en inundaciones en la Ciudad de México (CDMX).</p>
+            </section>
+            
+            <section id="content-2" class="content-section">
+                <h2>2. Metodología de Mapeo</h2>
+                <p>La metodología se basa en la integración de Sistemas de Información Geográfica (SIG) con herramientas clave como el **Mapa Hidrográfico Urbano (MHU)** de la UNAM, que visualiza la dirección del flujo de agua en las calles y las redes hídricas. Además, se utiliza el **Atlas de Riesgos** de la CDMX como una base fundamental para identificar zonas de peligro y evaluar escenarios de afectación, permitiendo un mapeo preciso de las zonas de riesgo.</p>
+            </section>
+            
+            <section id="content-3" class="content-section">
+                <h2>3. Sensores y Recolección de Datos</h2>
+                <p>Descripción de los tipos de sensores utilizados (nivel de agua, pluviómetros, etc.) y el proceso de adquisición de datos en tiempo real. La plataforma se alimenta de datos en vivo sobre precipitación pronosticada y el estado de la infraestructura de drenaje para la predicción oportuna.</p>
             </section>
 
             <section id="content-4" class="content-section">
@@ -305,6 +315,26 @@
                 </ul>
             </section>
             
+            <section id="content-6" class="content-section">
+                <h2>6. Interfaz de Usuario y UX</h2>
+                <p>Principios de diseño y usabilidad aplicados para crear una interfaz de alerta rápida y comprensible. La aplicación debe mostrar un **mapa de riesgo** y una lista de **puntos críticos** de manera intuitiva, facilitando la toma de decisiones tanto a ciudadanos como a autoridades.</p>
+            </section>
+            
+            <section id="content-7" class="content-section">
+                <h2>7. Detección Temprana e Integración</h2>
+                <p>El sistema se enfoca en generar predicciones de riesgo **en tiempo real** mediante la combinación de las variables C, K y S del modelo. Esta detección temprana permite la integración con los sistemas de alerta a la población y la emisión de **recomendaciones operativas** para las autoridades competentes, como Protección Civil.</p>
+            </section>
+            
+            <section id="content-8" class="content-section">
+                <h2>8. Referencias Bibliográficas</h2>
+                <p>Fuentes académicas y de datos utilizadas para sustentar el modelo predictivo y la metodología del proyecto.</p>
+                <ul>
+                    <li>[1] CONAGUA (2023). Reporte Nacional de Eventos Hidrometeorológicos.</li>
+                    <li>[2] Martínez, J. (2022). Modelos de Riesgo Hídrico en Zonas Urbanas.</li>
+                    <li>[3] Data.Gob.Mx - Registros de Precipitación Histórica.</li>
+                </ul>
+            </section>
+            
             <section id="content-9" class="content-section">
                 <h2>9. Evaluación de Vulnerabilidad</h2>
                 <p>Sección dedicada a los factores socioeconómicos y demográficos que aumentan la susceptibilidad de las comunidades a sufrir daños por inundaciones. Esto incluye densidad poblacional, tipo de vivienda y accesibilidad a servicios de emergencia.</p>
@@ -326,13 +356,13 @@
             </section>
             
             <section id="content-11" class="content-section">
-                <h2>11. Factores Determinantes de Inundaciones (Información Clave)</h2>
-                <p>Según el análisis, la problemática de las inundaciones en la CDMX está determinada por los siguientes factores clave:</p>
+                <h2>11. Factores Determinantes de Inundaciones</h2>
+                <p>Información clave sobre la problemática de las inundaciones en la CDMX, extraída del documento "Prototípico Avance D2.docx.pdf" (sin modificar datos):</p>
                 <ul class="new-content-list">
                     <li>**Ubicación Geográfica:** La ciudad es una **cuenca cerrada** y su suelo lacustre tiene **poca absorción de agua**.</li>
-                    <li>**Obstrucción por Residuos Sólidos:** La acumulación de basura en la vía pública es una de las principales causas de encharcamientos, relacionándose con **más del 50% de las inundaciones urbanas**.</li>
-                    <li>**Impermeabilización del Suelo:** El crecimiento urbano ha provocado la **impermeabilización del suelo**, lo que incrementa la escorrentía superficial.</li>
-                    <li>**Hundimiento de la Ciudad (Subsidencia):** Por la sobre extracción de agua. El Atlas de Riesgos clasifica áreas en nivel **rojo** que se hunden de **21 hasta 30 centímetros al año**.</li>
+                    <li>**Obstrucción por Residuos Sólidos:** La acumulación de basura en la vía pública es una de las principales causas. Se estima que **más del 50% de las inundaciones urbanas** se relacionan directamente con la basura.</li>
+                    <li>**Impermeabilización del Suelo:** El crecimiento urbano ha provocado el aumento de la escorrentía superficial.</li>
+                    <li>**Hundimiento de la Ciudad (Subsidencia):** Causado por la sobre extracción de agua subterránea. El Atlas de Riesgos clasifica áreas en nivel **rojo** que se hunden de **21 hasta 30 centímetros al año**.</li>
                     <li>**Colapso del Sistema de Drenaje:** El sistema de drenaje ha sido **rebasado** por las lluvias intensas.</li>
                 </ul>
                 <div class="image-container">
@@ -342,27 +372,13 @@
             
             <section id="content-12" class="content-section">
                 <h2>12. Ejemplo del Algoritmo de Predicción</h2>
-                <p>El modelo de predicción de riesgo propuesto para la aplicación utiliza tres variables de entrada principales (sin modificar datos):</p>
+                <p>El modelo de predicción de riesgo utiliza las siguientes variables de entrada (C, K, S), tal como se detalla en el documento, para generar el puntaje de riesgo:</p>
                 <ul class="new-content-list">
-                    <li>**Lluvia Pronosticada (C):** Mide la cantidad de precipitación esperada.</li>
-                    <li>**Capacidad Efectiva de la Zona (K):** Incluye el estado de la red de drenaje, la obstrucción y la subsidencia.</li>
-                    <li>**Severidad (S):** Mide el nivel de exposición de infraestructura clave (Metro, vías principales).</li>
+                    <li>**Lluvia Pronosticada (C)**</li>
+                    <li>**Capacidad Efectiva de la Zona (K):** Incluye red de drenaje, obstrucción y subsidencia.</li>
+                    <li>**Severidad (S):** Mide la exposición de la infraestructura (Metro, vías clave).</li>
                 </ul>
-                <p>Las salidas de datos del algoritmo incluyen un **mapa de riesgo**, una lista de **puntos críticos** y **recomendaciones operativas** para las autoridades.</p>
-            </section>
-
-            <section id="content-2" class="content-section"><h2>2. Metodología de Mapeo</h2><p>Detalle de cómo se mapearon las zonas de riesgo usando SIG (Sistemas de Información Geográfica).</p></section>
-            <section id="content-3" class="content-section"><h2>3. Sensores y Recolección de Datos</h2><p>Descripción de los tipos de sensores utilizados (nivel de agua, pluviómetros, etc.) y el proceso de adquisición de datos en tiempo real.</p></section>
-            <section id="content-6" class="content-section"><h2>6. Interfaz de Usuario y UX</h2><p>Principios de diseño y usabilidad aplicados para crear una interfaz de alerta rápida y comprensible para el usuario final.</p></section>
-            <section id="content-7" class="content-section"><h2>7. Detección Temprana e Integración</h2><p>Explicación sobre cómo el modelo de predicción se integra con el sistema de alerta a la población y a las autoridades competentes.</p></section>
-            <section id="content-8" class="content-section">
-                <h2>8. Referencias Bibliográficas</h2>
-                <p>Fuentes académicas y de datos utilizadas para sustentar el modelo predictivo y la metodología del proyecto.</p>
-                <ul>
-                    <li>[1] CONAGUA (2023). Reporte Nacional de Eventos Hidrometeorológicos.</li>
-                    <li>[2] Martínez, J. (2022). Modelos de Riesgo Hídrico en Zonas Urbanas.</li>
-                    <li>[3] Data.Gob.Mx - Registros de Precipitación Histórica.</li>
-                </ul>
+                <p>Las salidas de datos del algoritmo incluyen un **mapa de riesgo**, una lista de **puntos críticos** y **recomendaciones operativas**.</p>
             </section>
 
         </div>
