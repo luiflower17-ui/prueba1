@@ -1,6 +1,6 @@
 /* ======================================= */
 /* 1. VARIABLES DE COLOR (Modo Oscuro/Claro) */
-/* ======================================= */
+/* ====================================== */
 :root {
     /* Modo Oscuro (Dark Mode) - Por defecto */
     --color-bg-main: #141414;        /* Fondo principal (body) */
@@ -229,3 +229,4 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
