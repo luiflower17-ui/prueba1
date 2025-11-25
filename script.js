@@ -1,205 +1,232 @@
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // ==========================================================
-    // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (CORREGIDA)
-    // ==========================================================
-    const checkbox = document.getElementById('theme-checkbox');
-    const root = document.documentElement; 
-    const themeLabel = document.getElementById('theme-label');
+// ===============================================
+// 1. FUNCIONALIDAD DE AUDIO (CLICK)
+// ===============================================
+function playClickSound() {
+    // Tono sutil para navegación
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') {
+            context.resume();
+        }
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
 
-    // Función que aplica el tema y ajusta el texto
-    function applyTheme(isLight) {
-        if (isLight) {
-            root.classList.add('light-mode');
-            // Si está en modo claro, la etiqueta debe decir que cambia a oscuro
-            if (themeLabel) themeLabel.textContent = 'Activar Modo Oscuro'; 
-            localStorage.setItem('theme', 'light');
-        } else {
-            root.classList.remove('light-mode');
-            // Si está en modo oscuro, la etiqueta debe decir que cambia a claro
-            if (themeLabel) themeLabel.textContent = 'Activar Modo Claro'; 
-            localStorage.setItem('theme', 'dark');
-        }
-    }
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
 
-    // Cargar la preferencia del usuario al inicio
-    const savedTheme = localStorage.getItem('theme');
-    if (checkbox) {
-        if (savedTheme === 'light') {
-            checkbox.checked = true;
-            applyTheme(true);
-        } else {
-            checkbox.checked = false; // Asegurar que el checkbox refleje el modo inicial
-            applyTheme(false); 
-        }
-        
-        // Manejar el evento de cambio
-        checkbox.addEventListener('change', function() {
-            applyTheme(this.checked);
-        });
-    }
+        oscillator.type = 'sine'; // Tono suave
+        oscillator.frequency.setValueAtTime(440, context.currentTime); 
+        gainNode.gain.setValueAtTime(0.1, context.currentTime); // Volumen bajo
 
-    // ==========================================================
-    // B. LÓGICA DEL SIMULADOR Y ALGORITMO (Se mantiene la última versión funcional)
-    // ==========================================================
-    
-    const cValueInput = document.getElementById('c-value');
-    const pValueInput = document.getElementById('p-value');
-    const eValueInput = document.getElementById('e-value');
-    const calculateBtn = document.getElementById('calculate-btn');
-    const riskResultDiv = document.getElementById('risk-result');
-    const riskOutput = document.getElementById('risk-output');
-    const cLabel = document.getElementById('c-label');
-    const pLabel = document.getElementById('p-label');
-    const eLabel = document.getElementById('e-label');
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.05); 
+    } catch (e) {
+        console.log("Web Audio API no soportada o bloqueada.");
+    }
+}
 
-    function getLabel(value) {
-        const labels = {
-            '0': 'Nulo/Mínimo', '1': 'Bajo/Moderado',
-            '2': 'Medio/Alto', '3': 'Crítico/Extremo'
-        };
-        return value + " (" + labels[value] + ")";
-    }
+function playActionSound() {
+    // Tono más distintivo e intensivo para acciones clave (e.g., calcular)
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') context.resume();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
 
-    function updateLabels() {
-        if (!cValueInput || !pValueInput || !eValueInput) return; 
-        
-        if (cLabel) cLabel.textContent = getLabel(cValueInput.value);
-        if (pLabel) pLabel.textContent = getLabel(pValueInput.value);
-        if (eLabel) eLabel.textContent = getLabel(eValueInput.value);
-        
-        calcularRiesgo(); 
-    }
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
 
-    function calcularRiesgo() {
-        if (!cValueInput || !pValueInput || !eValueInput) return; 
+        oscillator.type = 'square'; // Tono más duro
+        oscillator.frequency.setValueAtTime(600, context.currentTime); 
+        gainNode.gain.setValueAtTime(0.15, context.currentTime); // Volumen un poco más alto
 
-        const C = parseFloat(cValueInput.value);
-        const P = parseFloat(pValueInput.value);
-        const E = parseFloat(eValueInput.value);
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.10); // Más largo
+    } catch (e) {
+        console.log("Web Audio API no soportada o bloqueada.");
+    }
+}
 
-        const C_Inverso = 3 - C; 
-        const P_Factor = P * 1.5; 
-        const E_Factor = E * 1.2; 
 
-        let riesgoBruto = (P_Factor + E_Factor) * C_Inverso; 
-        
-        let riesgoFinal = Math.min(5.0, riesgoBruto / 4.86); 
-        
-        riesgoFinal = riesgoFinal.toFixed(1);
+// ===============================================
+// 2. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
+// ===============================================
+const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-        let riskClass = '';
-        let riskText = '';
-
-        if (riesgoFinal <= 1.0) {
-            riskClass = 'zero'; riskText = `BAJO (Seguro)`;
-        } else if (riesgoFinal <= 2.5) {
-            riskClass = 'low'; riskText = `MODERADO`;
-        } else if (riesgoFinal <= 4.0) {
-            riskClass = 'medium'; riskText = `ALTO`;
-        } else {
-            riskClass = 'high'; riskText = `CRÍTICO`;
-        }
-
-        if (riskResultDiv) riskResultDiv.className = 'risk-level ' + riskClass;
-        if (riskOutput) riskOutput.innerHTML = `${riskText} <br> (${riesgoFinal} / 5.0)`;
-    }
-
-    if (cValueInput && pValueInput && eValueInput) {
-        cValueInput.addEventListener('input', updateLabels);
-        pValueInput.addEventListener('input', updateLabels);
-        eValueInput.addEventListener('input', updateLabels);
-    }
-    
-    if (calculateBtn) {
-        calculateBtn.addEventListener('click', calcularRiesgo);
-    }
-    
-    // ==========================================================
-    // C. LÓGICA DE NAVEGACIÓN Y CARRUSEL (APARTADOS CORREGIDOS)
-    // ==========================================================
-    
-    const contentDetails = document.querySelectorAll('.content-detail');
-    const sidebarItems = document.querySelectorAll('.sidebar-item');
-    const carouselCards = document.querySelectorAll('.carousel-card');
-
-    function showContent(targetId) {
-        // Ocultar todos los contenidos
-        contentDetails.forEach(detail => detail.classList.remove('active'));
-        // Desactivar todos los items del sidebar
-        sidebarItems.forEach(item => item.classList.remove('active'));
-
-        // Mostrar el contenido objetivo
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-            targetElement.classList.add('active');
-        }
-        
-        // Activa el item del sidebar usando el atributo data-target
-        document.querySelector(`.sidebar-item[data-target="${targetId}"]`)?.classList.add('active');
-        
-        // Inicializar el simulador si entramos a la sección
-        if (targetId === 'content-algoritmo' && cValueInput) {
-            updateLabels(); 
-        }
-    }
-
-    // 1. Navegación del Sidebar
-    sidebarItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('data-target');
-            showContent(targetId);
-        });
-    });
-
-    // 2. Navegación del Carrusel
-    carouselCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            showContent(targetId);
-        });
-    });
-    
-    // Lógica del Carrusel (Scroll Horizontal) - Se mantiene
-    const carouselContainer = document.querySelector('.carousel-cards');
-    const prevBtn = document.querySelector('.prev-btn');
-    const nextBtn = document.querySelector('.next-btn');
-    const scrollAmount = 300; 
-
-    if (carouselContainer) {
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                carouselContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                carouselContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            });
-        }
-    }
-
-    // 3. Scroll to Top - Se mantiene
-    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-
-    window.onscroll = function() {
-        if (scrollToTopBtn) {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                scrollToTopBtn.style.display = "block";
-            } else {
-                scrollToTopBtn.style.display = "none";
-            }
-        }
-    };
-
-    if (scrollToTopBtn) {
-        scrollToTopBtn.addEventListener('click', function() {
-            document.body.scrollTop = 0; 
-            document.documentElement.scrollTop = 0; 
-        });
-    }
-
-    // Inicializa la vista en "Introducción"
-    showContent('content-introduccion');
+window.addEventListener('scroll', () => {
+    // Muestra el botón de scroll al bajar
+    if (window.scrollY > 300) {
+        scrollToTopBtn.style.display = "block";
+    } else {
+        scrollToTopBtn.style.display = "none";
+    }
 });
+
+if (scrollToTopBtn) {
+    scrollToTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        playClickSound(); // Sonido de navegación
+    });
+}
+
+
+// ===============================================
+// 3. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL)
+// ===============================================
+const carouselCards = document.querySelectorAll('.carousel-card');
+const detailContents = document.querySelectorAll('.content-detail');
+let currentActiveContent = null;
+
+function showContent(targetId) {
+    const nextContent = document.getElementById(targetId);
+    
+    if (!nextContent || nextContent === currentActiveContent) return;
+
+    playClickSound(); // Sonido de navegación
+
+    if (currentActiveContent) {
+        currentActiveContent.classList.remove('active');
+        setTimeout(() => {
+            currentActiveContent.style.display = 'none';
+            
+            nextContent.style.display = 'block';
+            void nextContent.offsetWidth; 
+            nextContent.classList.add('active');
+            currentActiveContent = nextContent;
+            
+            if (targetId === 'content-impacto') {
+                animateAlcaldiasBars();
+            }
+        }, 300); 
+    } else {
+        detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
+        
+        nextContent.style.display = 'block';
+        void nextContent.offsetWidth;
+        nextContent.classList.add('active');
+        currentActiveContent = nextContent;
+
+        if (targetId === 'content-impacto') {
+            animateAlcaldiasBars();
+        }
+    }
+}
+
+// Inicializar al cargar: activa el primer elemento por defecto
+document.addEventListener('DOMContentLoaded', () => {
+    const initialTargetId = detailContents[0]?.id; 
+    if (initialTargetId) {
+        showContent(initialTargetId);
+    }
+});
+
+// Eventos para las tarjetas del carrusel (click)
+carouselCards.forEach(card => {
+    card.addEventListener('click', () => { 
+        // Ocultar la tarjeta de carga de la simulación si se navega a otro lado
+        if (document.getElementById('riesgo-texto') && card.getAttribute('data-target') !== 'content-algoritmo') {
+            document.getElementById('riesgo-texto').textContent = "Esperando datos...";
+            document.getElementById('riesgo-texto').className = `risk-level pending`; 
+        }
+
+        showContent(card.getAttribute('data-target')); 
+    });
+});
+
+
+// ------------------------------------
+// Lógica de navegación del Carrusel
+// ------------------------------------
+const carouselTrack = document.getElementById('carousel-track');
+const prevBtn = document.querySelector('.prev-btn');
+const nextBtn = document.querySelector('.next-btn');
+let currentCardIndex = 0;
+// Ancho de la tarjeta + gap (330px + 20px = 350px)
+const cardWidth = 350; 
+
+function moveToCard(index) {
+    if (carouselTrack) {
+        const offset = -index * cardWidth;
+        carouselTrack.style.transform = `translateX(${offset}px)`;
+    }
+}
+
+if (nextBtn && carouselTrack) {
+    nextBtn.addEventListener('click', () => {
+        playClickSound(); // Sonido de navegación
+        const totalCards = carouselTrack.children.length;
+        const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / cardWidth);
+
+        if (currentCardIndex < maxIndex) {
+            currentCardIndex++;
+            moveToCard(currentCardIndex);
+        } else if (currentCardIndex >= maxIndex) {
+            currentCardIndex = 0; 
+            moveToCard(currentCardIndex);
+        }
+    });
+}
+
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        playClickSound(); // Sonido de navegación
+        if (currentCardIndex > 0) {
+            currentCardIndex--;
+            moveToCard(currentCardIndex);
+        }
+    });
+}
+
+
+// ===============================================
+// 4. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - Lógica de riesgo ajustada
+// ===============================================
+function calcularRiesgo() {
+    playActionSound(); // <--- Sonido más intensivo para la acción
+    
+    // 1. Obtener valores de los inputs
+    const M = parseFloat(document.getElementById('alcaldia-select').value);
+    const C = parseFloat(document.getElementById('lluvia-input').value);
+    const P = parseFloat(document.getElementById('obstruccion-input').value);
+    const E = parseFloat(document.getElementById('exposicion-input').value);
+
+    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
+    const R = C + P + (E * M);
+
+    // 3. Clasificación de riesgo (Ajustada: C=0 es CERO RIESGO)
+    let riesgoText;
+    let riesgoClass;
+
+    if (C === 0) {
+        riesgoText = "Riesgo: CERO RIESGO (Sistema Estable)"; // VERDE - Solo si no hay lluvia
+        riesgoClass = "zero";
+    } else if (R >= 6.0) {
+        riesgoText = "Riesgo: ALTO"; // ROJO
+        riesgoClass = "high";
+    } else if (R >= 4.0) {
+        riesgoText = "Riesgo: MEDIO"; // NARANJA
+        riesgoClass = "medium";
+    } else { // C > 0 y R < 4.0
+        riesgoText = "Riesgo: BAJO"; // AMARILLO - El riesgo existe por haber lluvia
+        riesgoClass = "low";
+    }
+
+    // 4. Actualizar el display
+    const riesgoTextoEl = document.getElementById('riesgo-texto');
+    
+    riesgoTextoEl.textContent = `${riesgoText} (Valor R: ${R.toFixed(2)})`;
+    riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
+}
+
+
+// ===============================================
+// 5. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS
+// ===============================================
+function animateAlcaldiasBars() {
+    const alcaldias = document.querySelectorAll('.alcaldias-list li');
+    alcaldias.forEach(li => {
+        const percentage = li.getAttribute('data-percentage');
+        // Inyecta el valor del atributo (ej: "19%") a la variable CSS --percentage
+        li.style.setProperty('--percentage', percentage);
+    });
+}
