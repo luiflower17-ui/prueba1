@@ -210,8 +210,8 @@ carouselCards.forEach(card => {
             // Sincronizar el scroll del carrusel cuando se hace click
             const cardIndex = contentIds.indexOf(targetId);
             if (cardIndex !== -1) {
-                 const totalVisibleCards = 3; 
                  const totalCards = contentIds.length;
+                 const totalVisibleCards = 3; 
                  const maxScrollIndex = totalCards - totalVisibleCards; 
                  
                  let scrollIndex = 0;
@@ -283,7 +283,7 @@ if (prevBtn) {
 
 
 // ===============================================
-// 4. LÓGICA DEL SIMULADOR
+// 4. LÓGICA DEL SIMULADOR (ACTUALIZADA)
 // ===============================================
 
 // Centralizar la actualización de los valores de rango
@@ -316,7 +316,8 @@ function calcularRiesgo() {
     const M = parseFloat(document.getElementById('alcaldia-select').value);
     const C = parseFloat(document.getElementById('lluvia-input').value);
     const P = parseFloat(document.getElementById('obstruccion-input').value);
-    const E = parseFloat(document.getElementById('exposicion-input').value);
+    // E se parsea como entero según la lógica de Python
+    const E = parseInt(document.getElementById('exposicion-input').value, 10); 
 
     // Validación de Input
     if (isNaN(C) || isNaN(P) || isNaN(E) || isNaN(M)) {
@@ -326,23 +327,33 @@ function calcularRiesgo() {
         return; 
     }
 
-    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
-    const R = C + P + (E * M);
+    // 2. FÓRMULA CLAVE ACTUALIZADA: R = (C + P + E) * M
+    const R = (C + P + E) * M;
 
-    // 3. Clasificación de riesgo
+    // 3. Clasificación de riesgo (Umbrales Actualizados)
     let riesgoText;
     let riesgoClass;
 
-    if (C === 0) {
-        riesgoText = "Riesgo: CERO RIESGO (Sistema Estable)"; 
+    const adviceContainer = document.getElementById('advice-container');
+    adviceContainer.innerHTML = ''; // Limpiar mensajes anteriores
+    
+    // C <= 0: "Cero riesgo"
+    if (C <= 0) {
+        riesgoText = "Riesgo: CERO RIESGO (Lluvia nula)"; 
         riesgoClass = "zero";
-    } else if (R >= 6.0) {
+
+    // R >= 8: "Riesgo: Alto"
+    } else if (R >= 8.0) {
         riesgoText = "Riesgo: ALTO"; 
         riesgoClass = "high";
-    } else if (R >= 4.0) {
+
+    // R <= 7 and R >= 4: "Riesgo: Medio"
+    } else if (R >= 4.0 && R <= 7.0) { 
         riesgoText = "Riesgo: MEDIO"; 
         riesgoClass = "medium";
-    } else { // C > 0 y R < 4.0
+        
+    // Else (Implied: 0 < R < 4.0): "Riesgo: Bajo"
+    } else { 
         riesgoText = "Riesgo: BAJO"; 
         riesgoClass = "low";
     }
@@ -350,28 +361,30 @@ function calcularRiesgo() {
     // 4. Actualizar el display de clasificación
     const riesgoTextoEl = document.getElementById('riesgo-texto');
     const simResultEl = document.getElementById('sim-result');
-    let messageHTML = '';
-
     riesgoTextoEl.textContent = riesgoText;
     riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
+    
+    // 5. Añadir mensaje de sugerencia condicional (Enlaces actualizados)
+    // El enlace de Protección Civil se corrige añadiendo https://
+    const proteccionCivilLink = "https://www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf"; 
+    const videoInformativoLink = "https://youtu.be/wAaV8rV2bRw";
 
-    // 5. Añadir mensaje de sugerencia condicional
+    let messageHTML = '';
+
     if (riesgoClass === 'high') {
         messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil.</p>
-                       <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link">
+                       <a href="${proteccionCivilLink}" target="_blank" class="impact-link high-risk-link">
                            <i class="fas fa-file-pdf"></i> Protocolo de Emergencia
                        </a>`;
     } else {
         messageHTML = `<p class="impact-message low-alert">Manténgase informado y preparado.</p>
-                       <a href="https://youtu.be/wAaV8rV2bRw" target="_blank" class="impact-link low-risk-link">
+                       <a href="${videoInformativoLink}" target="_blank" class="impact-link low-risk-link">
                            <i class="fas fa-video"></i> Video Informativo sobre Inundaciones
                        </a>`;
     }
     
-    // Inyectar el mensaje y el enlace en un nuevo contenedor dentro de result-box
-    let adviceContainer = document.getElementById('advice-container');
-    if (!adviceContainer) {
-        adviceContainer = document.createElement('div');
+    // Inyectar el mensaje y el enlace en el contenedor
+    if (!adviceContainer.parentNode) { // Recrear si fue eliminado
         adviceContainer.id = 'advice-container';
         simResultEl.appendChild(adviceContainer);
     }
@@ -390,16 +403,26 @@ function animateAlcaldiasBars() {
     // 1. Resetear y preparar las barras
     alcaldias.forEach(li => {
         const fullText = li.textContent.trim();
-        const textParts = fullText.split(/\s+\(/); // Divide el texto de la alcaldía
-        const textWithoutPercentage = textParts[0]; 
+        // Intentar separar el texto de la alcaldía si ya hay paréntesis
+        let textWithoutPercentage = fullText.includes('(') ? fullText.substring(0, fullText.indexOf('(')).trim() : fullText;
+        if (!textWithoutPercentage) {
+            textWithoutPercentage = li.childNodes[0].nodeValue ? li.childNodes[0].nodeValue.trim() : '';
+        }
         
         const targetPercentage = parseInt(li.getAttribute('data-percentage').replace('%', ''), 10);
         
-        // Inyectamos el span del contador
-        li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
+        // Inyectamos el span del contador si no existe, o lo encontramos
+        let counterElement = li.querySelector('.percentage-counter');
+        if (!counterElement) {
+            li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
+            counterElement = li.querySelector('.percentage-counter');
+        } else {
+             li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
+             counterElement = li.querySelector('.percentage-counter');
+        }
+
         li.style.setProperty('--percentage', '0%'); 
         
-        const counterElement = li.querySelector('.percentage-counter');
         
         let currentCount = 0;
         const duration = 1500; 
