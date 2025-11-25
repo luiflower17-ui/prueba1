@@ -1,4 +1,20 @@
 // ===============================================
+// 0. PRELOADER Y ANIMACIÓN DE CARGA INICIAL
+// ===============================================
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        // Añadir una clase para iniciar la animación de desvanecimiento
+        preloader.classList.add('fade-out');
+        // Quitar el preloader del DOM después de que termine la transición (500ms)
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500);
+    }
+});
+
+
+// ===============================================
 // 1. FUNCIONALIDAD DE AUDIO (CLICK)
 // ===============================================
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -87,7 +103,7 @@ const carouselCards = document.querySelectorAll('.carousel-card');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
 
-// NUEVO: Array ordenado de IDs para navegación secuencial (teclado)
+// Array ordenado de IDs para navegación secuencial (teclado)
 const contentIds = Array.from(carouselCards).map(card => card.getAttribute('data-target')).filter(id => id);
 
 function animateInfoBlocks(contentElement) {
@@ -107,6 +123,22 @@ function showContent(targetId) {
 
     playSoftClick(); 
 
+    // Limpiar mensajes del simulador al cambiar de sección
+    const adviceContainer = document.getElementById('advice-container');
+    if (adviceContainer) {
+        adviceContainer.innerHTML = '';
+    }
+    
+    // Reiniciar el estado del simulador si salimos
+    if (targetId !== 'content-algoritmo') {
+        const riesgoTextoEl = document.getElementById('riesgo-texto');
+        if (riesgoTextoEl) {
+            riesgoTextoEl.textContent = "Esperando datos...";
+            riesgoTextoEl.className = `risk-level pending`; 
+        }
+    }
+
+
     if (currentActiveContent) {
         // Desactivar el contenido actual
         currentActiveContent.classList.remove('active');
@@ -124,7 +156,11 @@ function showContent(targetId) {
             currentActiveContent = nextContent;
             
             animateInfoBlocks(nextContent);
-            if (targetId === 'content-impacto') animateAlcaldiasBars();
+            
+            // Si es la sección de impacto, iniciamos la animación del contador
+            if (targetId === 'content-impacto') {
+                animateAlcaldiasBars();
+            }
         }, 300); 
     } else {
         // Primera carga
@@ -136,7 +172,9 @@ function showContent(targetId) {
         currentActiveContent = nextContent;
 
         animateInfoBlocks(nextContent); 
-        if (targetId === 'content-impacto') animateAlcaldiasBars();
+        if (targetId === 'content-impacto') {
+            animateAlcaldiasBars();
+        }
     }
 }
 
@@ -161,15 +199,6 @@ carouselCards.forEach(card => {
     card.addEventListener('click', () => { 
         const targetId = card.getAttribute('data-target');
         
-        // Reiniciar el estado del simulador
-        if (targetId !== 'content-algoritmo') {
-            const riesgoTextoEl = document.getElementById('riesgo-texto');
-            if (riesgoTextoEl) {
-                riesgoTextoEl.textContent = "Esperando datos...";
-                riesgoTextoEl.className = `risk-level pending`; 
-            }
-        }
-
         if (targetId) {
             // Manejar la clase 'active' para el efecto de pulse/glow
             carouselCards.forEach(c => c.classList.remove('active'));
@@ -177,6 +206,25 @@ carouselCards.forEach(card => {
 
             window.location.hash = targetId; 
             showContent(targetId); 
+            
+            // Sincronizar el scroll del carrusel cuando se hace click
+            const cardIndex = contentIds.indexOf(targetId);
+            if (cardIndex !== -1) {
+                 const totalVisibleCards = 3; 
+                 const totalCards = contentIds.length;
+                 const maxScrollIndex = totalCards - totalVisibleCards; 
+                 
+                 let scrollIndex = 0;
+                 if (cardIndex >= totalVisibleCards) {
+                     // Calcula el índice de desplazamiento para que la tarjeta quede a la derecha
+                     scrollIndex = Math.min(cardIndex - (totalVisibleCards - 1), maxScrollIndex);
+                 }
+                 
+                 scrollIndex = Math.max(0, scrollIndex);
+                 
+                 currentCardIndex = scrollIndex; // Sincroniza el índice global
+                 moveToCard(currentCardIndex);
+            }
         }
     });
 });
@@ -188,7 +236,7 @@ carouselCards.forEach(card => {
 const carouselTrack = document.getElementById('carousel-track');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
-let currentCardIndex = 0;
+let currentCardIndex = 0; // Índice de desplazamiento visual (NO índice de la tarjeta activa)
 
 const CARD_WIDTH = 330; 
 const CARD_GAP = 20;    
@@ -206,7 +254,6 @@ if (nextBtn && carouselTrack) {
     nextBtn.addEventListener('click', () => {
         playSoftClick();
         const totalCards = carouselTrack.children.length;
-        // Se asume que en escritorio caben 3 tarjetas y la vista no se mueve más allá del final
         const totalVisibleCards = 3; 
         const maxIndex = totalCards - totalVisibleCards;
 
@@ -217,6 +264,10 @@ if (nextBtn && carouselTrack) {
             currentCardIndex = 0; 
             moveToCard(currentCardIndex);
         }
+        
+        // Al usar el botón, no cambiamos la tarjeta activa, solo el scroll.
+        // Si queremos que al mover el scroll se active la primera visible, es más complejo.
+        // Dejaremos que los botones solo muevan el scroll visualmente.
     });
 }
 
@@ -238,9 +289,9 @@ if (prevBtn) {
 // Centralizar la actualización de los valores de rango
 document.addEventListener('DOMContentLoaded', () => {
     const rangeInputs = [
-        { id: 'lluvia-input', valueId: 'lluvia-value' },
-        { id: 'obstruccion-input', valueId: 'obstruccion-value' },
-        { id: 'exposicion-input', valueId: 'exposicion-value' }
+        { id: 'lluvia-input', valueId: 'lluvia-val' },
+        { id: 'obstruccion-input', valueId: 'obstruccion-val' },
+        { id: 'exposicion-input', valueId: 'exposicion-val' }
     ];
 
     rangeInputs.forEach(item => {
@@ -296,29 +347,98 @@ function calcularRiesgo() {
         riesgoClass = "low";
     }
 
-    // 4. Actualizar el display (SOLO CLASIFICACIÓN DE RIESGO)
+    // 4. Actualizar el display de clasificación
     const riesgoTextoEl = document.getElementById('riesgo-texto');
-    
+    const simResultEl = document.getElementById('sim-result');
+    let messageHTML = '';
+
     riesgoTextoEl.textContent = riesgoText;
     riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
+
+    // 5. Añadir mensaje de sugerencia condicional
+    if (riesgoClass === 'high') {
+        messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil.</p>
+                       <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link">
+                           <i class="fas fa-file-pdf"></i> Protocolo de Emergencia
+                       </a>`;
+    } else {
+        messageHTML = `<p class="impact-message low-alert">Manténgase informado y preparado.</p>
+                       <a href="https://youtu.be/wAaV8rV2bRw" target="_blank" class="impact-link low-risk-link">
+                           <i class="fas fa-video"></i> Video Informativo sobre Inundaciones
+                       </a>`;
+    }
+    
+    // Inyectar el mensaje y el enlace en un nuevo contenedor dentro de result-box
+    let adviceContainer = document.getElementById('advice-container');
+    if (!adviceContainer) {
+        adviceContainer = document.createElement('div');
+        adviceContainer.id = 'advice-container';
+        simResultEl.appendChild(adviceContainer);
+    }
+    adviceContainer.innerHTML = messageHTML;
 }
 
 window.calcularRiesgo = calcularRiesgo;
 
 
 // ===============================================
-// 5. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS
+// 5. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS (Contador Dinámico)
 // ===============================================
 function animateAlcaldiasBars() {
     const alcaldias = document.querySelectorAll('.alcaldias-list li');
+    
+    // 1. Resetear y preparar las barras
     alcaldias.forEach(li => {
-        const percentage = li.getAttribute('data-percentage');
-        li.style.setProperty('--percentage', percentage);
+        const fullText = li.textContent.trim();
+        const textParts = fullText.split(/\s+\(/); // Divide el texto de la alcaldía
+        const textWithoutPercentage = textParts[0]; 
+        
+        const targetPercentage = parseInt(li.getAttribute('data-percentage').replace('%', ''), 10);
+        
+        // Inyectamos el span del contador
+        li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
+        li.style.setProperty('--percentage', '0%'); 
+        
+        const counterElement = li.querySelector('.percentage-counter');
+        
+        let currentCount = 0;
+        const duration = 1500; 
+        const stepTime = 15; 
+        const steps = duration / stepTime;
+        const stepValue = targetPercentage / steps;
+        
+        // 2. Iniciar el contador
+        let countInterval = setInterval(() => {
+            currentCount += stepValue;
+            
+            if (currentCount >= targetPercentage) {
+                clearInterval(countInterval);
+                currentCount = targetPercentage;
+            }
+            
+            const roundedCount = Math.floor(currentCount);
+            
+            // Actualizar el porcentaje de la barra (CSS transition)
+            li.style.setProperty('--percentage', `${roundedCount}%`);
+            
+            // Actualizar el contador en el texto
+            if(counterElement) {
+                counterElement.textContent = `(${roundedCount}%)`;
+            }
+            
+            if (currentCount === targetPercentage) {
+                 li.style.setProperty('--percentage', `${targetPercentage}%`);
+                 if(counterElement) {
+                    counterElement.textContent = `(${targetPercentage}%)`;
+                 }
+            }
+
+        }, stepTime);
     });
 }
 
 // ===============================================
-// 6. NAVEGACIÓN POR TECLADO
+// 6. NAVEGACIÓN POR TECLADO (Mejorada con Scroll)
 // ===============================================
 function navigateSections(direction) {
     if (!currentActiveContent) return; 
@@ -331,19 +451,37 @@ function navigateSections(direction) {
     let newIndex = currentIndex;
 
     if (direction === 'next') {
-        newIndex = (currentIndex + 1) % contentIds.length; // Ciclo hacia adelante
+        newIndex = (currentIndex + 1) % contentIds.length; 
     } else if (direction === 'prev') {
-        // Ciclo hacia atrás: asegura que el resultado sea positivo
         newIndex = (currentIndex - 1 + contentIds.length) % contentIds.length;
     }
 
     const newTargetId = contentIds[newIndex];
     
     if (newTargetId) {
-        // Buscar la tarjeta del carrusel y simular el click para reusar toda la lógica
+        // Simular el click en la nueva tarjeta (esto ya cambia el contenido y la clase 'active')
         const targetCard = document.querySelector(`.carousel-card[data-target="${newTargetId}"]`);
         if (targetCard) {
             targetCard.click(); 
+            
+            // Lógica para sincronizar el scroll visual del carrusel:
+            const totalCards = contentIds.length;
+            const totalVisibleCards = 3; 
+            const maxScrollIndex = totalCards - totalVisibleCards;
+            
+            let scrollIndex = 0;
+            
+            if (newIndex >= totalVisibleCards) {
+                // Si la nueva tarjeta está fuera de la vista (índice 3 o más), movemos el carrusel
+                // para que la tarjeta activa quede como la tercera tarjeta visible.
+                scrollIndex = Math.min(newIndex - (totalVisibleCards - 1), maxScrollIndex);
+            }
+            
+            // Aseguramos que el índice no sea negativo o exceda el máximo
+            scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
+            
+            currentCardIndex = scrollIndex;
+            moveToCard(currentCardIndex);
         }
     }
 }
