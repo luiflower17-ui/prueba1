@@ -1,41 +1,46 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ==========================================================
-    // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO
+    // A. LÓGICA DEL CAMBIO DE TEMA Y ALMACENAMIENTO (CORREGIDA)
     // ==========================================================
     const checkbox = document.getElementById('theme-checkbox');
     const root = document.documentElement; 
     const themeLabel = document.getElementById('theme-label');
 
+    // Función que aplica el tema y ajusta el texto
     function applyTheme(isLight) {
         if (isLight) {
             root.classList.add('light-mode');
-            if (themeLabel) themeLabel.textContent = 'Modo Oscuro';
+            // Si está en modo claro, la etiqueta debe decir que cambia a oscuro
+            if (themeLabel) themeLabel.textContent = 'Activar Modo Oscuro'; 
             localStorage.setItem('theme', 'light');
         } else {
             root.classList.remove('light-mode');
-            if (themeLabel) themeLabel.textContent = 'Modo Claro';
+            // Si está en modo oscuro, la etiqueta debe decir que cambia a claro
+            if (themeLabel) themeLabel.textContent = 'Activar Modo Claro'; 
             localStorage.setItem('theme', 'dark');
         }
     }
 
+    // Cargar la preferencia del usuario al inicio
     const savedTheme = localStorage.getItem('theme');
     if (checkbox) {
         if (savedTheme === 'light') {
             checkbox.checked = true;
             applyTheme(true);
         } else {
+            checkbox.checked = false; // Asegurar que el checkbox refleje el modo inicial
             applyTheme(false); 
         }
         
+        // Manejar el evento de cambio
         checkbox.addEventListener('change', function() {
             applyTheme(this.checked);
         });
     }
 
-
     // ==========================================================
-    // B. LÓGICA DEL SIMULADOR Y ALGORITMO (FUNCIONAL)
+    // B. LÓGICA DEL SIMULADOR Y ALGORITMO (Se mantiene la última versión funcional)
     // ==========================================================
     
     const cValueInput = document.getElementById('c-value');
@@ -56,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return value + " (" + labels[value] + ")";
     }
 
-    // Función que actualiza sliders Y dispara el cálculo (SOLUCIÓN AL FALLO DE SIMULACIÓN)
     function updateLabels() {
         if (!cValueInput || !pValueInput || !eValueInput) return; 
         
@@ -64,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (pLabel) pLabel.textContent = getLabel(pValueInput.value);
         if (eLabel) eLabel.textContent = getLabel(eValueInput.value);
         
-        // Disparar el cálculo inmediatamente
         calcularRiesgo(); 
     }
 
@@ -75,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const P = parseFloat(pValueInput.value);
         const E = parseFloat(eValueInput.value);
 
-        // Algoritmo (Lógica Difusa Simplificada)
         const C_Inverso = 3 - C; 
         const P_Factor = P * 1.5; 
         const E_Factor = E * 1.2; 
@@ -103,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (riskOutput) riskOutput.innerHTML = `${riskText} <br> (${riesgoFinal} / 5.0)`;
     }
 
-    // Event Listeners para el simulador
     if (cValueInput && pValueInput && eValueInput) {
         cValueInput.addEventListener('input', updateLabels);
         pValueInput.addEventListener('input', updateLabels);
@@ -123,9 +124,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const carouselCards = document.querySelectorAll('.carousel-card');
 
     function showContent(targetId) {
+        // Ocultar todos los contenidos
         contentDetails.forEach(detail => detail.classList.remove('active'));
+        // Desactivar todos los items del sidebar
         sidebarItems.forEach(item => item.classList.remove('active'));
 
+        // Mostrar el contenido objetivo
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
             targetElement.classList.add('active');
@@ -157,14 +161,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Lógica del Carrusel (Scroll Horizontal)
+    // Lógica del Carrusel (Scroll Horizontal) - Se mantiene
     const carouselContainer = document.querySelector('.carousel-cards');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     const scrollAmount = 300; 
 
     if (carouselContainer) {
-        // Solo añade botones si existen
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 carouselContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -177,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 3. Scroll to Top
+    // 3. Scroll to Top - Se mantiene
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
     window.onscroll = function() {
