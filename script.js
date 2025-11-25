@@ -1,502 +1,505 @@
-// ===============================================
-// 0. PRELOADER Y ANIMACIÓN DE CARGA INICIAL
-// ===============================================
-window.addEventListener('load', () => {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        // Añadir una clase para iniciar la animación de desvanecimiento
-        preloader.classList.add('fade-out');
-        // Quitar el preloader del DOM después de que termine la transición (500ms)
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 500);
-    }
-});
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de inundaciones en CDMX</title>
 
-
-// ===============================================
-// 1. FUNCIONALIDAD DE AUDIO (CLICK)
-// ===============================================
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-// Asegura que el contexto se reactive en la primera interacción del usuario
-document.addEventListener('DOMContentLoaded', () => {
-    if (audioContext.state === 'suspended') {
-        const resumeContext = () => {
-            audioContext.resume().then(() => {
-                document.removeEventListener('click', resumeContext);
-                document.removeEventListener('touchstart', resumeContext);
-            }).catch(e => console.error("Error al reanudar AudioContext:", e));
-        };
-        document.addEventListener('click', resumeContext, { once: true });
-        document.addEventListener('touchstart', resumeContext, { once: true });
-    }
-});
-
-/**
- * Genera un sonido sintetizado con la Web Audio API.
- */
-function createSound(frequency, duration, volume, type = 'square') {
-    if (audioContext.state === 'closed' || audioContext.state === 'suspended') return; 
-
-    try {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-
-        oscillator.type = type; 
-        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime); 
-        gainNode.gain.setValueAtTime(volume, audioContext.currentTime); 
-
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
-
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + duration); 
-    } catch (e) {
-        console.warn("Fallo al reproducir audio:", e.message);
-    }
-}
-
-// Sonido de click digital (navegación sutil)
-const playSoftClick = () => createSound(1500, 0.015, 0.1, 'square'); 
-// Sonido de acción (botón de simulación)
-const playConfirmAction = () => createSound(1200, 0.08, 0.2, 'sine'); 
-
-
-// ===============================================
-// 2. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
-// ===============================================
-const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-
-if (scrollToTopBtn) {
-    const observerTarget = document.querySelector('header');
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                scrollToTopBtn.style.display = "none";
-            } else {
-                scrollToTopBtn.style.display = "block";
-            }
-        });
-    }, {
-        threshold: 0.1 
-    });
-
-    if (observerTarget) {
-        observer.observe(observerTarget);
-    }
-
-    scrollToTopBtn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        playSoftClick(); 
-    });
-}
-
-
-// ===============================================
-// 3. LÓGICA DEL PANEL INTERACTIVO (CARRUSEL Y ANIMACIONES)
-// ===============================================
-const carouselCards = document.querySelectorAll('.carousel-card');
-const detailContents = document.querySelectorAll('.content-detail');
-let currentActiveContent = null;
-
-// Array ordenado de IDs para navegación secuencial (teclado)
-const contentIds = Array.from(carouselCards).map(card => card.getAttribute('data-target')).filter(id => id);
-
-function animateInfoBlocks(contentElement) {
-    const infoBlocks = contentElement.querySelectorAll('.info-block');
-    infoBlocks.forEach((block, index) => {
-        block.style.animation = `none`; 
-        block.offsetHeight; 
-        block.style.animation = `fadeInUp 0.6s ease-out forwards`;
-        block.style.animationDelay = `${0.2 + index * 0.1}s`; 
-    });
-}
-
-function showContent(targetId) {
-    const nextContent = document.getElementById(targetId);
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    if (!nextContent || nextContent === currentActiveContent) return;
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    playSoftClick(); 
+    <link rel="stylesheet" href="styles.css">
 
-    // Limpiar mensajes del simulador al cambiar de sección
-    const adviceContainer = document.getElementById('advice-container');
-    if (adviceContainer) {
-        adviceContainer.innerHTML = '';
-    }
-    
-    // Reiniciar el estado del simulador si salimos
-    if (targetId !== 'content-algoritmo') {
-        const riesgoTextoEl = document.getElementById('riesgo-texto');
-        if (riesgoTextoEl) {
-            riesgoTextoEl.textContent = "Esperando datos...";
-            riesgoTextoEl.className = `risk-level pending`; 
-        }
-    }
+</head>
+<body>
 
+<div class="video-background">
+    <div class="video-overlay"></div>
+    <iframe
+        id="youtube-background"
+        src="https://www.youtube.com/embed/6E4qvlqMT2A?controls=0&rel=0&autoplay=1&loop=1&mute=1&playlist=6E4qvlqMT2A"
+        frameborder="0"
+        allow="autoplay; encrypted-media; loop"
+        allowfullscreen>
+    </iframe>
+</div>
 
-    if (currentActiveContent) {
-        // Desactivar el contenido actual
-        currentActiveContent.classList.remove('active');
-        currentActiveContent.style.opacity = '0';
-        currentActiveContent.style.transform = 'translateY(-20px)';
+<main>
+    <header>
+        <div class="header-branding">
+            <h1>Predicción de inundaciones en CDMX</h1>
+            <p class="header-subtitle">
+                Herramienta digital para la detección temprana de riesgo de inundación.
+            </p>
+        </div>
+ 
+        <div class="header-meta">
+            <p class="meta-line">Gobierno de la Ciudad de México | Universidad Nacional Rosario Castellanos (UNRC)</p>
+            <p class="meta-line">Proyecto prototípico: Aliza Ramírez, Giovanni Morales, Luis Flores</p>
+        </div>
+    </header>
 
-        setTimeout(() => {
-            currentActiveContent.style.display = 'none'; 
-            
-            // Activar el nuevo contenido
-            nextContent.style.display = 'block';
-            void nextContent.offsetWidth; 
-            nextContent.classList.add('active');
-            
-            currentActiveContent = nextContent;
-            
-            animateInfoBlocks(nextContent);
-            
-            // Si es la sección de impacto, iniciamos la animación del contador
-            if (targetId === 'content-impacto') {
-                animateAlcaldiasBars();
-            }
-        }, 300); 
-    } else {
-        // Primera carga
-        detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
+    <section id="project-overview" class="fade-in">
         
-        nextContent.style.display = 'block';
-        void nextContent.offsetWidth;
-        nextContent.classList.add('active');
-        currentActiveContent = nextContent;
+        <h2 class="section-title"><i class="fas fa-book-open"></i> Puntos clave del proyecto</h2>
+       
+        <div class="carousel-container">
+            <div class="carousel-track" id="carousel-track">
+                
+                <div class="carousel-card" data-target="content-problema">
+                    <h4>1. Problema y antecedentes</h4>
+                    <i class="fas fa-exclamation-triangle card-icon"></i>
+                    <p>La CDMX sufre de alta vulnerabilidad a inundaciones. <strong>La Gran Inundación de 1629 es un antecedente clave.</strong></p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+                </div>
 
-        animateInfoBlocks(nextContent); 
-        if (targetId === 'content-impacto') {
-            animateAlcaldiasBars();
-        }
-    }
-}
+                <div class="carousel-card" data-target="content-objetivos">
+                    <h4>2. Objetivos y justificación</h4>
+                    <i class="fas fa-bullseye card-icon"></i>
+                    <p>Desarrollar una plataforma predictiva que reduzca el impacto del riesgo de inundación, usando datos del C5 y SACMEX.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+             
+                </div>
 
-// Inicializar y manejar la tarjeta activa al cargar
-document.addEventListener('DOMContentLoaded', () => {
-    const initialTargetId = window.location.hash ? window.location.hash.substring(1) : detailContents[0]?.id; 
-    
-    if (initialTargetId && document.getElementById(initialTargetId)) {
-        showContent(initialTargetId);
-        const initialCard = document.querySelector(`.carousel-card[data-target="${initialTargetId}"]`);
-        if (initialCard) {
-            initialCard.classList.add('active');
-        }
-    } else if (detailContents[0]?.id) {
-        showContent(detailContents[0].id);
-        carouselCards[0]?.classList.add('active');
-    }
-});
+                <div class="carousel-card" data-target="content-marco">
+                    <h4>3. Marco teórico</h4>
+                    <i class="fas fa-book card-icon"></i>
+                    <p>El proyecto se enfoca en las inundaciones <strong>pluviales</strong>, agravadas por la falta de infiltración y la obstrucción por residuos.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+             
+                </div>
 
-// Eventos para las tarjetas del carrusel (click)
-carouselCards.forEach(card => {
-    card.addEventListener('click', () => { 
-        const targetId = card.getAttribute('data-target');
-        
-        if (targetId) {
-            // Manejar la clase 'active' para el efecto de pulse/glow
-            carouselCards.forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
+                <div class="carousel-card" data-target="content-geohidrico">
+                    <h4>4. Factores geológicos críticos</h4>
+                    <i class="fas fa-archway card-icon"></i>
+                    <p>El <strong>hundimiento diferencial (subsidencia)</strong> obstruye el flujo del drenaje y amplifica el riesgo estructural.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+                </div>
 
-            window.location.hash = targetId; 
-            showContent(targetId); 
+ 
+                <div class="carousel-card" data-target="content-impacto">
+                    <h4>5. Zonas de impacto y riesgo</h4>
+                    <i class="fas fa-map-marked-alt card-icon"></i>
+                    <p>Tlalpan (19%) e Iztapalapa (18%) concentran la mayor parte de los reportes de inundación (datos C5).</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+             
+                </div>
+
+                <div class="carousel-card" data-target="content-prediccion">
+                    <h4>6. Modelos de predicción</h4>
+                    <i class="fas fa-chart-line card-icon"></i>
+                    <p>Se utilizan referencias como el Atlas de Riesgos del EDOMEX y el Mapa Hidrográfico Urbano (MHU) de la UNAM.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
             
-            // Sincronizar el scroll del carrusel cuando se hace click
-            const cardIndex = contentIds.indexOf(targetId);
-            if (cardIndex !== -1) {
-                 const totalVisibleCards = 3; 
-                 const totalCards = contentIds.length;
-                 const maxScrollIndex = totalCards - totalVisibleCards; 
+                </div>
+
+                <div class="carousel-card" data-target="content-algoritmo">
+                    <h4>7. Diseño del algoritmo (Simulador)</h4>
+                    <i class="fas fa-code card-icon"></i>
+                    <p>Se utiliza un modelo algorítmico conceptual para clasificar el riesgo en niveles de alerta temprana (Cero, Bajo, Medio, Alto).</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+           
+                </div>
+
+                <div class="carousel-card" data-target="content-preventivas">
+                    <h4>8. Medidas preventivas</h4>
+                    <i class="fas fa-hands-helping card-icon"></i>
+                    <p>La prevención incluye la limpieza de cañadas y la implementación de <strong>infraestructura verde</strong>.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+                </div>
+   
+              
+                <div class="carousel-card" data-target="content-referencias">
+                    <h4>9. Referencias</h4>
+                    <i class="fas fa-clipboard-list card-icon"></i>
+                    <p>Listado de fuentes bibliográficas utilizadas en la investigación y el desarrollo del prototipo.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+                </div>
+
+    
+                <div class="carousel-card" data-target="content-conclusiones">
+                    <h4>10. Conclusiones</h4>
+                    <i class="fas fa-check-circle card-icon"></i>
+                    <p>Resumen de los hallazgos clave y el impacto potencial de la herramienta en la gestión urbana.</p>
+                    <span class="card-action-hint">Haz clic para ver más...</span>
+                </div>
+
+ 
+            </div>
+            <button class="carousel-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+
+        <h2 class="section-title" style="margin-top: 50px;"><i class="fas fa-file-alt"></i> Documentación detallada del proyecto de investigación</h2>
+
+        <div id="interactive-content">
+            <div id="detail-panel" class="detail-panel-full"> 
+
+      
+                <div id="content-problema" class="content-detail">
+                    <h3>1. Problema de investigación y antecedentes</h3>
+                    <p class="section-intro">El proyecto aborda la creciente vulnerabilidad de la CDMX ante las inundaciones, un fenómeno que combina factores geológicos, climáticos y sociales.</p>
+
+                    <div class="info-grid">
+                        <div class="info-block full-width">
+                            <h4>Contexto Histórico: La Gran Inundación de 1629</h4>
+                   
+                            <p>La Gran Inundación de 1629, que mantuvo a la ciudad bajo el agua por 5 años, es un antecedente clave de la vulnerabilidad de la cuenca. Este evento marcó el inicio de las grandes obras de desagüe y el cambio de enfoque de convivencia con el lago a su desecación. Este precedente histórico refuerza la necesidad de herramientas predictivas modernas.</p>
+
+                            <figure class="project-figure">
+                                <img src="https://i.ibb.co/L5T47y4/old-map-mexico-valley-conceptual.jpg" alt="Mapa antiguo del Valle de México durante las inundaciones." />
+                                <figcaption>
+                                    <p><em>Nota: Imagen conceptual utilizada para representar la extensión de los lagos y las inundaciones históricas en el Valle de México.</em></p>
+             
+                                    <p><strong>Cita conceptual (APA 7):</strong> Autor desconocido. (s. f.). <em>Mapa conceptual del Valle de México.</em> [Ilustración]. (Se recomienda al usuario verificar la fuente real de su imagen para la cita final).</p>
+                                </figcaption>
+                            </figure>
                  
-                 let scrollIndex = 0;
-                 if (cardIndex >= totalVisibleCards) {
-                     // Calcula el índice de desplazamiento para que la tarjeta quede a la derecha
-                     scrollIndex = Math.min(cardIndex - (totalVisibleCards - 1), maxScrollIndex);
-                 }
+                        </div>
+                        <div class="info-block">
+                            <h4>Problemas de investigación</h4>
+                            <p>La Ciudad de México presenta un alto índice de inundaciones debido a su ubicación en una cuenca cerrada, el cambio climático y la impermeabilización del suelo por el crecimiento urbano descontrolado. El registro de la temporada de lluvias 2025 superó volúmenes históricos (hasta un 33% más que 1982), acentuando la vulnerabilidad del sistema de drenaje y desalojo.</p>
+                        </div>
+                        <div class="info-block">
+                          
+                            <h4>Antecedentes (raíces históricas y geográficas)</h4>
+                            <p>La urbe se construyó sobre el antiguo lago de Texcoco, un subsuelo lacustre que, al ser desecado y cubierto con infraestructura, ha perdido capacidad de filtración y sufre de hundimiento diferencial. El reto de la gestión del agua ha requerido obras de gran magnitud, como el Túnel Emisor Oriente (TEO).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="content-objetivos" class="content-detail">
+    
+                 <h3>2. Objetivos y justificación</h3>
+                    <p class="section-intro">Definición del propósito central del proyecto y la relevancia de su aplicación para la gestión de riesgos en la capital.</p>
+
+                    <div class="info-grid two-columns">
+                        <div class="info-block">
+           
+                            <h4>Objetivo general</h4>
+                            <p>Analizar los factores geológicos y sociales que detonan las inundaciones en la CDMX para reducir el impacto en la vida y el patrimonio de los ciudadanos mediante una herramienta de alerta temprana.</p>
+                       
+                        </div>
+                        <div class="info-block">
+                            <h4>Justificación (la necesidad del proyecto)</h4>
+                            <p>La prevención de desastres naturales se ha vuelto prioritaria en la agenda de la CDMX. Una herramienta digital predictiva es fundamental para orientar los recursos de Protección Civil y SACMEX, permitiendo una intervención rápida y enfocada antes de la saturación del sistema.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-block full-width">
+       
+                            <h4>Objetivos específicos</h4>
+                        <ul>
+                            <li>Recabar y procesar datos históricos de precipitación, hundimiento del suelo, reportes de basura y fallas del drenaje (datos del C5 y SACMEX).</li>
+         
+                            <li>Diseñar un modelo predictivo que clasifique el riesgo de inundación en áreas específicas (e.g., celdas de 500m x 500m) en función de las variables de entrada.</li>
+                            <li>Visualizar las zonas de riesgo en tiempo real y emitir alertas tempranas.</li>
                  
-                 scrollIndex = Math.max(0, scrollIndex);
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="content-marco" class="content-detail">
+                    <h3>3. Marco teórico</h3>
+                    <p class="section-intro">Definiciones clave para el análisis del riesgo de inundación, incluyendo la tipología y las principales causas.</p>
+
+                    <div class="info-grid">
+                        <div class="info-block">
                  
-                 currentCardIndex = scrollIndex; // Sincroniza el índice global
-                 moveToCard(currentCardIndex);
-            }
-        }
-    });
-});
+                            <h4>Concepto y tipología de las inundaciones</h4>
+                            <p>Este proyecto se enfoca en tres tipos principales:</p>
+                            <ul>
+                     
+                                <li>Inundaciones Pluviales: Originadas por lluvias intensas que exceden la capacidad del drenaje. Son el foco principal del estudio.</li>
+                                <li>Inundaciones Fluviales: Causadas por el desbordamiento de ríos o cuerpos de agua naturales.</li>
+                                <li>Inundaciones Urbanas: Se agravan por la impermeabilización del suelo, generando escorrentía superficial masiva.</li>
+       
+                            </ul>
+                        </div>
+                        <div class="info-block">
+                            <h4>Factores determinantes de las inundaciones</h4>
+                            <p>Dos factores clave interactúan para detonar las inundaciones:</p>
+                            <ul>
+                                <li>Factor natural/climático: Lluvias intensas y persistentes.</li>
+                                <li>Factor antropogénico/urbano: Impermeabilización del suelo.</li>
+                            </ul>
+                            <p>La disposición inadecuada de basura en las calles es el factor social más relevante, responsable de más del 50% de los bloqueos.</p>
+                        </div>
+                        <div class="info-block full-width">
+                            <h4>La problemática específica de la obstrucción por residuos sólidos</h4>
+                            <p>La acumulación de basura es responsable de más del 50% de los bloqueos en alcantarillas y colectores. Este factor tiene un impacto desproporcionado en la eficiencia del sistema de drenaje. Aproximadamente el 13% de la basura generada en el país queda en la vía pública, terminando en el drenaje.</p>
+                            <h4>Consecuencias derivadas de la obstrucción del drenaje</h4>
+                            <p>Las inundaciones no solo causan daños materiales, sino que representan un riesgo sanitario grave debido al contacto con aguas residuales, y provocan un colapso en la movilidad urbana.</p>
+                        </div>
+                    </div>
+                </div>
 
+                <div id="content-geohidrico" class="content-detail">
+               
+                    <h3>4. Factores geológicos críticos</h3>
+                    <p class="section-intro">El análisis geológico revela que el hundimiento del subsuelo es un factor estructural que amplifica el riesgo en la infraestructura del drenaje.</p>
 
-// ------------------------------------
-// Lógica de navegación del Carrusel
-// ------------------------------------
-const carouselTrack = document.getElementById('carousel-track');
-const prevBtn = document.querySelector('.prev-btn');
-const nextBtn = document.querySelector('.next-btn');
-let currentCardIndex = 0; // Índice de desplazamiento visual (NO índice de la tarjeta activa)
+                    <div class="info-grid two-columns">
+                        <div class="info-block">
+                            <h4>El hundimiento de Ciudad de México (subsidencia)</h4>
+                   
+                            <p>El hundimiento, causado por la sobre-extracción de agua de los acuíferos, modifica las pendientes naturales del terreno. Este cambio geológico obstaculiza el flujo por gravedad en el drenaje y es una de las causas principales de las fallas del sistema.</p>
+                        </div>
+                        <div class="info-block">
+                            <h4>Colapso del sistema de drenaje</h4>
+                            <p>La combinación de lluvias intensas y la subsidencia ha provocado que la capacidad de desalojo sea rebasada periódicamente. A pesar de las grandes obras (como el TEO), la presión sobre el sistema sigue siendo insostenible en picos de precipitación, requiriendo soluciones complementarias como la infraestructura verde.</p>
+                        </div>
+                    </div>
+                </div>
 
-const CARD_WIDTH = 330; 
-const CARD_GAP = 20;    
-const totalStepSize = CARD_WIDTH + CARD_GAP; 
-
-
-function moveToCard(index) {
-    if (carouselTrack) {
-        const offset = -index * totalStepSize; 
-        carouselTrack.style.transform = `translateX(${offset}px)`;
-    }
-}
-
-if (nextBtn && carouselTrack) {
-    nextBtn.addEventListener('click', () => {
-        playSoftClick();
-        const totalCards = carouselTrack.children.length;
-        const totalVisibleCards = 3; 
-        const maxIndex = totalCards - totalVisibleCards;
-
-        if (currentCardIndex < maxIndex) {
-            currentCardIndex++;
-            moveToCard(currentCardIndex);
-        } else if (currentCardIndex >= maxIndex) {
-            currentCardIndex = 0; 
-            moveToCard(currentCardIndex);
-        }
+             
+                <div id="content-impacto" class="content-detail">
+                    <h3>5. Zonas de impacto y riesgo</h3>
+                    <p class="section-intro">Identificación de las alcaldías más vulnerables basada en reportes históricos del C5 y el impacto en la infraestructura de transporte.</p>
+                    
+                    <div class="info-grid">
+               
+                        <div class="info-block">
+                            <h4>Alcaldías con mayor incidencia (reportes C5, 2025)</h4>
+                            <ol class="alcaldias-list">
+                           
+                                <li data-percentage="19%">Tlalpan</li>
+                                <li data-percentage="18%">Iztapalapa</li>
+                                <li data-percentage="10%">Gustavo A. Madero</li>
+                          
+                                <li data-percentage="10%">Xochimilco</li>
+                                <li data-percentage="9%">Tláhuac</li>
+                            </ol>
+                        </div>
         
-        // Al usar el botón, no cambiamos la tarjeta activa, solo el scroll.
-        // Si queremos que al mover el scroll se active la primera visible, es más complejo.
-        // Dejaremos que los botones solo muevan el scroll visualmente.
-    });
-}
-
-if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-        playSoftClick();
-        if (currentCardIndex > 0) {
-            currentCardIndex--;
-            moveToCard(currentCardIndex);
-        }
-    });
-}
-
-
-// ===============================================
-// 4. LÓGICA DEL SIMULADOR
-// ===============================================
-
-// Centralizar la actualización de los valores de rango
-document.addEventListener('DOMContentLoaded', () => {
-    const rangeInputs = [
-        { id: 'lluvia-input', valueId: 'lluvia-val' },
-        { id: 'obstruccion-input', valueId: 'obstruccion-val' },
-        { id: 'exposicion-input', valueId: 'exposicion-val' }
-    ];
-
-    rangeInputs.forEach(item => {
-        const inputEl = document.getElementById(item.id);
-        const valueEl = document.getElementById(item.valueId);
-        
-        if (inputEl && valueEl) {
-            valueEl.textContent = inputEl.value; 
+                        <div class="info-block">
+                            <h4>Impacto en infraestructura urbana y el transporte</h4>
+                            <p>Se estima que el 33% de los daños a la infraestructura vial es causado por las fuertes lluvias. Las inundaciones también reportan filtraciones y cierre de operaciones en el Aeropuerto Internacional de la Ciudad de México (AICM) y la interrupción parcial del servicio del Metro y Metrobús.</p>
+                            <p>Las zonas con mayor riesgo de inundación son las que presentan menor pendiente y mayor densidad poblacional e impermeabilización.</p>
+                        </div>
+  
+                        <div class="info-block full-width">
+                             <figure class="project-figure">
+                                <img src="https://i.ibb.co/30HkS7d/map-flood-risk-cdmx-conceptual.jpg" alt="Mapa de calor que muestra las zonas de alto riesgo de inundación en CDMX." />
+                                <figcaption>
+                                    <p><em>Nota: Mapa de riesgo conceptual utilizado para ilustrar la concentración de vulnerabilidad y reportes de inundación en la CDMX.</em></p>
             
-            inputEl.addEventListener('input', function() {
-                valueEl.textContent = this.value;
-            });
-        }
-    });
-});
+                                    <p><strong>Cita conceptual (APA 7):</strong> C5/SACMEX. (2025). <em>Mapa conceptual de Incidencia de Inundaciones por Alcaldía.</em> [Gráfico de datos]. (Se recomienda al usuario verificar la fuente real de su imagen para la cita final).</p>
+                                </figcaption>
+                            </figure>
+                        </div>
+  
+                    </div>
+                </div>
+
+                <div id="content-prediccion" class="content-detail">
+                    <h3>6. Modelos de predicción</h3>
+                    <p class="section-intro">El proyecto se basa en la conceptualización y uso de herramientas existentes para la gestión de riesgos en la cuenca.</p>
+
+                    <div class="info-grid two-columns">
+                        <div class="info-block">
+           
+                            <h4>Mapa hidrográfico urbano (MHU)</h4>
+                            <p>Herramienta clave desarrollada por la UNAM que permite la localización de áreas sensibles al encharcamiento, usando información topográfica y datos de pendientes. El MHU es una base esencial para definir las variables M (Multiplicador de Vulnerabilidad) en nuestro algoritmo.</p>
+                        </div>
+                        <div class="info-block">
+                            <h4>Atlas de riesgos</h4>
+     
+                            <p>Los Atlas de Riesgos, especialmente los del Estado de México, proporcionan una zonificación de peligros que complementa la visión del MHU, incorporando riesgos geológicos y socio-económicos que influyen en la variable E (Exposición).</p>
+                        </div>
+                    </div>
+ 
+                </div>
+
+                <div id="content-algoritmo" class="content-detail">
+                    <h3>7. Diseño del algoritmo (Simulador)</h3>
+                    <p class="section-intro">Para demostrar la viabilidad del algoritmo propuesto en la App, se presenta el caso de estudio del Centro Histórico, utilizando un modelo conceptual de predicción.</p>
+                    
+                    <div id="simulation-area" class="simulation-card">
+                   
+                        <div class="sim-inputs">
+                            <div class="input-group">
+                                <label for="alcaldia-select"><i class="fas fa-map-marker-alt"></i> 1. Vulnerabilidad histórica (Alcaldía / Multiplicador M)</label>
+                       
+                                <select id="alcaldia-select">
+                                    <option value="1.4">Tlalpan (M=1.4)</option>
+                                    <option value="1.3">Iztapalapa (M=1.3)</option>
+              
+                                    <option value="1.1">Gustavo A. Madero (GAM) / Xochimilco (M=1.1)</option>
+                                    <option value="1.0">Tláhuac (M=1.0)</option>
+                                 
+                                    <option value="0.8">Otra alcaldía (M=0.8)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+     
+                                <label for="lluvia-input"><i class="fas fa-cloud-showers-heavy"></i> 2. Lluvia (C, Nivel de 0 a 3)</label>
+                                <input type="range" id="lluvia-input" min="0" max="3" step="0.1" value="1.5" oninput="document.getElementById('lluvia-val').textContent=this.value">
+                       
+                                <span class="range-value">Valor C: <span id="lluvia-val">1.5</span></span>
+                            </div>
+
+                            <div class="input-group">
+                              
+                                <label for="obstruccion-input"><i class="fas fa-trash-alt"></i> 3. Obstrucción (P, Nivel de 0 a 3)</label>
+                                <input type="range" id="obstruccion-input" min="0" max="3" step="0.1" value="1.5" oninput="document.getElementById('obstruccion-val').textContent=this.value">
+                                <span class="range-value">Valor P: <span id="obstruccion-val">1.5</span></span>
+            
+                            </div>
+
+                            <div class="input-group">
+                                <label for="exposicion-input"><i class="fas fa-building"></i> 4. Exposición (E, Nivel de 0 a 3)</label>
+            
+                                <input type="range" id="exposicion-input" min="0" max="3" step="1" value="1" oninput="document.getElementById('exposicion-val').textContent=this.value">
+                                <span class="range-value">Valor E: <span id="exposicion-val">1</span></span>
+                            </div>
+         
+                        </div>
+
+                        <button onclick="calcularRiesgo()">
+                            <i class="fas fa-calculator"></i> Calcular riesgo (R)
+                        </button>
+
+   
+                        <div id="sim-result" class="result-box">
+                            <p>Resultado del simulador:</p>
+                            <p id="riesgo-texto" class="risk-level pending">Esperando datos...</p>
+               
+                        </div>
+
+                        <p class="colab-link-text">
+                            <i class="fas fa-code"></i> Consulta el código original de la simulación en: 
+                           
+                            <a href="https://colab.research.google.com/drive/1QZGbNwUbsDe2hNXoZ2ShXIT4115ufMUO?usp=sharing" target="_blank">Google Colab</a>
+                        </p>
+                    </div>
+
+                    <div class="info-block full-width formula-block">
+                        <h4>Fórmula conceptual utilizada</h4>
+   
+                        <p>$$R = C + P + (E \times M)$$</p>
+                    </div>
+
+                    <div class="info-block full-width">
+                        <h4>Ejemplo práctico: Algoritmo de predicción en el Zócalo</h4>
+                        <p>Para demostrar la viabilidad de la predicción, se utiliza un modelo conceptual simplificado que compara la intensidad de lluvia (C) contra la capacidad hidráulica (K), evaluando la Severidad (S).</p>
+                        <p><strong>Contexto:</strong> En 2025 se registró un récord de lluvia acumulada de 50 mm en solo 20 minutos en la zona.</p>
+                        <ol>
+                            <li><strong>Paso 1: Intensidad de lluvia (C):</strong> Se clasifica como Positiva (+), ya que 20 minutos de esa intensidad bastan para inundar la plancha.</li>
+                            <li><strong>Paso 2: Capacidad hidráulica (K):</strong> Se evalúa la zona. Aunque tiene drenaje profundo, su capacidad efectiva es reducida (K-) debido al hundimiento del suelo (malas pendientes) y la obstrucción constante de coladeras por basura comercial.</li>
+                            <li><strong>Paso 3: Comparación (C vs K):</strong> Al tener una lluvia intensa (C+) contra una capacidad de drenaje mermada (K-), la probabilidad de encharcamiento es muy alta.</li>
+                            <li><strong>Paso 4: Severidad (S):</strong> Se determina como crítica debido a la alta exposición: es una zona turística, comercial y cuenta con la Línea 2 del Metro subterránea.</li>
+                        </ol>
+                        <p><strong>Resultado y Acción:</strong> El sistema emitiría una <strong>Alerta Roja</strong>, activando el envío de bombas móviles y cierres puntuales de vialidades.</p>
+                    </div>
+                </div>
 
 
-function calcularRiesgo() {
-    playConfirmAction(); // Usar el sonido de acción
+       
+                <div id="content-preventivas" class="content-detail">
+                    <h3>8. Medidas preventivas</h3>
+                    <p class="section-intro">Recomendaciones clave para la ciudadanía y las autoridades para mitigar el riesgo de inundación.</p>
 
-    // 1. Obtener valores de los inputs
-    const M = parseFloat(document.getElementById('alcaldia-select').value);
-    const C = parseFloat(document.getElementById('lluvia-input').value);
-    const P = parseFloat(document.getElementById('obstruccion-input').value);
-    const E = parseFloat(document.getElementById('exposicion-input').value);
+                    <div class="info-grid">
+                        <div class="info-block">
+                   
+                            <h4>Acciones preventivas (antes de la lluvia)</h4>
+                            <ul>
+                                <li>No tirar basura en la vía pública: mantener limpias las coladeras y alcantarillas.</li>
+              
+                                <li>Limpiar azoteas, canales, y desagües.</li>
+                                <li>Revisar el estado de la impermeabilización de viviendas.</li>
+                            </ul>
+           
+                        </div>
+                        <div class="info-block">
+                            <h4>Acciones durante y después de la lluvia</h4>
+                            
+                            <ul>
+                                <li>No intentar cruzar corrientes de agua.</li>
+                                <li>Desconectar la energía eléctrica en caso de encharcamiento grave.</li>
+                       
+                                <li>Evitar caminar o conducir por zonas inundadas.</li>
+                            </ul>
+                        </div>
+                        <div class="info-block full-width">
+       
+                            <h4>Infraestructura Verde (Zonas Verdes) como Solución</h4>
+                            <p>El proyecto sugiere la adopción de Infraestructura Verde (techos verdes, pavimentos permeables, jardines de lluvia) para aumentar la infiltración y reducir la carga sobre el sistema de drenaje. Las Zonas Verdes Urbanas funcionan como esponjas naturales, absorbiendo el exceso de agua pluvial y mitigando el efecto de la escorrentía superficial.</p>
 
-    // Validación de Input
-    if (isNaN(C) || isNaN(P) || isNaN(E) || isNaN(M)) {
-        const riesgoTextoEl = document.getElementById('riesgo-texto');
-        riesgoTextoEl.textContent = "Error: Datos de entrada inválidos. Revise los valores.";
-        riesgoTextoEl.className = `risk-level high`; 
-        return; 
-    }
+                             <figure class="project-figure">
+                                <img src="https://i.ibb.co/3Wf2W3h/green-roof-permeable-pavement-conceptual.jpg" alt="Ejemplo de infraestructura verde (techo verde y pavimento permeable)." />
+                                <figcaption>
+                                    <p><em>Nota: Fotografía conceptual de un techo verde y pavimento permeable, utilizado para representar las soluciones de Infraestructura Verde.</em></p>
+               
+                                    <p><strong>Cita conceptual (APA 7):</strong> UAM Azcapotzalco/SEDEÑA. (s. f.). <em>Propuesta de Infraestructura Verde Urbana.</em> [Fotografía]. (Se recomienda al usuario verificar la fuente real de su imagen para la cita final).</p>
+                                </figcaption>
+                            </figure>
+                  
+                        </div>
+                    </div>
+                </div>
 
-    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
-    const R = C + P + (E * M);
+                <div id="content-referencias" class="content-detail">
+                    <h3>9. Referencias bibliográficas</h3>
+                    <ul class="references-list">
+                        <li>(2019, 26 de abril). Causas de las inundaciones. <em>Tierra y Tecnología</em>. <a href="https://www.icog.es/TyT/index.php/2014/10/causas-las-inundaciones/" target="_blank">https://www.icog.es/TyT/index.php/2014/10/causas-las-inundaciones/</a></li>
+                        <li><em>[Ciudad de México anegada]</em>. (s. f.). Mediateca - Instituto Nacional de Antropología e Historia. <a href="https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176" target="_blank">https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176</a></li>
+                        <li>Coordinación General de Protección Civil y Gestión Integral del Riesgo. (s. f.). <em>Atlas de riesgos del Estado de México</em>. <a href="https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos" target="_blank">https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos</a></li>
+                        <li>EcoExploratorio. (2022, 31 de agosto). Tipos de inundación. <em>EcoExploratorio: Museo de Ciencias de Puerto Rico</em>. <a href="https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/" target="_blank">https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/</a></li>
+                        <li>Estrada, L. (2025, 3 de septiembre). CDMX frente al agua: inundaciones, causas y vías para actuar. <em>Tecnológico de Monterrey</em>. <a href="https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar" target="_blank">https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar</a></li>
+                        <li>Hernández-Espinosa, A., Otazo-Sánchez, E., Román-Gutiérrez, A., & Romo-Gómez, C. (2021, 5 de julio). El sistema de drenaje de la Ciudad de México. <em>AmeliCA</em>. <a href="https://portal.amelica.org/ameli/journal/595/5952727008/html/" target="_blank">https://portal.amelica.org/ameli/journal/595/5952727008/html/</a></li>
+                        <li>Indicadores de lluvia. (s. f.). <em>Sistema de Aguas de la Ciudad de México (SACMEX)</em>. <a href="https://charcos.sacmex.cdmx.gob.mx/monthlyprecipitation-graph" target="_blank">https://charcos.sacmex.cdmx.gob.mx/monthlyprecipitation-graph</a></li>
+        
+                        <li>López, A. I., López, A. I., & López, A. I. (2025, 30 de agosto). El hundimiento de Ciudad de México, un factor desestimado que agrava las inundaciones en la capital. <em>El País México</em>. <a href="https://elpais.com/mexico/2025-08-30/el-hundimiento-deciudad-de-mexico-un-factor-desestimado-que-agrava-las-inundaciones-en-lacapital.html" target="_blank">https://elpais.com/mexico/2025-08-30/el-hundimiento-deciudad-de-mexico-un-factor-desestimado-que-agrava-las-inundaciones-en-lacapital.html</a></li>
+                        <li>Mercado Libre. (2025, 30 de julio). Re: Alcaldías CDMX que más se inundan 2025. <em>Mercado Libre Blog</em>. <a href="https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025" target="_blank">https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025</a></li>
+                        <li>Redacción. (2025, 2 de noviembre). ¿Qué es el Mapa Hidrográfico Urbano de la CDMX? Así funciona la herramienta para prevenir daños por inundaciones: esto dice la UNAM. <em>Eje Central</em>. <a href="https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam" target="_blank">https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam</a></li>
+                        <li>Redacción. (2025, 1 de noviembre). Lluvias 2025, las más intensas del siglo: experta UAM. <em>CDMX Magacín</em>. <a href="https://cdmx.info/lluvias-2025-las-masintensas-del-siglo-experta-uam/" target="_blank">https://cdmx.info/lluvias-2025-las-masintensas-del-siglo-experta-uam/</a></li>
+                        <li>Torres, B. (2025, 1 de agosto). ¿Dónde llueve más y por qué? Mapeo de inundaciones en CDMX desde el espacio. <em>UNAM Global</em>. <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/</a></li>
+                        <li><em>La última gran inundación de la Ciudad de México</em>. (s. f.). Centro Nacional de Prevención de Desastres (CENAPRED). <a href="https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico" target="_blank">https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico</a></li>
+                    </ul>
+                </div>
 
-    // 3. Clasificación de riesgo
-    let riesgoText;
-    let riesgoClass;
+                 <div id="content-conclusiones" class="content-detail">
+                    <h3>10. Conclusiones</h3>
+                    <p class="section-intro">El proyecto prototípico demuestra la viabilidad de utilizar variables geográficas, sociales y climáticas para crear un índice de riesgo de inundación dinámico.</p>
 
-    if (C === 0) {
-        riesgoText = "Riesgo: CERO RIESGO (Sistema Estable)"; 
-        riesgoClass = "zero";
-    } else if (R >= 6.0) {
-        riesgoText = "Riesgo: ALTO"; 
-        riesgoClass = "high";
-    } else if (R >= 4.0) {
-        riesgoText = "Riesgo: MEDIO"; 
-        riesgoClass = "medium";
-    } else { // C > 0 y R < 4.0
-        riesgoText = "Riesgo: BAJO"; 
-        riesgoClass = "low";
-    }
-
-    // 4. Actualizar el display de clasificación
-    const riesgoTextoEl = document.getElementById('riesgo-texto');
-    const simResultEl = document.getElementById('sim-result');
-    let messageHTML = '';
-
-    riesgoTextoEl.textContent = riesgoText;
-    riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
-
-    // 5. Añadir mensaje de sugerencia condicional
-    if (riesgoClass === 'high') {
-        messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil.</p>
-                       <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link">
-                           <i class="fas fa-file-pdf"></i> Protocolo de Emergencia
-                       </a>`;
-    } else {
-        messageHTML = `<p class="impact-message low-alert">Manténgase informado y preparado.</p>
-                       <a href="https://youtu.be/wAaV8rV2bRw" target="_blank" class="impact-link low-risk-link">
-                           <i class="fas fa-video"></i> Video Informativo sobre Inundaciones
-                       </a>`;
-    }
+                    <div class="info-grid two-columns">
+                        <div class="info-block">
+           
+                            <h4>Impacto y utilidad de la herramienta</h4>
+                            <p>El simulador algorítmico ofrece una perspectiva clara sobre cómo la conjunción de factores (especialmente la obstrucción por basura, 'P', y la vulnerabilidad histórica, 'M') puede elevar rápidamente el riesgo en picos de precipitación. Esta herramienta es esencial para la planificación de recursos de emergencia antes y durante la temporada de lluvias.</p>
+                        </div>
+                        <div class="info-block">
+                            <h4>Siguientes pasos recomendados</h4>
     
-    // Inyectar el mensaje y el enlace en un nuevo contenedor dentro de result-box
-    let adviceContainer = document.getElementById('advice-container');
-    if (!adviceContainer) {
-        adviceContainer = document.createElement('div');
-        adviceContainer.id = 'advice-container';
-        simResultEl.appendChild(adviceContainer);
-    }
-    adviceContainer.innerHTML = messageHTML;
-}
+                            <p>Para la implementación real, se recomienda la integración del modelo con un sistema de información geográfica (SIG) que permita el monitoreo de los valores 'C' y 'P' en tiempo real. Además, la promoción de la Infraestructura Verde debe ser un pilar de la mitigación urbana a largo plazo para reducir la impermeabilización del suelo en las áreas críticas.</p>
+                        </div>
+                    </div>
+                </div>
 
-window.calcularRiesgo = calcularRiesgo;
+            </div> 
+ 
+        </div> 
+    </section>
 
+    <footer>
+        <p>&copy; 2025 Proyecto Prototípico UNRC</p>
+        <p><a href="#project-overview">Volver al inicio</a></p>
+    </footer>
+</main>
 
-// ===============================================
-// 5. FUNCIÓN PARA ANIMAR LAS BARRAS DE PROGRESO DE ALCALDÍAS (Contador Dinámico)
-// ===============================================
-function animateAlcaldiasBars() {
-    const alcaldias = document.querySelectorAll('.alcaldias-list li');
-    
-    // 1. Resetear y preparar las barras
-    alcaldias.forEach(li => {
-        const fullText = li.textContent.trim();
-        const textParts = fullText.split(/\s+\(/); // Divide el texto de la alcaldía
-        const textWithoutPercentage = textParts[0]; 
-        
-        const targetPercentage = parseInt(li.getAttribute('data-percentage').replace('%', ''), 10);
-        
-        // Inyectamos el span del contador
-        li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
-        li.style.setProperty('--percentage', '0%'); 
-        
-        const counterElement = li.querySelector('.percentage-counter');
-        
-        let currentCount = 0;
-        const duration = 1500; 
-        const stepTime = 15; 
-        const steps = duration / stepTime;
-        const stepValue = targetPercentage / steps;
-        
-        // 2. Iniciar el contador
-        let countInterval = setInterval(() => {
-            currentCount += stepValue;
-            
-            if (currentCount >= targetPercentage) {
-                clearInterval(countInterval);
-                currentCount = targetPercentage;
-            }
-            
-            const roundedCount = Math.floor(currentCount);
-            
-            // Actualizar el porcentaje de la barra (CSS transition)
-            li.style.setProperty('--percentage', `${roundedCount}%`);
-            
-            // Actualizar el contador en el texto
-            if(counterElement) {
-                counterElement.textContent = `(${roundedCount}%)`;
-            }
-            
-            if (currentCount === targetPercentage) {
-                 li.style.setProperty('--percentage', `${targetPercentage}%`);
-                 if(counterElement) {
-                    counterElement.textContent = `(${targetPercentage}%)`;
-                 }
-            }
+<button id="scrollToTopBtn" title="Volver al inicio">
+    <i class="fas fa-arrow-up"></i>
+</button> 
 
-        }, stepTime);
-    });
-}
-
-// ===============================================
-// 6. NAVEGACIÓN POR TECLADO (Mejorada con Scroll)
-// ===============================================
-function navigateSections(direction) {
-    if (!currentActiveContent) return; 
-
-    const currentId = currentActiveContent.id;
-    let currentIndex = contentIds.indexOf(currentId);
-    
-    if (currentIndex === -1) return; 
-
-    let newIndex = currentIndex;
-
-    if (direction === 'next') {
-        newIndex = (currentIndex + 1) % contentIds.length; 
-    } else if (direction === 'prev') {
-        newIndex = (currentIndex - 1 + contentIds.length) % contentIds.length;
-    }
-
-    const newTargetId = contentIds[newIndex];
-    
-    if (newTargetId) {
-        // Simular el click en la nueva tarjeta (esto ya cambia el contenido y la clase 'active')
-        const targetCard = document.querySelector(`.carousel-card[data-target="${newTargetId}"]`);
-        if (targetCard) {
-            targetCard.click(); 
-            
-            // Lógica para sincronizar el scroll visual del carrusel:
-            const totalCards = contentIds.length;
-            const totalVisibleCards = 3; 
-            const maxScrollIndex = totalCards - totalVisibleCards;
-            
-            let scrollIndex = 0;
-            
-            if (newIndex >= totalVisibleCards) {
-                // Si la nueva tarjeta está fuera de la vista (índice 3 o más), movemos el carrusel
-                // para que la tarjeta activa quede como la tercera tarjeta visible.
-                scrollIndex = Math.min(newIndex - (totalVisibleCards - 1), maxScrollIndex);
-            }
-            
-            // Aseguramos que el índice no sea negativo o exceda el máximo
-            scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
-            
-            currentCardIndex = scrollIndex;
-            moveToCard(currentCardIndex);
-        }
-    }
-}
-
-document.addEventListener('keydown', (event) => {
-    // Evitar navegación si el usuario está interactuando con un campo de formulario
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
-        return;
-    }
-
-    if (event.key === 'ArrowRight') {
-        event.preventDefault(); // Prevenir el scroll por defecto
-        navigateSections('next');
-    } else if (event.key === 'ArrowLeft') {
-        event.preventDefault(); // Prevenir el scroll por defecto
-        navigateSections('prev');
-    }
-});
+<script src="script.js"></script>
+</body>
+</html>
