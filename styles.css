@@ -51,6 +51,49 @@ a:hover {
 }
 
 /* ==================================== */
+/* 0. PRELOADER Y EFECTOS DE CARGA */
+/* ==================================== */
+#preloader {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--color-bg);
+    z-index: 9999; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-out;
+}
+#preloader.fade-out {
+    opacity: 0;
+}
+.loader {
+    border: 5px solid rgba(0, 191, 255, 0.2);
+    border-top: 5px solid var(--color-accent-blue);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+#preloader p {
+    color: var(--color-text-light);
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    animation: pulseText 1.5s infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes pulseText {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+
+/* ==================================== */
 /* 1. VIDEO DE FONDO Y ESTRUCTURA GENERAL */
 /* ==================================== */
 .video-background {
@@ -227,6 +270,50 @@ input[type="range"]::-webkit-slider-thumb {
     to { box-shadow: 0 0 20px var(--risk-high); }
 }
 
+/* Nuevos estilos para los mensajes condicionales del simulador */
+#advice-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--color-divider);
+    text-align: center;
+}
+.impact-message {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px !important;
+}
+.high-alert {
+    color: var(--risk-high);
+}
+.low-alert {
+    color: var(--risk-zero);
+}
+.impact-link {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+.high-risk-link {
+    background-color: var(--risk-high);
+    color: var(--color-bg);
+}
+.high-risk-link:hover {
+    background-color: #C0392B;
+    text-decoration: none;
+}
+.low-risk-link {
+    background-color: var(--color-accent-blue);
+    color: var(--color-bg);
+}
+.low-risk-link:hover {
+    background-color: var(--color-accent-hover);
+    text-decoration: none;
+}
+
+
 .colab-link-text {
     margin-top: 15px;
     text-align: center;
@@ -331,6 +418,13 @@ input[type="range"]::-webkit-slider-thumb {
     padding: 0 3.5rem 3.5rem 3.5rem; min-height: 600px; 
     display: block; 
 }
+/* AÑADIDO: Animación de borde de energía (glowPulse) */
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3); }
+    50% { box-shadow: 0 0 25px var(--color-accent-blue), inset 0 0 15px var(--color-accent-blue); }
+    100% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3); }
+}
+
 #detail-panel {
     background-color: var(--color-card-bg); padding: 35px; border-radius: 12px;
     border: 1px solid rgba(0, 191, 255, 0.5); 
@@ -338,6 +432,7 @@ input[type="range"]::-webkit-slider-thumb {
     max-height: calc(100vh - 5rem - 2rem - 150px); 
     overflow-y: auto; 
     width: 100%; 
+    animation: glowPulse 4s infinite ease-in-out; /* NUEVO: Aplicar la animación de pulso */
 }
 .content-detail {
     display: none; 
@@ -400,6 +495,9 @@ input[type="range"]::-webkit-slider-thumb {
     background-color: rgba(0, 191, 255, 0.08); padding: 10px; margin-bottom: 8px; 
     border-left: 5px solid var(--color-accent-blue); font-weight: 600;
     position: relative; overflow: hidden; color: var(--color-text-light);
+    display: flex; /* Para mejor alineación del texto y el contador */
+    justify-content: space-between; 
+    align-items: center;
 }
 .alcaldias-list li::before {
     content: ''; position: absolute; top: 0; left: 0; height: 100%;
@@ -408,12 +506,18 @@ input[type="range"]::-webkit-slider-thumb {
     transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); 
     z-index: -1;
 }
-.alcaldias-list li::after {
-    content: attr(data-percentage); position: absolute; top: 0; right: 0;
-    background-color: var(--color-accent-blue); color: var(--color-bg);
-    padding: 10px 15px; height: 100%; display: flex; align-items: center;
+/* El contador dinámico lo gestiona JS, no usamos ::after para la cifra */
+.percentage-counter {
     font-weight: 700;
+    color: var(--color-accent-blue);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 10px;
+    min-width: 45px; /* Para que no salte al contar */
+    text-align: right;
 }
+
 
 /* Referencias */
 .references-list li {
