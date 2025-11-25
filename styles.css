@@ -17,7 +17,7 @@
     --font-heading: 'Montserrat', sans-serif; 
     --percentage: 0%; 
 
-    /* MEJORA: Colores de Riesgo Centralizados */
+    /* MEJORA: Colores de Riesgo Centralizados para Mantenibilidad */
     --risk-zero: #2ECC71;      /* VERDE */
     --risk-low: #F1C40F;       /* AMARILLO */
     --risk-medium: #F39C12;    /* NARANJA */
@@ -199,12 +199,12 @@ input[type="range"]::-webkit-slider-thumb {
     text-shadow: none; 
 }
 
-/* CLASES DE RIESGO ACTUALIZADAS (Usando variables) */
+/* CLASES DE RIESGO ACTUALIZADAS (Usando variables CSS) */
 .risk-level.pending { background-color: var(--color-text-secondary); color: var(--color-bg); }
-.risk-level.zero { background-color: var(--risk-zero); } 
-.risk-level.low { background-color: var(--risk-low); } 
-.risk-level.medium { background-color: var(--risk-medium); } 
-.risk-level.high { background-color: var(--risk-high); box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); } 
+.risk-level.zero { background-color: var(--risk-zero); } /* VERDE: Cero Riesgo */
+.risk-level.low { background-color: var(--risk-low); } /* AMARILLO: Riesgo Bajo */
+.risk-level.medium { background-color: var(--risk-medium); } /* NARANJA: Riesgo Medio */
+.risk-level.high { background-color: var(--risk-high); box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); } /* ROJO: Riesgo Alto */
 
 .colab-link-text {
     margin-top: 15px;
@@ -260,7 +260,6 @@ input[type="range"]::-webkit-slider-thumb {
 .carousel-track > :nth-child(1) { animation-delay: 0.2s; }
 .carousel-track > :nth-child(2) { animation-delay: 0.3s; }
 .carousel-track > :nth-child(3) { animation-delay: 0.4s; }
-/* ... (más estilos para el resto si es necesario, pero con 3 es suficiente para el efecto inicial) */
 
 .carousel-card h4 {
     font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.15rem; 
@@ -277,10 +276,10 @@ input[type="range"]::-webkit-slider-thumb {
     position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
     background-color: rgba(0, 0, 0, 0.5); color: var(--color-text-light); border: none;
     padding: 15px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 .carousel-btn:hover {
-    background-color: var(--color-accent-blue); color: var(--color-bg);
+    background-color: var(--color-accent-hover);
     transform: translateY(-50%) scale(1.1);
 }
 .prev-btn { left: -15px; }
@@ -303,15 +302,22 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%; 
 }
 .content-detail {
-    display: none; opacity: 0; 
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out; padding-bottom: 25px; 
+    /* Estado inicial que permite animar al añadir la clase .active */
+    display: none; 
+    opacity: 0; 
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out; 
+    padding-bottom: 25px; 
 }
 .content-detail.active {
-    display: block; opacity: 1; 
+    display: block; 
+    opacity: 1; /* Asegura el estado final de la transición en navegadores sin animación */
     /* Animación de apertura: slide-up sutil */
-    animation: contentFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    animation: contentFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; /* Añadido 'forwards' para asegurar el estado final */
 }
-@keyframes contentFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes contentFadeIn { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
 
 .info-grid {
     display: grid; 
@@ -326,7 +332,6 @@ input[type="range"]::-webkit-slider-thumb {
     border: 1px solid rgba(0, 191, 255, 0.3); 
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); 
     transition: all 0.3s ease-in-out; opacity: 0; transform: translateY(30px); 
-    /* Animación manejada por JS para un efecto escalonado */
 }
 /* Keyframe usado por JS para el efecto escalonado */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
