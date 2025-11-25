@@ -1,9 +1,9 @@
 // ===============================================
-// 1. FUNCIONALIDAD DE AUDIO (CLICK) - MEJORA: Contexto Único y Robustez
+// 1. FUNCIONALIDAD DE AUDIO (CLICK)
 // ===============================================
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-// Asegura que el contexto se reactive en la primera interacción del usuario (necesario en navegadores)
+// Asegura que el contexto se reactive en la primera interacción del usuario
 document.addEventListener('DOMContentLoaded', () => {
     if (audioContext.state === 'suspended') {
         const resumeContext = () => {
@@ -17,11 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/**
- * Genera y reproduce un sonido de clic.
- */
 function createClickSound(frequency = 1000, duration = 0.02, volume = 0.1) {
-    // Si el contexto está cerrado o suspendido (y no se ha podido reanudar), no intentar reproducir
     if (audioContext.state === 'closed' || audioContext.state === 'suspended') return; 
 
     try {
@@ -35,7 +31,6 @@ function createClickSound(frequency = 1000, duration = 0.02, volume = 0.1) {
         oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime); 
         gainNode.gain.setValueAtTime(volume, audioContext.currentTime); 
 
-        // MEJORA: Fade out suave para un sonido más limpio
         gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
 
         oscillator.start(audioContext.currentTime);
@@ -54,11 +49,10 @@ const playActionSound = () => createClickSound(1200, 0.1, 0.15);
 // ===============================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-// MEJORA: Uso de Intersection Observer (Máximo rendimiento)
+// Uso de Intersection Observer para máximo rendimiento en el scroll
 if (scrollToTopBtn) {
     const observerTarget = document.querySelector('header');
     
-    // Observador que detecta cuando el 'header' ya no es visible
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -68,7 +62,7 @@ if (scrollToTopBtn) {
             }
         });
     }, {
-        threshold: 0.1 // Activar cuando el 10% del header ha desaparecido
+        threshold: 0.1 
     });
 
     if (observerTarget) {
@@ -113,12 +107,13 @@ function showContent(targetId) {
         currentActiveContent.style.transform = 'translateY(-20px)';
 
         setTimeout(() => {
-            currentActiveContent.style.display = 'none';
+            currentActiveContent.style.display = 'none'; // Oculta el viejo contenido
             
             // Activar el nuevo contenido
             nextContent.style.display = 'block';
-            nextContent.style.opacity = '0'; 
-            void nextContent.offsetWidth; 
+            // CORRECCIÓN: Se eliminó nextContent.style.opacity = '0'; 
+            // Esto prevenía que la animación CSS se ejecutara correctamente.
+            void nextContent.offsetWidth; // Forzar reflow para reiniciar la animación
             nextContent.classList.add('active');
             
             currentActiveContent = nextContent;
@@ -142,14 +137,11 @@ function showContent(targetId) {
 
 // Inicializar al cargar: activa el primer elemento por defecto o el del hash
 document.addEventListener('DOMContentLoaded', () => {
-    // Si hay hash, cargarlo, si no, usar el primer elemento por defecto
     const initialTargetId = window.location.hash ? window.location.hash.substring(1) : detailContents[0]?.id; 
     
-    // Asegurar que el hash exista como contenido y cargarlo
     if (initialTargetId && document.getElementById(initialTargetId)) {
         showContent(initialTargetId);
     } else if (detailContents[0]?.id) {
-        // Si el hash no es válido, cargar el primer elemento por defecto
         showContent(detailContents[0].id);
     }
 });
@@ -159,7 +151,6 @@ carouselCards.forEach(card => {
     card.addEventListener('click', () => { 
         const targetId = card.getAttribute('data-target');
         
-        // Ocultar la tarjeta de carga de la simulación si se navega a otro lado
         if (targetId !== 'content-algoritmo') {
             const riesgoTextoEl = document.getElementById('riesgo-texto');
             if (riesgoTextoEl) {
@@ -168,7 +159,6 @@ carouselCards.forEach(card => {
             }
         }
 
-        // MEJORA: Persistencia de estado (Actualizar el hash de la URL)
         if (targetId) {
             window.location.hash = targetId; 
             showContent(targetId); 
@@ -184,11 +174,15 @@ const carouselTrack = document.getElementById('carousel-track');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
 let currentCardIndex = 0;
-const cardWidth = 350; 
+
+const CARD_WIDTH = 330; 
+const CARD_GAP = 20;    
+const totalStepSize = CARD_WIDTH + CARD_GAP; 
+
 
 function moveToCard(index) {
     if (carouselTrack) {
-        const offset = -index * cardWidth;
+        const offset = -index * totalStepSize; 
         carouselTrack.style.transform = `translateX(${offset}px)`;
     }
 }
@@ -197,7 +191,7 @@ if (nextBtn && carouselTrack) {
     nextBtn.addEventListener('click', () => {
         playClickSound();
         const totalCards = carouselTrack.children.length;
-        const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / cardWidth);
+        const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / totalStepSize);
 
         if (currentCardIndex < maxIndex) {
             currentCardIndex++;
@@ -221,30 +215,53 @@ if (prevBtn) {
 
 
 // ===============================================
-// 4. FUNCIÓN DE SIMULACIÓN (calcularRiesgo) - MEJORA: Validación de Inputs
+// 4. LÓGICA DEL SIMULADOR
 // ===============================================
+
+// Centralizar la actualización de los valores de rango
+document.addEventListener('DOMContentLoaded', () => {
+    const rangeInputs = [
+        { id: 'lluvia-input', valueId: 'lluvia-value' },
+        { id: 'obstruccion-input', valueId: 'obstruccion-value' },
+        { id: 'exposicion-input', valueId: 'exposicion-value' }
+    ];
+
+    rangeInputs.forEach(item => {
+        const inputEl = document.getElementById(item.id);
+        const valueEl = document.getElementById(item.valueId);
+        
+        if (inputEl && valueEl) {
+            valueEl.textContent = inputEl.value; 
+            
+            inputEl.addEventListener('input', function() {
+                valueEl.textContent = this.value;
+            });
+        }
+    });
+});
+
+
 function calcularRiesgo() {
     playActionSound(); 
     
-    // 1. Obtener valores de los inputs
     const M = parseFloat(document.getElementById('alcaldia-select').value);
     const C = parseFloat(document.getElementById('lluvia-input').value);
     const P = parseFloat(document.getElementById('obstruccion-input').value);
     const E = parseFloat(document.getElementById('exposicion-input').value);
 
-    // MEJORA: Validación de Input para robustez
+    // Validación de Input
     if (isNaN(C) || isNaN(P) || isNaN(E) || isNaN(M)) {
         const riesgoTextoEl = document.getElementById('riesgo-texto');
         riesgoTextoEl.textContent = "Error: Datos de entrada inválidos. Revise los valores.";
-        riesgoTextoEl.className = `risk-level high`; // Usar high para notificar error
+        riesgoTextoEl.className = `risk-level high`; 
         console.error("Entrada inválida en la simulación.");
         return; 
     }
 
-    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
+    // FÓRMULA CLAVE: R = C + P + (E × M)
     const R = C + P + (E * M);
 
-    // 3. Clasificación de riesgo
+    // Clasificación de riesgo
     let riesgoText;
     let riesgoClass;
 
@@ -262,7 +279,7 @@ function calcularRiesgo() {
         riesgoClass = "low";
     }
 
-    // 4. Actualizar el display
+    // Actualizar el display
     const riesgoTextoEl = document.getElementById('riesgo-texto');
     
     riesgoTextoEl.textContent = `${riesgoText} (Valor R: ${R.toFixed(2)})`;
