@@ -62,12 +62,10 @@ window.addEventListener('scroll', () => {
     }
 });
 
-if (scrollToTopBtn) {
-    scrollToTopBtn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        playClickSound(); // Sonido de navegación
-    });
-}
+scrollToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    playClickSound(); // Sonido de navegación
+});
 
 
 // ===============================================
@@ -124,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 carouselCards.forEach(card => {
     card.addEventListener('click', () => { 
         // Ocultar la tarjeta de carga de la simulación si se navega a otro lado
-        if (document.getElementById('riesgo-texto') && card.getAttribute('data-target') !== 'content-algoritmo') {
+        if (card.getAttribute('data-target') !== 'content-algoritmo') {
             document.getElementById('riesgo-texto').textContent = "Esperando datos...";
             document.getElementById('riesgo-texto').className = `risk-level pending`; 
         }
