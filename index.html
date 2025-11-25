@@ -6,7 +6,7 @@
     <title>Predicción de inundaciones en CDMX</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900;1000&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -17,6 +17,9 @@
 
 </head>
 <body>
+
+<audio id="click-sound" src="click_sound.mp3" preload="auto"></audio>
+
 
 <div class="video-background">
     <div class="video-overlay"></div>
@@ -49,7 +52,7 @@
         <div class="carousel-container">
             <div class="carousel-track" id="carousel-track">
                 
-                <div class="carousel-card" data-target="content-problema">
+                <div class="carousel-card active-card" data-target="content-problema">
                     <h4>1. Problema y antecedentes</h4>
                     <i class="fas fa-exclamation-triangle card-icon"></i>
                     <p>La CDMX sufre de alta vulnerabilidad a inundaciones. <strong>La Gran Inundación de 1629 es un antecedente clave.</strong></p>
@@ -130,7 +133,7 @@
         <div id="interactive-content">
             <div id="detail-panel" class="detail-panel-full"> 
 
-                <div id="content-problema" class="content-detail">
+                <div id="content-problema" class="content-detail active">
                     <h3>1. Problema de investigación y antecedentes</h3>
                     <p class="section-intro">El proyecto aborda la creciente vulnerabilidad de la CDMX ante las inundaciones, un fenómeno que combina factores geológicos, climáticos y sociales. </p>
 
@@ -140,11 +143,7 @@
                             <p>La <strong>Gran Inundación de 1629</strong>, que mantuvo a la ciudad bajo el agua por 5 años, es un antecedente clave de la vulnerabilidad de la cuenca. Este evento marcó el inicio de las grandes obras de desagüe y el cambio de enfoque de convivencia con el lago a su desecación. Este precedente histórico refuerza la necesidad de herramientas predictivas modernas.</p>
 
                             <figure class="project-figure">
-                                <img src="https://i.ibb.co/L5T47y4/old-map-mexico-valley-conceptual.jpg" alt="Mapa antiguo del Valle de México durante las inundaciones." />
-                                <figcaption>
-                                    <p><em>Nota: Imagen conceptual utilizada para representar la extensión de los lagos y las inundaciones históricas en el Valle de México.</em></p>
-                                    <p><strong>Cita conceptual (APA 7):</strong> Autor desconocido. (s. f.). <em>Mapa conceptual del Valle de México.</em> [Ilustración]. (Se recomienda al usuario verificar la fuente real de su imagen para la cita final).</p>
-                                </figcaption>
+                                <img src="images/mapa_historico.jpg" alt="Mapa antiguo del Valle de México durante las inundaciones." />
                             </figure>
                         </div>
                         <div class="info-block">
@@ -253,11 +252,7 @@
                         </div>
                         <div class="info-block full-width">
                              <figure class="project-figure">
-                                <img src="https://i.ibb.co/30HkS7d/map-flood-risk-cdmx-conceptual.jpg" alt="Mapa de calor que muestra las zonas de alto riesgo de inundación en CDMX." />
-                                <figcaption>
-                                    <p><em>Nota: Mapa de riesgo conceptual utilizado para ilustrar la concentración de vulnerabilidad y reportes de inundación en la CDMX.</em></p>
-                                    <p><strong>Cita conceptual (APA 7):</strong> C5/SACMEX. (2025). <em>Mapa conceptual de Incidencia de Inundaciones por Alcaldía.</em> [Gráfico de datos]. (Se recomienda al usuario verificar la fuente real de su imagen para la cita final).</p>
-                                </figcaption>
+                                <img src="images/mapa_riesgo.jpg" alt="Mapa de calor que muestra las zonas de alto riesgo de inundación en CDMX." />
                             </figure>
                         </div>
                     </div>
@@ -385,11 +380,7 @@
                             <p>El proyecto sugiere la adopción de <strong>infraestructura verde</strong> (techos verdes, pavimentos permeables, jardines de lluvia) para aumentar la infiltración y reducir la carga sobre el sistema de drenaje. Las **Zonas Verdes Urbanas** funcionan como esponjas naturales, absorbiendo el exceso de agua pluvial y mitigando el efecto de la escorrentía superficial.</p>
 
                              <figure class="project-figure">
-                                <img src="https://i.ibb.co/3Wf2W3h/green-roof-permeable-pavement-conceptual.jpg" alt="Ejemplo de infraestructura verde (techo verde y pavimento permeable)." />
-                                <figcaption>
-                                    <p><em>Nota: Fotografía conceptual de un techo verde y pavimento permeable, utilizado para representar las soluciones de Infraestructura Verde.</em></p>
-                                    <p><strong>Cita conceptual (APA 7):</strong> UAM Azcapotzalco/SEDEÑA. (s. f.). <em>Propuesta de Infraestructura Verde Urbana.</em> [Fotografía]. (Se recomienda al usuario verificar la fuente real de su imagen para la cita final).</p>
-                                </figcaption>
+                                <img src="images/infraestructura_verde.jpg" alt="Ejemplo de infraestructura verde (techo verde y pavimento permeable)." />
                             </figure>
                         </div>
                     </div>
@@ -402,14 +393,14 @@
                         <li><em>[Ciudad de México anegada]</em>. (s. f.). Mediateca - Instituto Nacional de Antropología e Historia. <a href="https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176" target="_blank">https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176</a></li>
                         <li>Coordinación General de Protección Civil y Gestión Integral del Riesgo. (s. f.). <em>Atlas de riesgos del Estado de México</em>. <a href="https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos" target="_blank">https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos</a></li>
                         <li>EcoExploratorio. (2022, 31 de agosto). Tipos de inundación. <em>EcoExploratorio: Museo de Ciencias de Puerto Rico</em>. <a href="https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/" target="_blank">https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/</a></li>
-                        <li>Estrada, L. (2025, 3 de septiembre). CDMX frente al agua: inundaciones, causas y vías para actuar. <em>Tecnológico de Monterrey</em>. <a href="https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar" target="_blank">https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar" target="_blank">https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar</a></li>
+                        <li>Estrada, L. (2025, 3 de septiembre). CDMX frente al agua: inundaciones, causas y vías para actuar. <em>Tecnológico de Monterrey</em>. <a href="https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar" target="_blank">https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar</a></li>
                         <li>Hernández-Espinosa, A., Otazo-Sánchez, E., Román-Gutiérrez, A., & Romo-Gómez, C. (2021, 5 de julio). El sistema de drenaje de la Ciudad de México. <em>AmeliCA</em>. <a href="https://portal.amelica.org/ameli/journal/595/5952727008/html/" target="_blank">https://portal.amelica.org/ameli/journal/595/5952727008/html/</a></li>
                         <li>Indicadores de lluvia. (s. f.). <em>Sistema de Aguas de la Ciudad de México (SACMEX)</em>. <a href="https://charcos.sacmex.cdmx.gob.mx/monthlyprecipitation-graph" target="_blank">https://charcos.sacmex.cdmx.gob.mx/monthlyprecipitation-graph</a></li>
                         <li>López, A. I., López, A. I., & López, A. I. (2025, 30 de agosto). El hundimiento de Ciudad de México, un factor desestimado que agrava las inundaciones en la capital. <em>El País México</em>. <a href="https://elpais.com/mexico/2025-08-30/el-hundimiento-deciudad-de-mexico-un-factor-desestimado-que-agrava-las-inundaciones-en-lacapital.html" target="_blank">https://elpais.com/mexico/2025-08-30/el-hundimiento-deciudad-de-mexico-un-factor-desestimado-que-agrava-las-inundaciones-en-lacapital.html</a></li>
                         <li>Mercado Libre. (2025, 30 de julio). Re: Alcaldías CDMX que más se inundan 2025. <em>Mercado Libre Blog</em>. <a href="https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025" target="_blank">https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025</a></li>
                         <li>Redacción. (2025, 2 de noviembre). ¿Qué es el Mapa Hidrográfico Urbano de la CDMX? Así funciona la herramienta para prevenir daños por inundaciones: esto dice la UNAM. <em>Eje Central</em>. <a href="https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam" target="_blank">https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam</a></li>
                         <li>Redacción. (2025, 1 de noviembre). Lluvias 2025, las más intensas del siglo: experta UAM. <em>CDMX Magacín</em>. <a href="https://cdmx.info/lluvias-2025-las-masintensas-del-siglo-experta-uam/" target="_blank">https://cdmx.info/lluvias-2025-las-masintensas-del-siglo-experta-uam/</a></li>
-                        <li>Torres, B. (2025, 1 de agosto). ¿Dónde llueve más y por qué? Mapeo de inundaciones en CDMX desde el espacio. <em>UNAM Global</em>. <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/</a></li>
+                        <li>Torres, B. (2025, 1 de agosto). ¿Dónde llueve más y por qué? Mapeo de inundaciones en CDMX desde el espacio. <em>UNAM Global</em>. <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/</a></li>
                         <li><em>La última gran inundación de la Ciudad de México</em>. (s. f.). Centro Nacional de Prevención de Desastres (CENAPRED). <a href="https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico" target="_blank">https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico</a></li>
                     </ul>
                 </div>
