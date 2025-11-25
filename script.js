@@ -4,7 +4,9 @@
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
     if (preloader) {
+        // Añadir una clase para iniciar la animación de desvanecimiento
         preloader.classList.add('fade-out');
+        // Quitar el preloader del DOM después de que termine la transición (500ms)
         setTimeout(() => {
             preloader.style.display = 'none';
         }, 500);
@@ -17,6 +19,7 @@ window.addEventListener('load', () => {
 // ===============================================
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
+// Asegura que el contexto se reactive en la primera interacción del usuario
 document.addEventListener('DOMContentLoaded', () => {
     if (audioContext.state === 'suspended') {
         const resumeContext = () => {
@@ -30,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/**
+ * Genera un sonido sintetizado con la Web Audio API.
+ */
 function createSound(frequency, duration, volume, type = 'square') {
     if (audioContext.state === 'closed' || audioContext.state === 'suspended') return; 
 
@@ -53,12 +59,14 @@ function createSound(frequency, duration, volume, type = 'square') {
     }
 }
 
+// Sonido de click digital (navegación sutil)
 const playSoftClick = () => createSound(1500, 0.015, 0.1, 'square'); 
+// Sonido de acción (botón de simulación)
 const playConfirmAction = () => createSound(1200, 0.08, 0.2, 'sine'); 
 
 
 // ===============================================
-// 2. MANEJO DE SCROLL Y BOTÓN DE INICIO
+// 2. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
 // ===============================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
@@ -94,6 +102,8 @@ if (scrollToTopBtn) {
 const carouselCards = document.querySelectorAll('.carousel-card');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
+
+// Array ordenado de IDs para navegación secuencial (teclado)
 const contentIds = Array.from(carouselCards).map(card => card.getAttribute('data-target')).filter(id => id);
 
 function animateInfoBlocks(contentElement) {
@@ -113,11 +123,13 @@ function showContent(targetId) {
 
     playSoftClick(); 
 
+    // Limpiar mensajes del simulador al cambiar de sección
     const adviceContainer = document.getElementById('advice-container');
     if (adviceContainer) {
         adviceContainer.innerHTML = '';
     }
     
+    // Reiniciar el estado del simulador si salimos
     if (targetId !== 'content-algoritmo') {
         const riesgoTextoEl = document.getElementById('riesgo-texto');
         if (riesgoTextoEl) {
@@ -128,6 +140,7 @@ function showContent(targetId) {
 
 
     if (currentActiveContent) {
+        // Desactivar el contenido actual
         currentActiveContent.classList.remove('active');
         currentActiveContent.style.opacity = '0';
         currentActiveContent.style.transform = 'translateY(-20px)';
@@ -135,6 +148,7 @@ function showContent(targetId) {
         setTimeout(() => {
             currentActiveContent.style.display = 'none'; 
             
+            // Activar el nuevo contenido
             nextContent.style.display = 'block';
             void nextContent.offsetWidth; 
             nextContent.classList.add('active');
@@ -143,11 +157,13 @@ function showContent(targetId) {
             
             animateInfoBlocks(nextContent);
             
+            // Si es la sección de impacto, iniciamos la animación del contador
             if (targetId === 'content-impacto') {
                 animateAlcaldiasBars();
             }
         }, 300); 
     } else {
+        // Primera carga
         detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
         
         nextContent.style.display = 'block';
@@ -162,6 +178,7 @@ function showContent(targetId) {
     }
 }
 
+// Inicializar y manejar la tarjeta activa al cargar
 document.addEventListener('DOMContentLoaded', () => {
     const initialTargetId = window.location.hash ? window.location.hash.substring(1) : detailContents[0]?.id; 
     
@@ -177,31 +194,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Eventos para las tarjetas del carrusel (click)
 carouselCards.forEach(card => {
     card.addEventListener('click', () => { 
         const targetId = card.getAttribute('data-target');
         
         if (targetId) {
+            // Manejar la clase 'active' para el efecto de pulse/glow
             carouselCards.forEach(c => c.classList.remove('active'));
             card.classList.add('active');
 
             window.location.hash = targetId; 
             showContent(targetId); 
             
+            // Sincronizar el scroll del carrusel cuando se hace click
             const cardIndex = contentIds.indexOf(targetId);
             if (cardIndex !== -1) {
-                 const totalCards = contentIds.length;
                  const totalVisibleCards = 3; 
+                 const totalCards = contentIds.length;
                  const maxScrollIndex = totalCards - totalVisibleCards; 
                  
                  let scrollIndex = 0;
                  if (cardIndex >= totalVisibleCards) {
+                     // Calcula el índice de desplazamiento para que la tarjeta quede a la derecha
                      scrollIndex = Math.min(cardIndex - (totalVisibleCards - 1), maxScrollIndex);
                  }
                  
                  scrollIndex = Math.max(0, scrollIndex);
                  
-                 currentCardIndex = scrollIndex; 
+                 currentCardIndex = scrollIndex; // Sincroniza el índice global
                  moveToCard(currentCardIndex);
             }
         }
@@ -215,7 +236,8 @@ carouselCards.forEach(card => {
 const carouselTrack = document.getElementById('carousel-track');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
-let currentCardIndex = 0; 
+let currentCardIndex = 0; // Índice de desplazamiento visual (NO índice de la tarjeta activa)
+
 const CARD_WIDTH = 330; 
 const CARD_GAP = 20;    
 const totalStepSize = CARD_WIDTH + CARD_GAP; 
@@ -242,6 +264,10 @@ if (nextBtn && carouselTrack) {
             currentCardIndex = 0; 
             moveToCard(currentCardIndex);
         }
+        
+        // Al usar el botón, no cambiamos la tarjeta activa, solo el scroll.
+        // Si queremos que al mover el scroll se active la primera visible, es más complejo.
+        // Dejaremos que los botones solo muevan el scroll visualmente.
     });
 }
 
@@ -257,10 +283,10 @@ if (prevBtn) {
 
 
 // ===============================================
-// 4. LÓGICA DEL SIMULADOR (FIEL A LAS REGLAS DE PYTHON)
+// 4. LÓGICA DEL SIMULADOR
 // ===============================================
 
-// Inicialización y visualización de valores de rango
+// Centralizar la actualización de los valores de rango
 document.addEventListener('DOMContentLoaded', () => {
     const rangeInputs = [
         { id: 'lluvia-input', valueId: 'lluvia-val' },
@@ -284,14 +310,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function calcularRiesgo() {
-    playConfirmAction(); 
+    playConfirmAction(); // Usar el sonido de acción
 
-    // 1. Obtener y PARSEAR valores
-    // Asegurarse de que M, C, P sean flotantes y E sea entero
+    // 1. Obtener valores de los inputs
     const M = parseFloat(document.getElementById('alcaldia-select').value);
     const C = parseFloat(document.getElementById('lluvia-input').value);
     const P = parseFloat(document.getElementById('obstruccion-input').value);
-    const E = parseInt(document.getElementById('exposicion-input').value, 10); 
+    const E = parseFloat(document.getElementById('exposicion-input').value);
 
     // Validación de Input
     if (isNaN(C) || isNaN(P) || isNaN(E) || isNaN(M)) {
@@ -301,65 +326,52 @@ function calcularRiesgo() {
         return; 
     }
 
-    // 2. FÓRMULA CLAVE: R = (1*C + P + E) * M
-    // El '1*' es implícito en la suma: (C + P + E) * M
-    const R = (C + P + E) * M;
+    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
+    const R = C + P + (E * M);
 
-    // 3. Clasificación de riesgo (Fiel a la lógica de Python)
+    // 3. Clasificación de riesgo
     let riesgoText;
     let riesgoClass;
 
-    const adviceContainer = document.getElementById('advice-container');
-    adviceContainer.innerHTML = ''; 
-    
-    // El orden de evaluación es crucial aquí:
-    
-    // Cero Riesgo
-    if (C <= 0) {
-        riesgoText = "Riesgo: CERO RIESGO (Lluvia nula)"; 
+    if (C === 0) {
+        riesgoText = "Riesgo: CERO RIESGO (Sistema Estable)"; 
         riesgoClass = "zero";
-
-    // Alto Riesgo: R >= 8
-    } else if (R >= 8.0) { 
+    } else if (R >= 6.0) {
         riesgoText = "Riesgo: ALTO"; 
         riesgoClass = "high";
-
-    // Medio Riesgo: R <= 7 Y R >= 4
-    } else if (R >= 4.0 && R <= 7.0) { 
+    } else if (R >= 4.0) {
         riesgoText = "Riesgo: MEDIO"; 
         riesgoClass = "medium";
-        
-    // Bajo Riesgo (Cubre R < 4.0 y el "agujero" 7.0 < R < 8.0)
-    } else { 
+    } else { // C > 0 y R < 4.0
         riesgoText = "Riesgo: BAJO"; 
         riesgoClass = "low";
     }
 
-    // 4. Actualizar el display y mensajes condicionales
+    // 4. Actualizar el display de clasificación
     const riesgoTextoEl = document.getElementById('riesgo-texto');
     const simResultEl = document.getElementById('sim-result');
-    riesgoTextoEl.textContent = riesgoText;
-    riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
-    
-    // Enlaces condicionales (Corregidos)
-    const proteccionCivilLink = "https://www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf"; 
-    const videoInformativoLink = "https://youtu.be/wAaV8rV2bRw";
-
     let messageHTML = '';
 
+    riesgoTextoEl.textContent = riesgoText;
+    riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
+
+    // 5. Añadir mensaje de sugerencia condicional
     if (riesgoClass === 'high') {
         messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil.</p>
-                       <a href="${proteccionCivilLink}" target="_blank" class="impact-link high-risk-link">
+                       <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link">
                            <i class="fas fa-file-pdf"></i> Protocolo de Emergencia
                        </a>`;
     } else {
         messageHTML = `<p class="impact-message low-alert">Manténgase informado y preparado.</p>
-                       <a href="${videoInformativoLink}" target="_blank" class="impact-link low-risk-link">
+                       <a href="https://youtu.be/wAaV8rV2bRw" target="_blank" class="impact-link low-risk-link">
                            <i class="fas fa-video"></i> Video Informativo sobre Inundaciones
                        </a>`;
     }
     
-    if (!adviceContainer.parentNode) { 
+    // Inyectar el mensaje y el enlace en un nuevo contenedor dentro de result-box
+    let adviceContainer = document.getElementById('advice-container');
+    if (!adviceContainer) {
+        adviceContainer = document.createElement('div');
         adviceContainer.id = 'advice-container';
         simResultEl.appendChild(adviceContainer);
     }
@@ -375,26 +387,19 @@ window.calcularRiesgo = calcularRiesgo;
 function animateAlcaldiasBars() {
     const alcaldias = document.querySelectorAll('.alcaldias-list li');
     
+    // 1. Resetear y preparar las barras
     alcaldias.forEach(li => {
         const fullText = li.textContent.trim();
-        let textWithoutPercentage = fullText.includes('(') ? fullText.substring(0, fullText.indexOf('(')).trim() : fullText;
-        if (!textWithoutPercentage) {
-            textWithoutPercentage = li.childNodes[0].nodeValue ? li.childNodes[0].nodeValue.trim() : '';
-        }
+        const textParts = fullText.split(/\s+\(/); // Divide el texto de la alcaldía
+        const textWithoutPercentage = textParts[0]; 
         
         const targetPercentage = parseInt(li.getAttribute('data-percentage').replace('%', ''), 10);
         
-        let counterElement = li.querySelector('.percentage-counter');
-        if (!counterElement) {
-            li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
-            counterElement = li.querySelector('.percentage-counter');
-        } else {
-             li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
-             counterElement = li.querySelector('.percentage-counter');
-        }
-
+        // Inyectamos el span del contador
+        li.innerHTML = `${textWithoutPercentage} <span class="percentage-counter">0%</span>`;
         li.style.setProperty('--percentage', '0%'); 
         
+        const counterElement = li.querySelector('.percentage-counter');
         
         let currentCount = 0;
         const duration = 1500; 
@@ -402,6 +407,7 @@ function animateAlcaldiasBars() {
         const steps = duration / stepTime;
         const stepValue = targetPercentage / steps;
         
+        // 2. Iniciar el contador
         let countInterval = setInterval(() => {
             currentCount += stepValue;
             
@@ -412,8 +418,10 @@ function animateAlcaldiasBars() {
             
             const roundedCount = Math.floor(currentCount);
             
+            // Actualizar el porcentaje de la barra (CSS transition)
             li.style.setProperty('--percentage', `${roundedCount}%`);
             
+            // Actualizar el contador en el texto
             if(counterElement) {
                 counterElement.textContent = `(${roundedCount}%)`;
             }
@@ -451,10 +459,12 @@ function navigateSections(direction) {
     const newTargetId = contentIds[newIndex];
     
     if (newTargetId) {
+        // Simular el click en la nueva tarjeta (esto ya cambia el contenido y la clase 'active')
         const targetCard = document.querySelector(`.carousel-card[data-target="${newTargetId}"]`);
         if (targetCard) {
             targetCard.click(); 
             
+            // Lógica para sincronizar el scroll visual del carrusel:
             const totalCards = contentIds.length;
             const totalVisibleCards = 3; 
             const maxScrollIndex = totalCards - totalVisibleCards;
@@ -462,9 +472,12 @@ function navigateSections(direction) {
             let scrollIndex = 0;
             
             if (newIndex >= totalVisibleCards) {
+                // Si la nueva tarjeta está fuera de la vista (índice 3 o más), movemos el carrusel
+                // para que la tarjeta activa quede como la tercera tarjeta visible.
                 scrollIndex = Math.min(newIndex - (totalVisibleCards - 1), maxScrollIndex);
             }
             
+            // Aseguramos que el índice no sea negativo o exceda el máximo
             scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
             
             currentCardIndex = scrollIndex;
@@ -474,15 +487,16 @@ function navigateSections(direction) {
 }
 
 document.addEventListener('keydown', (event) => {
+    // Evitar navegación si el usuario está interactuando con un campo de formulario
     if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
         return;
     }
 
     if (event.key === 'ArrowRight') {
-        event.preventDefault(); 
+        event.preventDefault(); // Prevenir el scroll por defecto
         navigateSections('next');
     } else if (event.key === 'ArrowLeft') {
-        event.preventDefault(); 
+        event.preventDefault(); // Prevenir el scroll por defecto
         navigateSections('prev');
     }
 });
