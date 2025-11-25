@@ -1,5 +1,5 @@
 /* ==================================== */
-/* 0. Paleta y Tipografía - MEJORA: Centralizar colores de riesgo */
+/* 0. Paleta y Tipografía */
 /* ==================================== */
 :root {
     --color-bg: #0C0C0C; 
@@ -17,7 +17,7 @@
     --font-heading: 'Montserrat', sans-serif; 
     --percentage: 0%; 
 
-    /* MEJORA: Colores de Riesgo Centralizados para Mantenibilidad */
+    /* Colores de Riesgo Centralizados */
     --risk-zero: #2ECC71;      /* VERDE */
     --risk-low: #F1C40F;       /* AMARILLO */
     --risk-medium: #F39C12;    /* NARANJA */
@@ -188,15 +188,27 @@ input[type="range"]::-webkit-slider-thumb {
     background-color: var(--color-accent-hover); transform: scale(1.02);
 }
 
+/* Estilos de la caja de resultados del simulador */
 .result-box {
-    margin-top: 30px; padding: 20px; background-color: rgba(30, 30, 30, 0.8);
-    border-radius: 8px; border-left: 5px solid var(--color-divider);
+    margin-top: 30px; padding: 20px; 
+    background-color: rgba(30, 30, 30, 0.8);
+    border-radius: 8px; 
+    border-left: 5px solid var(--color-divider);
+    /* Animación sutil de entrada */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: resultPopIn 0.5s ease-out forwards;
 }
+@keyframes resultPopIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .result-box p { margin: 0; font-size: 1rem; }
 #riesgo-texto {
     font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; margin-bottom: 5px;
     padding: 10px 0; text-align: center; border-radius: 4px; color: var(--color-bg);
     text-shadow: none; 
+    transition: all 0.5s ease-in-out; /* Transición para el cambio de color */
 }
 
 /* CLASES DE RIESGO ACTUALIZADAS (Usando variables CSS) */
@@ -204,7 +216,16 @@ input[type="range"]::-webkit-slider-thumb {
 .risk-level.zero { background-color: var(--risk-zero); } /* VERDE: Cero Riesgo */
 .risk-level.low { background-color: var(--risk-low); } /* AMARILLO: Riesgo Bajo */
 .risk-level.medium { background-color: var(--risk-medium); } /* NARANJA: Riesgo Medio */
-.risk-level.high { background-color: var(--risk-high); box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); } /* ROJO: Riesgo Alto */
+/* Animación de Alto Riesgo con glow */
+.risk-level.high { 
+    background-color: var(--risk-high); 
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); 
+    animation: highRiskPulse 1.5s infinite alternate;
+} 
+@keyframes highRiskPulse {
+    from { box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); }
+    to { box-shadow: 0 0 20px var(--risk-high); }
+}
 
 .colab-link-text {
     margin-top: 15px;
@@ -243,13 +264,13 @@ input[type="range"]::-webkit-slider-thumb {
     padding: 25px; background-color: var(--color-card-bg); border-radius: 10px;
     border: 1px solid rgba(0, 191, 255, 0.2); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     cursor: pointer; transition: all 0.3s ease-in-out; position: relative;
-    /* Animación de entrada de las tarjetas */
     opacity: 0;
     transform: scale(0.95);
     animation: cardEntrance 0.7s forwards;
 }
 .carousel-card:hover {
-    transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
     border-color: var(--color-accent-hover);
 }
 @keyframes cardEntrance {
@@ -260,6 +281,23 @@ input[type="range"]::-webkit-slider-thumb {
 .carousel-track > :nth-child(1) { animation-delay: 0.2s; }
 .carousel-track > :nth-child(2) { animation-delay: 0.3s; }
 .carousel-track > :nth-child(3) { animation-delay: 0.4s; }
+
+/* Nuevo estilo y animación para la tarjeta activa (Active Card Pulse) */
+.carousel-card.active {
+    transform: translateY(-5px) scale(1.01); 
+    border-color: var(--color-accent-blue);
+    background-color: var(--color-card-hover);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.9);
+    animation: activePulse 2s infinite alternate ease-in-out; /* Pulso sutil */
+}
+@keyframes activePulse {
+    from {
+        box-shadow: 0 0 15px rgba(0, 191, 255, 0.7), 0 8px 20px rgba(0, 0, 0, 0.8);
+    }
+    to {
+        box-shadow: 0 0 25px var(--color-accent-hover), 0 8px 25px rgba(0, 0, 0, 0.9);
+    }
+}
 
 .carousel-card h4 {
     font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.15rem; 
@@ -302,7 +340,6 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%; 
 }
 .content-detail {
-    /* Estado inicial que permite animar al añadir la clase .active */
     display: none; 
     opacity: 0; 
     transition: opacity 0.4s ease-out, transform 0.4s ease-out; 
@@ -310,9 +347,8 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .content-detail.active {
     display: block; 
-    opacity: 1; /* Asegura el estado final de la transición en navegadores sin animación */
-    /* Animación de apertura: slide-up sutil */
-    animation: contentFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; /* Añadido 'forwards' para asegurar el estado final */
+    opacity: 1; 
+    animation: contentFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
 }
 @keyframes contentFadeIn { 
     from { opacity: 0; transform: translateY(20px); } 
@@ -390,7 +426,6 @@ input[type="range"]::-webkit-slider-thumb {
 footer {
     padding: 25px 3rem; text-align: center; border-top: 1px solid var(--color-divider);
     background-color: rgba(0, 0, 0, 0.98); font-size: 0.9rem; color: var(--color-text-secondary); 
-    /* Animación del footer */
     opacity: 0;
     animation: fadeInFooter 1s ease-out forwards;
     animation-delay: 0.8s;
@@ -427,7 +462,6 @@ footer {
     .carousel-track { 
         overflow-x: scroll; 
         scroll-snap-type: x mandatory; 
-        /* MEJORA: Inercia de scroll en iOS (Mejor UX móvil) */
         -webkit-overflow-scrolling: touch; 
     }
     .carousel-card { flex: 0 0 80%; scroll-snap-align: start; }
