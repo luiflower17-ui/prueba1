@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function createClickSound(frequency = 1000, duration = 0.02, volume = 0.1) {
+/**
+ * Genera un sonido sintetizado con la Web Audio API.
+ */
+function createSound(frequency, duration, volume, type = 'square') {
     if (audioContext.state === 'closed' || audioContext.state === 'suspended') return; 
 
     try {
@@ -27,7 +30,7 @@ function createClickSound(frequency = 1000, duration = 0.02, volume = 0.1) {
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
 
-        oscillator.type = 'square'; 
+        oscillator.type = type; 
         oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime); 
         gainNode.gain.setValueAtTime(volume, audioContext.currentTime); 
 
@@ -40,8 +43,10 @@ function createClickSound(frequency = 1000, duration = 0.02, volume = 0.1) {
     }
 }
 
-const playClickSound = () => createClickSound(800, 0.05, 0.1); 
-const playActionSound = () => createClickSound(1200, 0.1, 0.15); 
+// Sonido de click digital (navegación sutil)
+const playSoftClick = () => createSound(1500, 0.015, 0.1, 'square'); 
+// Sonido de acción (botón de simulación)
+const playConfirmAction = () => createSound(1200, 0.08, 0.2, 'sine'); 
 
 
 // ===============================================
@@ -49,7 +54,6 @@ const playActionSound = () => createClickSound(1200, 0.1, 0.15);
 // ===============================================
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-// Uso de Intersection Observer para máximo rendimiento en el scroll
 if (scrollToTopBtn) {
     const observerTarget = document.querySelector('header');
     
@@ -71,7 +75,7 @@ if (scrollToTopBtn) {
 
     scrollToTopBtn.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
-        playClickSound(); 
+        playSoftClick(); 
     });
 }
 
@@ -82,6 +86,9 @@ if (scrollToTopBtn) {
 const carouselCards = document.querySelectorAll('.carousel-card');
 const detailContents = document.querySelectorAll('.content-detail');
 let currentActiveContent = null;
+
+// NUEVO: Array ordenado de IDs para navegación secuencial (teclado)
+const contentIds = Array.from(carouselCards).map(card => card.getAttribute('data-target')).filter(id => id);
 
 function animateInfoBlocks(contentElement) {
     const infoBlocks = contentElement.querySelectorAll('.info-block');
@@ -98,7 +105,7 @@ function showContent(targetId) {
     
     if (!nextContent || nextContent === currentActiveContent) return;
 
-    playClickSound(); 
+    playSoftClick(); 
 
     if (currentActiveContent) {
         // Desactivar el contenido actual
@@ -107,13 +114,11 @@ function showContent(targetId) {
         currentActiveContent.style.transform = 'translateY(-20px)';
 
         setTimeout(() => {
-            currentActiveContent.style.display = 'none'; // Oculta el viejo contenido
+            currentActiveContent.style.display = 'none'; 
             
             // Activar el nuevo contenido
             nextContent.style.display = 'block';
-            // CORRECCIÓN: Se eliminó nextContent.style.opacity = '0'; 
-            // Esto prevenía que la animación CSS se ejecutara correctamente.
-            void nextContent.offsetWidth; // Forzar reflow para reiniciar la animación
+            void nextContent.offsetWidth; 
             nextContent.classList.add('active');
             
             currentActiveContent = nextContent;
@@ -135,14 +140,19 @@ function showContent(targetId) {
     }
 }
 
-// Inicializar al cargar: activa el primer elemento por defecto o el del hash
+// Inicializar y manejar la tarjeta activa al cargar
 document.addEventListener('DOMContentLoaded', () => {
     const initialTargetId = window.location.hash ? window.location.hash.substring(1) : detailContents[0]?.id; 
     
     if (initialTargetId && document.getElementById(initialTargetId)) {
         showContent(initialTargetId);
+        const initialCard = document.querySelector(`.carousel-card[data-target="${initialTargetId}"]`);
+        if (initialCard) {
+            initialCard.classList.add('active');
+        }
     } else if (detailContents[0]?.id) {
         showContent(detailContents[0].id);
+        carouselCards[0]?.classList.add('active');
     }
 });
 
@@ -151,6 +161,7 @@ carouselCards.forEach(card => {
     card.addEventListener('click', () => { 
         const targetId = card.getAttribute('data-target');
         
+        // Reiniciar el estado del simulador
         if (targetId !== 'content-algoritmo') {
             const riesgoTextoEl = document.getElementById('riesgo-texto');
             if (riesgoTextoEl) {
@@ -160,6 +171,10 @@ carouselCards.forEach(card => {
         }
 
         if (targetId) {
+            // Manejar la clase 'active' para el efecto de pulse/glow
+            carouselCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+
             window.location.hash = targetId; 
             showContent(targetId); 
         }
@@ -189,9 +204,11 @@ function moveToCard(index) {
 
 if (nextBtn && carouselTrack) {
     nextBtn.addEventListener('click', () => {
-        playClickSound();
+        playSoftClick();
         const totalCards = carouselTrack.children.length;
-        const maxIndex = totalCards - Math.floor(carouselTrack.offsetWidth / totalStepSize);
+        // Se asume que en escritorio caben 3 tarjetas y la vista no se mueve más allá del final
+        const totalVisibleCards = 3; 
+        const maxIndex = totalCards - totalVisibleCards;
 
         if (currentCardIndex < maxIndex) {
             currentCardIndex++;
@@ -205,7 +222,7 @@ if (nextBtn && carouselTrack) {
 
 if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-        playClickSound();
+        playSoftClick();
         if (currentCardIndex > 0) {
             currentCardIndex--;
             moveToCard(currentCardIndex);
@@ -242,8 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function calcularRiesgo() {
-    playActionSound(); 
-    
+    playConfirmAction(); // Usar el sonido de acción
+
+    // 1. Obtener valores de los inputs
     const M = parseFloat(document.getElementById('alcaldia-select').value);
     const C = parseFloat(document.getElementById('lluvia-input').value);
     const P = parseFloat(document.getElementById('obstruccion-input').value);
@@ -254,14 +272,13 @@ function calcularRiesgo() {
         const riesgoTextoEl = document.getElementById('riesgo-texto');
         riesgoTextoEl.textContent = "Error: Datos de entrada inválidos. Revise los valores.";
         riesgoTextoEl.className = `risk-level high`; 
-        console.error("Entrada inválida en la simulación.");
         return; 
     }
 
-    // FÓRMULA CLAVE: R = C + P + (E × M)
+    // 2. FÓRMULA CLAVE: R = C + P + (E × M)
     const R = C + P + (E * M);
 
-    // Clasificación de riesgo
+    // 3. Clasificación de riesgo
     let riesgoText;
     let riesgoClass;
 
@@ -279,10 +296,10 @@ function calcularRiesgo() {
         riesgoClass = "low";
     }
 
-    // Actualizar el display
+    // 4. Actualizar el display (SOLO CLASIFICACIÓN DE RIESGO)
     const riesgoTextoEl = document.getElementById('riesgo-texto');
     
-    riesgoTextoEl.textContent = `${riesgoText} (Valor R: ${R.toFixed(2)})`;
+    riesgoTextoEl.textContent = riesgoText;
     riesgoTextoEl.className = `risk-level ${riesgoClass}`; 
 }
 
@@ -299,3 +316,49 @@ function animateAlcaldiasBars() {
         li.style.setProperty('--percentage', percentage);
     });
 }
+
+// ===============================================
+// 6. NAVEGACIÓN POR TECLADO
+// ===============================================
+function navigateSections(direction) {
+    if (!currentActiveContent) return; 
+
+    const currentId = currentActiveContent.id;
+    let currentIndex = contentIds.indexOf(currentId);
+    
+    if (currentIndex === -1) return; 
+
+    let newIndex = currentIndex;
+
+    if (direction === 'next') {
+        newIndex = (currentIndex + 1) % contentIds.length; // Ciclo hacia adelante
+    } else if (direction === 'prev') {
+        // Ciclo hacia atrás: asegura que el resultado sea positivo
+        newIndex = (currentIndex - 1 + contentIds.length) % contentIds.length;
+    }
+
+    const newTargetId = contentIds[newIndex];
+    
+    if (newTargetId) {
+        // Buscar la tarjeta del carrusel y simular el click para reusar toda la lógica
+        const targetCard = document.querySelector(`.carousel-card[data-target="${newTargetId}"]`);
+        if (targetCard) {
+            targetCard.click(); 
+        }
+    }
+}
+
+document.addEventListener('keydown', (event) => {
+    // Evitar navegación si el usuario está interactuando con un campo de formulario
+    if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
+        return;
+    }
+
+    if (event.key === 'ArrowRight') {
+        event.preventDefault(); // Prevenir el scroll por defecto
+        navigateSections('next');
+    } else if (event.key === 'ArrowLeft') {
+        event.preventDefault(); // Prevenir el scroll por defecto
+        navigateSections('prev');
+    }
+});
