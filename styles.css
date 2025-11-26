@@ -1,4 +1,4 @@
-/* --- VARIABLES BASe --- */
+/* --- VARIABLES BASE --- */
 
 :root {
     --color-dark-bg: #121212;
@@ -228,9 +228,22 @@ input:checked + .slider .icon-light {
     margin-right: 10px;
 }
 
+/* --- CORRECCIÓN DE ERROR DE CARGA: Ocultar por defecto --- */
 .content-detail {
+    display: none; /* Ocultar por defecto hasta que JS cargue el contenido inicial */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     padding: 30px 0;
 }
+
+.content-detail.active {
+    display: block; /* Solo se hace visible cuando JS le agrega la clase 'active' */
+    opacity: 1;
+    transform: translateY(0);
+}
+/* --- FIN CORRECCIÓN DE ERROR DE CARGA --- */
+
 
 .content-detail h3 {
     font-family: 'Montserrat', sans-serif;
@@ -465,8 +478,8 @@ ul {
     opacity: 0.4;
     transition: width 0.5s ease-out;
     z-index: -1;
-    /* Se usará un script para calcular el width basado en data-percentage */
-    width: calc(var(--percentage) * 1%);
+    /* Se usa la propiedad custom --percentage, establecida en JS */
+    width: calc(var(--percentage, 0) * 1%); 
 }
 
 .alcaldias-list li:nth-child(2)::before { background-color: #ff9800; } /* Naranja para el 2do */
@@ -714,4 +727,3 @@ footer a {
         width: 250px;
     }
 }
-
