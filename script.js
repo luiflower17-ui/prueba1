@@ -1,6 +1,6 @@
 // ===============================================
 // 0.1. TOGGLE MODO CLARO/OSCURO (Punto 1 y 3)
-// ==============================================
+// ===============================================
 const darkModeToggle = document.getElementById('darkModeToggle');
 const body = document.body;
 
@@ -165,13 +165,9 @@ function showContent(targetId) {
     // Reiniciar el estado del simulador si salimos
     if (targetId !== 'content-algoritmo') {
         const riesgoTextoEl = document.getElementById('riesgo-texto');
-        const simResultEl = document.getElementById('sim-result');
         if (riesgoTextoEl) {
             riesgoTextoEl.textContent = "Esperando datos...";
             riesgoTextoEl.className = `risk-level pending`; 
-        }
-        if (simResultEl) {
-             simResultEl.classList.remove('high-pulse', 'medium-pulse'); // Limpiar pulso
         }
     }
 
@@ -503,25 +499,20 @@ function calcularRiesgo() {
     }
 
 
-    // 4. Actualizar el display de clasificación (Punto 2 anterior: Solo Riesgo: [Nivel])
+    // 4. Actualizar el display de clasificación (Punto 2: Solo Riesgo: [Nivel])
     const riesgoTextoEl = document.getElementById('riesgo-texto');
-    const simResultEl = document.getElementById('sim-result'); // Elemento para control de impacto visual
+    const simResultEl = document.getElementById('sim-result');
     const adviceContainer = document.getElementById('advice-container');
     
-    // --- NUEVO: Control de impacto visual (Pulso) ---
-    simResultEl.classList.remove('high-pulse', 'medium-pulse'); // Limpiar clases anteriores
-
     let messageHTML = '';
     riesgoTextoEl.textContent = riesgoText; // Ya contiene "Riesgo: ..."
     riesgoTextoEl.className = `risk-level ${riesgoClass}`;
 
 
-    // 5. Añadir mensaje de sugerencia condicional y activar pulso
+    // 5. Añadir mensaje de sugerencia condicional
     if (riesgoClass === 'high') {
-        simResultEl.classList.add('high-pulse'); // Añadir pulso rojo
         messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil. La combinación de lluvia alta (C=${C}) y obstrucción (P=${P}) ha superado la capacidad crítica de drenaje (K=${K}).</p> <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link"> <i class="fas fa-file-pdf"></i> Protocolo de Emergencia </a>`;
     } else if (riesgoClass === 'medium') {
-        simResultEl.classList.add('medium-pulse'); // Añadir pulso naranja
         messageHTML = `<p class="impact-message medium-alert"><strong>❗️ ALERTA:</strong> Nivel de riesgo moderado. Se recomienda limpiar coladeras y evitar áreas bajas. El factor de Obstrucción (P=${P}) es un mitigador potencial.</p>`;
     } else if (riesgoClass === 'low') {
         messageHTML = `<p class="impact-message low-alert"><strong>🟢 PRECAUCIÓN:</strong> Nivel de riesgo bajo, pero K=${K} indica que el drenaje puede comenzar a saturarse con precipitaciones continuas. Siga limpiando coladeras.</p>`;
@@ -531,4 +522,3 @@ function calcularRiesgo() {
 
     adviceContainer.innerHTML = messageHTML;
 }
-
