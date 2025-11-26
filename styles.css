@@ -1,774 +1,577 @@
-/* ==================================== */
-/* 0. Paleta y Tipografía */
-/* ==================================== */
+/* ========================================= */
+/* PARTE 1 — VARIABLES DE TEMA Y NEÓN */
+/* ========================================= */
+
 :root {
-    /* Tema Oscuro (Original): Negro y Azul Neón */
-    --color-bg: #0C0C0C;
-    --color-main-bg: rgba(20, 20, 20, 0.95);
-    --color-text-light: #F8F8F8;
-    --color-text-secondary: #909090;
-    --color-accent-blue: #00c8ff; /* Azul NEÓN ajustado */
-    --color-accent-hover: #34d1ff;
-    --color-divider: #333333;
-    --color-card-bg: rgba(30, 30, 30, 0.9);
-    --color-card-hover: #3D3D3D;
-    --shadow-subtle: 0 8px 30px rgba(0, 0, 0, 0.95);
-    --spacing-margin: 5rem;
-    --font-content: 'Roboto', sans-serif;
-    --font-heading: 'Montserrat', sans-serif;
-    --percentage: 0%;
+    /* MODO OSCURO (DEFAULT) — Azul Neón */
+    --bg: #0a0f1f;
+    --text: #e4ebff;
+    --accent: #4db8ff;
+    --accent-glow: #73cfff;
+    --card-bg: #11182d;
+    --border-soft: #1e2742;
 
-    /* Colores de Riesgo Centralizados */
-    --risk-zero: #2ECC71; 
-    --risk-low: #F1C40F;
-    --risk-medium: #F39C12;
-    --risk-high: #E74C3C;
+    /* Colores neón */
+    --neon-blue: #4dc3ff;
+    --neon-blue-strong: #66d9ff;
+
+    /* Transiciones generales */
+    --transition-fast: 0.25s ease;
+    --transition-medium: 0.4s ease;
 }
 
-/* ADICIÓN: Variables para Tema Claro (Blanco y Rojo Neón) */
-body[data-theme="light"] {
-    --color-bg: #FFFFFF;
-    --color-main-bg: rgba(245, 245, 245, 0.98);
-    --color-text-light: #111111;
-    --color-text-secondary: #555555;
-    --color-accent-blue: #ff004c;  /* ROJO NEÓN */
-    --color-accent-hover: #ff336d; /* ROJO más brillante */
+/* ========================================= */
+/* MODO CLARO — ROJO NEÓN */
+/* ========================================= */
 
-    --color-divider: #CCCCCC;
-    --color-card-bg: rgba(255, 255, 255, 1.0);
-    --color-card-hover: #EEEEEE;
-    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.2);
+body.light-mode {
+    --bg: #fff6f6;
+    --text: #2a0000;
+    --accent: #ff4d4d;
+    --accent-glow: #ff7373;
+    --card-bg: #ffe5e5;
+    --border-soft: #ffcccc;
 
-    /* Riesgos ajustados */
-    --risk-zero: #1B9C5F;
-    --risk-low: #DDAA00;
-    --risk-medium: #DD5500;
-    --risk-high: #CC0000;
-}
+    --neon-red: #ff4d4d;
+    --neon-red-strong: #ff7a7a;
 
-body[data-theme="light"] header h1,
-body[data-theme="light"] .content-detail h3 {
-    text-shadow: 0 0 12px rgba(255, 0, 76, 0.8); /* NEÓN rojo */
-}
-
-body[data-theme="dark"] header h1,
-body[data-theme="dark"] .content-detail h3 {
-    text-shadow: 0 0 12px rgba(0, 200, 255, 0.8); /* NEÓN azul */
-}
-
-body[data-theme="light"] #detail-panel {
-    border-color: var(--color-divider);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    animation: none;
+    background: var(--bg);
+    color: var(--text);
 }
 
 body {
-    font-family: var(--font-content);
-    font-weight: 400;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    color: var(--color-text-light);
-    min-height: 100vh;
-    background-color: var(--color-bg);
-    display: flex;
-    justify-content: center;
-    position: relative;
-    overflow-x: hidden;
-    transition: background-color 0.5s ease;
+    background: var(--bg);
+    color: var(--text);
+    transition: background var(--transition-medium), color var(--transition-medium);
 }
 
-a {
-    color: var(--color-accent-blue);
-    text-decoration: none;
-    transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-a:hover {
-    color: var(--color-accent-hover);
-    text-decoration: underline;
-}
-
-/* ==================================== */
-/* 0. PRELOADER */
-/* ==================================== */
-#preloader {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: var(--color-bg);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease-out;
-}
-#preloader.fade-out { opacity: 0; }
-
-.loader {
-    border: 5px solid rgba(0, 191, 255, 0.2);
-    border-top: 5px solid var(--color-accent-blue);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-#preloader p {
-    color: var(--color-text-light);
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    animation: pulseText 1.5s infinite;
-}
-
-@keyframes spin { 
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-@keyframes pulseText {
-    0% { opacity: 0.7; }
-    50% { opacity: 1; }
-    100% { opacity: 0.7; }
-}
-
-/* ==================================== */
-/* 1. VIDEO DE FONDO */
-/* ==================================== */
-.video-background {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.video-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.65);
-    z-index: 5;
-    transition: background-color 0.5s ease;
-}
-
-#youtube-background {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 100vw;
-    height: 56.25vw;
-    min-width: 100%;
-    min-height: 100%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    border: none;
-    z-index: 2;
-}
-
-/* ==================================== */
-/* 2. HEADER */
-/* ==================================== */
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background-color: var(--color-main-bg);
-    padding: 3rem 3.5rem 2rem 3.5rem;
-    border-bottom: 3px solid var(--color-accent-blue);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.5s ease, border-bottom-color 0.5s ease;
-}
-
-header h1 {
-    font-family: var(--font-heading);
-    font-size: 2.8rem;
-    font-weight: 800;
-    color: var(--color-accent-blue);
-    margin: 0;
-    letter-spacing: 0.08em;
-    transition: color 0.5s ease, text-shadow 0.5s ease;
-}
-
-.header-subtitle {
-    font-size: 1.05rem;
-    color: var(--color-text-light);
-    transition: color 0.5s ease;
-}
-
-.section-title {
-    font-family: var(--font-heading);
-    color: var(--color-text-light);
-    font-size: 1.8rem;
-    padding: 2.5rem 3.5rem 0.5rem 3.5rem;
-    font-weight: 700;
-    border-top: 1px solid var(--color-divider);
-    transition: color 0.5s ease, border-top-color 0.5s ease;
-}
-.section-title i {
-    color: var(--color-accent-blue);
-    margin-right: 15px;
-    transition: color 0.5s ease;
-}
-
-.section-intro {
-    font-size: 1.05rem;
-    padding: 0 3.5rem;
-    margin-bottom: 2rem;
-    color: var(--color-text-secondary);
-}
-
-/* Títulos dentro del detalle */
-.content-detail h3 {
-    font-family: var(--font-heading);
-    color: var(--color-accent-blue);
-    font-size: 2.2rem;
-    border-bottom: 3px solid var(--color-accent-blue);
-    padding-bottom: 15px;
-    margin-bottom: 30px;
-    font-weight: 700;
-    text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
-    transition: color 0.5s ease, text-shadow 0.5s ease, border-bottom-color 0.5s ease;
-}
-
-.content-detail h4 {
-    font-family: var(--font-heading);
-    color: var(--color-accent-blue);
-    font-size: 1.3rem;
-    margin: 0 0 12px 0;
-    font-weight: 700;
-    border-bottom: 1px dashed rgba(51, 51, 51, 0.6);
-    padding-bottom: 8px;
-    transition: color 0.5s ease;
-}
-
-.full-width { grid-column: 1 / -1; }
-
-/* ==================================== */
-/* 3. SIMULADOR */
-/* ==================================== */
-
-#simulation-area {
-    padding: 30px;
-    background-color: var(--color-card-bg);
-    border: 2px solid var(--color-accent-blue);
-    border-radius: 12px;
-    margin-bottom: 40px;
-    transition: background-color 0.5s ease, border-color 0.5s ease;
-}
-
-.sim-inputs {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.input-group {
-    flex: 1 1 200px;
-    display: flex;
-    flex-direction: column;
-}
-
-.input-group label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--color-text-light);
-}
-
-.input-group i {
-    color: var(--color-accent-blue);
-    margin-right: 8px;
-    transition: color 0.5s ease;
-}
-
-#alcaldia-select,
-input[type="range"] {
-    background-color: var(--color-card-bg);
-    border: 1px solid var(--color-divider);
-    color: var(--color-text-light);
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.5s ease,
-                border-color 0.5s ease,
-                color 0.5s ease;
-}
-
-input[type="range"] {
-    -webkit-appearance: none;
-    height: 10px;
-}
-
-/* Thumb */
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--color-accent-blue);
-    cursor: pointer;
-    margin-top: -5px;
-    transition: background 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.range-value {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    margin-top: 5px;
-    text-align: right;
-}
-
-/* Botón del simulador */
-#simulation-area button {
-    background-color: var(--color-accent-blue);
-    color: var(--color-bg);
-    padding: 12px 25px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-                transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    margin-top: 15px;
-}
-
-#simulation-area button:hover {
-    background-color: var(--color-accent-hover);
-    transform: scale(1.02);
-}
-
-/* Caja de resultados */
-.result-box {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: var(--color-card-hover);
-    border-radius: 8px;
-    border-left: 5px solid var(--color-divider);
-    opacity: 0;
-    transform: translateY(20px);
-    animation: resultPopIn 0.5s ease-out forwards;
-    transition: background-color 0.5s ease,
-                border-left-color 0.5s ease;
-}
-
-@keyframes resultPopIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-#riesgo-texto {
-    font-family: var(--font-heading);
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-    padding: 10px 0;
-    text-align: center;
-    border-radius: 4px;
-    color: var(--color-bg);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Colores de riesgo */
-.risk-level.pending { 
-    background-color: var(--color-text-secondary);
-    color: var(--color-bg);
-}
-.risk-level.zero { background-color: var(--risk-zero); }
-.risk-level.low { background-color: var(--risk-low); }
-.risk-level.medium { background-color: var(--risk-medium); }
-.risk-level.high { background-color: var(--risk-high); }
-
-/* ==================================== */
-/* 4. CARRUSEL */
-/* ==================================== */
-
-.carousel-container {
-    padding: 20px 0;
-    margin: 0 3.5rem 50px 3.5rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.carousel-track {
-    display: flex;
-    gap: 20px;
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.carousel-card {
-    flex: 0 0 330px;
-    padding: 25px;
-    background-color: var(--color-card-bg);
-    border-radius: 10px;
-    border: 1px solid rgba(0, 191, 255, 0.2);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-                background-color 0.4s ease,
-                border-color 0.4s ease;
-    position: relative;
-    opacity: 0;
-    transform: scale(0.95);
-    animation: cardEntrance 0.7s forwards;
-}
-
-.carousel-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.8);
-    border-color: var(--color-accent-hover);
-}
-
-@keyframes cardEntrance {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* NEÓN de tarjeta activa */
-.carousel-card.active-card {
-    border-color: var(--color-accent-blue);
-    box-shadow: 0 0 20px var(--color-accent-blue);
-    animation: glowPulse 4s infinite ease-in-out;
-}
-
-@keyframes glowPulse {
-    0% { box-shadow: 0 0 15px var(--color-accent-blue); }
-    50% { box-shadow: 0 0 35px var(--color-accent-blue); }
-    100% { box-shadow: 0 0 15px var(--color-accent-blue); }
-}
-
-/* Ajuste para modo claro */
-body[data-theme="light"] .carousel-card.active-card {
-    animation: none;
-    box-shadow: 0 0 20px rgba(255, 0, 76, 0.8);
-}
-/* ==================================== */
-/* Botones del carrusel */
-/* ==================================== */
-
-.prev-btn,
-.next-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: var(--color-accent-blue);
-    color: var(--color-bg);
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
-    font-size: 20px;
-    box-shadow: 0 0 12px var(--color-accent-blue);
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    z-index: 10;
-}
-
-.prev-btn:hover,
-.next-btn:hover {
-    background-color: var(--color-accent-hover);
-    box-shadow: 0 0 20px var(--color-accent-hover);
-}
-
-.prev-btn { left: -10px; }
-.next-btn { right: -10px; }
-
-/* ==================================== */
-/* 5. PANEL LATERAL */
-/* ==================================== */
-
-#detail-panel {
-    width: 100%;
-    max-width: 1100px;
-    background-color: var(--color-main-bg);
-    padding: 50px;
-    border-radius: 20px;
-    margin: 30px auto 80px auto;
-    border: 2px solid var(--color-accent-blue);
-    box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
-    position: relative;
-    z-index: 15;
-    transition: background-color 0.5s ease,
-                border-color 0.5s ease,
-                box-shadow 0.5s ease;
-}
-
-.content-detail {
-    display: none;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.content-detail.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ==================================== */
-/* 6. INFO BLOCKS */
-/* ==================================== */
-
-.info-block {
-    padding: 25px;
-    background-color: var(--color-card-bg);
-    border-radius: 8px;
-    border-left: 5px solid var(--color-accent-blue);
-    box-shadow: var(--shadow-subtle);
-    margin-bottom: 25px;
-    animation: fadeInUp 0.6s ease forwards;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: background-color 0.5s ease,
-                border-color 0.5s ease,
-                color 0.5s ease;
-}
-
-.info-block p {
-    margin: 0;
-    font-size: 1.05rem;
-}
-
-.info-block ul {
-    padding-left: 25px;
-}
-
-.info-block ul li {
-    padding: 6px 0;
-}
-
-/* ==================================== */
-/* 7. BARRAS DE ALCALDÍAS */
-/* ==================================== */
-
-.alcaldias-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.alcaldias-list li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 18px;
-    font-size: 1.1rem;
-    color: var(--color-text-light);
-    transition: color 0.5s ease;
-}
-
-.alcaldias-list .bar {
-    flex: 1;
-    height: 12px;
-    background-color: var(--color-card-hover);
-    margin-left: 12px;
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
-}
-
-.alcaldias-list .bar-fill {
-    height: 100%;
-    background-color: var(--color-accent-blue);
-    width: calc(var(--percentage));
-    transition: width 1.5s ease, background-color 0.5s ease;
-}
-
-.percentage-counter {
-    width: 60px;
-    text-align: right;
-    padding-left: 10px;
-    color: var(--color-text-light);
-}
-
-/* ==================================== */
-/* 8. BOTÓN FLOTANTE (ir arriba) */
-/* ==================================== */
-
-#scrollToTopBtn {
-    position: fixed;
-    bottom: 35px;
-    right: 35px;
-    background-color: var(--color-accent-blue);
-    color: var(--color-bg);
-    border: none;
-    border-radius: 50%;
-    width: 52px;
-    height: 52px;
-    font-size: 26px;
-    cursor: pointer;
-    box-shadow: 0 0 15px var(--color-accent-blue);
-    display: none;
-    transition: background-color 0.4s ease,
-                box-shadow 0.4s ease,
-                transform 0.4s ease;
-    z-index: 30;
-}
-
-#scrollToTopBtn:hover {
-    background-color: var(--color-accent-hover);
-    box-shadow: 0 0 25px var(--color-accent-hover);
-    transform: scale(1.1);
-}
-
-/* ==================================== */
-/* 9. SWITCH DEL TEMA  
-   ✔ YA ESTÁ COLOCADO EN LA ESQUINA SUPERIOR DERECHA */
-/* ==================================== */
+/* ========================================= */
+/* SWITCH ARRIBA A LA DERECHA */
+/* ========================================= */
 
 .theme-switch-wrapper {
     position: fixed;
     top: 15px;
-    right: 25px;
-    z-index: 5000;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    right: 20px;
+    z-index: 9999;
 }
 
 .theme-switch {
     display: inline-block;
-    width: 60px;
-    height: 30px;
+    position: relative;
+    width: 50px;
+    height: 24px;
 }
 
 .theme-switch input {
     display: none;
 }
 
-.slider {
+.theme-switch .slider {
     position: absolute;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #888;
-    transition: 0.4s;
-    border-radius: 34px;
+    inset: 0;
+    background: var(--border-soft);
+    border-radius: 20px;
+    transition: background var(--transition-fast);
 }
 
-.slider:before {
-    position: absolute;
+.theme-switch .slider:before {
     content: "";
-    height: 22px;
-    width: 22px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background: var(--accent);
     border-radius: 50%;
-    transition: 0.4s;
+    transition: transform var(--transition-fast), background var(--transition-fast);
 }
 
-input:checked + .slider {
-    background-color: var(--color-accent-blue);
-    box-shadow: 0 0 15px var(--color-accent-blue);
+/* ON */
+.theme-switch input:checked + .slider {
+    background: var(--accent-glow);
 }
 
-input:checked + .slider:before {
-    transform: translateX(28px);
+.theme-switch input:checked + .slider:before {
+    transform: translateX(26px);
+    background: var(--accent);
 }
-/* ==================================== */
-/* 10. RESPONSIVE DESIGN */
-/* ==================================== */
+/* ========================================= */
+/* PARTE 2 — ESTILOS GENERALES */
+/* ========================================= */
 
-@media (max-width: 1100px) {
-    header h1 {
-        font-size: 2.3rem;
-    }
+/* Textos y estructura */
+h1, h2, h3, h4 {
+    color: var(--text);
+    margin: 0;
+}
 
-    #detail-panel {
-        padding: 35px;
+p, span, label {
+    color: var(--text);
+}
+
+/* Links */
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--accent-glow);
+}
+
+/* Contenedores generales */
+section, .page-section {
+    background: var(--bg);
+    color: var(--text);
+    transition: background var(--transition-medium), color var(--transition-medium);
+}
+
+/* Cartas / paneles */
+.card, .info-box, .panel {
+    background: var(--card-bg);
+    border: 2px solid var(--border-soft);
+    border-radius: 15px;
+    padding: 20px;
+    transition: background var(--transition-medium), border var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+/* Botones generales */
+button {
+    background: var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+button:hover {
+    background: var(--accent-glow);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Inputs */
+input, select {
+    background: var(--card-bg);
+    color: var(--text);
+    border: 2px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 8px;
+    transition: background var(--transition-fast), border var(--transition-fast), color var(--transition-fast);
+}
+
+/* Hover suave */
+.soft-blink {
+    animation: softBlink 1.2s ease-out;
+}
+
+/* Animación de parpadeo */
+@keyframes softBlink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+/* ========================================= */
+/* PARTE 3 — CARRUSEL Y TARJETAS */
+/* ========================================= */
+
+.carousel-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin: 20px auto;
+}
+
+#carousel-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.45s ease;
+}
+
+.carousel-card {
+    min-width: 260px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-soft);
+    padding: 18px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px transparent;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border var(--transition-fast);
+}
+
+.carousel-card:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.carousel-card.active {
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: scale(1.06);
+}
+
+/* Botones prev/next */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card-bg);
+    color: var(--accent);
+    border: 2px solid var(--border-soft);
+    padding: 10px 14px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background var(--transition-fast), border var(--transition-fast), color var(--transition-fast);
+}
+
+.carousel-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+/* ========================================= */
+/* PANEL DETALLADO DE CADA TARJETA */
+/* ========================================= */
+
+.detail-content {
+    display: none;
+    background: var(--card-bg);
+    border: 2px solid var(--border-soft);
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px transparent;
+    transition: opacity var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.detail-content.visible {
+    display: block;
+    box-shadow: 0 0 15px var(--accent-glow);
+    opacity: 1;
+}
+/* ========================================= */
+/* PARTE 4 — NAVEGACIÓN Y SECCIONES */
+/* ========================================= */
+
+/* NAV PRINCIPAL */
+nav {
+    background: var(--card-bg);
+    border-bottom: 2px solid var(--border-soft);
+    padding: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    backdrop-filter: blur(6px);
+    transition: background var(--transition-medium), border var(--transition-medium);
+}
+
+.nav-btn {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid var(--border-soft);
+    padding: 10px 18px;
+    margin: 0 5px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background var(--transition-fast), border var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.nav-btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.nav-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* ========================================= */
+/* SECCIONES */
+/* ========================================= */
+
+.page-section {
+    padding: 40px 20px;
+    opacity: 0;
+    transition: opacity var(--transition-medium), background var(--transition-medium), color var(--transition-medium);
+}
+
+.page-section.visible,
+.page-section.section-visible {
+    opacity: 1;
+}
+
+/* TITULOS DE SECCIÓN */
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--accent);
+    text-shadow: 0 0 8px var(--accent-glow);
+    transition: color var(--transition-medium), text-shadow var(--transition-medium);
+}
+
+/* CAJAS DE INFORMACIÓN */
+.info-box {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 18px;
+    border: 2px solid var(--border-soft);
+    margin-bottom: 25px;
+    transition: background var(--transition-medium), border var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.info-box:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ENCABEZADO SUPERIOR */
+header {
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--bg);
+    color: var(--text);
+    transition: background var(--transition-medium), color var(--transition-medium);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+/* ========================================= */
+/* PARTE 5 — SIMULADOR DE RIESGO */
+/* ========================================= */
+
+.simulator-container {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid var(--border-soft);
+    box-shadow: 0 0 12px transparent;
+    transition: background var(--transition-medium), border var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.simulator-container:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Etiquetas */
+.simulator-container label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+    color: var(--text);
+}
+
+/* Select */
+.simulator-container select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 2px solid var(--border-soft);
+    transition: border var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.simulator-container select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Inputs numéricos */
+.simulator-container input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 2px solid var(--border-soft);
+    transition: border var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.simulator-container input[type="number"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Botón Calcular */
+#btn-calc {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    background: var(--accent);
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#btn-calc:hover {
+    background: var(--accent-glow);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Resultados */
+#simulator-results {
+    margin-top: 25px;
+    padding: 18px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    border: 2px solid var(--border-soft);
+    text-align: center;
+    transition: background var(--transition-medium), border var(--transition-medium);
+}
+
+/* Alcaldía */
+#sim-result-alcaldia {
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+/* Texto de riesgo */
+#riesgo-texto {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* Estado: Cero riesgo */
+.risk-level.zero {
+    background: #8882;
+    color: var(--text);
+}
+
+/* Bajo */
+.risk-level.low {
+    background: rgba(80, 255, 120, 0.15);
+    color: #4cff95;
+    box-shadow: 0 0 10px rgba(80, 255, 120, 0.4);
+}
+
+/* Medio */
+.risk-level.medium {
+    background: rgba(255, 200, 60, 0.18);
+    color: #ffd65c;
+    box-shadow: 0 0 10px rgba(255, 200, 60, 0.5);
+}
+
+/* Alto */
+.risk-level.high {
+    background: rgba(255, 70, 70, 0.2);
+    color: #ff5c5c;
+    box-shadow: 0 0 15px rgba(255, 70, 70, 0.6);
+}
+/* ========================================= */
+/* PARTE 6 — RESPONSIVE Y AJUSTES FINALES */
+/* ========================================= */
+
+/* CARRUSEL EN PANTALLAS PEQUEÑAS */
+@media (max-width: 900px) {
+    #carousel-track {
+        gap: 12px;
     }
 
     .carousel-card {
-        flex: 0 0 290px;
+        min-width: 220px;
+        padding: 15px;
     }
 }
 
-@media (max-width: 900px) {
-    .carousel-container {
-        margin: 0 2rem 50px 2rem;
+@media (max-width: 600px) {
+    .carousel-card {
+        min-width: 190px;
+        padding: 14px;
     }
 
-    header {
-        padding: 2rem;
+    .prev-btn,
+    .next-btn {
+        display: none;
+    }
+}
+
+/* SECCIONES EN PANTALLAS CHICAS */
+@media (max-width: 750px) {
+    .page-section {
+        padding: 25px 15px;
     }
 
     .section-title {
-        padding-left: 2rem;
+        font-size: 1.7rem;
     }
 }
 
-@media (max-width: 700px) {
-
-    .theme-switch-wrapper {
-        top: 12px;
-        right: 12px;
-        transform: scale(0.9);
-    }
-
-    header {
-        padding: 1.5rem;
-        flex-direction: column;
-        text-align: center;
-    }
-
-    header h1 {
-        font-size: 2rem;
-        margin-bottom: 10px;
-    }
-
-    .carousel-container {
-        margin: 0 1rem 40px 1rem;
-    }
-
-    .carousel-card {
-        flex: 0 0 260px;
-    }
-
-    #detail-panel {
-        padding: 25px;
-        margin: 15px auto 50px auto;
-    }
-}
-
-@media (max-width: 520px) {
-
-    .carousel-card {
-        flex: 0 0 240px;
-    }
-
-    .prev-btn, .next-btn {
-        display: none;
-    }
-
-    .sim-inputs {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .input-group {
-        width: 100%;
-    }
-
-    #simulation-area {
+/* SIMULADOR */
+@media (max-width: 680px) {
+    .simulator-container {
         padding: 20px;
     }
 
-    header {
-        padding: 1.2rem;
+    #btn-calc {
+        padding: 10px;
     }
+}
 
+/* SWITCH — FIJO Y SEGURO ARRIBA A LA DERECHA */
+@media (max-width: 480px) {
+    .theme-switch-wrapper {
+        top: 12px;
+        right: 15px;
+        transform: scale(0.9);
+    }
+}
+
+/* TITULOS MÁS PEQUEÑOS EN CELULAR */
+@media (max-width: 500px) {
     header h1 {
-        font-size: 1.7rem;
+        font-size: 2rem;
     }
 
     .section-title {
-        padding: 1.5rem 1rem;
+        font-size: 1.5rem;
     }
+}
+
+/* AJUSTES VISUALES FINALES */
+.animate-on-scroll {
+    opacity: 0;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.value-changed {
+    animation: flashValue 0.4s ease-out;
+}
+
+@keyframes flashValue {
+    0% { background: rgba(255,255,255,0.2); }
+    100% { background: transparent; }
 }
