@@ -509,5 +509,3 @@ document.addEventListener('DOMContentLoaded', initializeTheme);
 if (themeToggle) {
     themeToggle.addEventListener('change', toggleTheme);
 }
-
-
