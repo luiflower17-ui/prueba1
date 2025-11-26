@@ -2,6 +2,7 @@
 /* 0. Paleta y Tipografía */
 /* ==================================== */
 :root {
+    /* Tema Oscuro (Original): Negro y Azul Neón */
     --color-bg: #0C0C0C; 
     --color-main-bg: rgba(20, 20, 20, 0.95); 
     --color-text-light: #F8F8F8; 
@@ -17,11 +18,44 @@
     --font-heading: 'Montserrat', sans-serif; 
     --percentage: 0%; 
 
-    /* Colores de Riesgo Centralizados */
+    /* Colores de Riesgo Centralizados (Oscuro) */
     --risk-zero: #2ECC71;      /* VERDE */
     --risk-low: #F1C40F;       /* AMARILLO */
     --risk-medium: #F39C12;    /* NARANJA */
     --risk-high: #E74C3C;      /* ROJO */
+}
+
+/* ADICIÓN: Variables para Tema Claro (Blanco y Rojo Neón) */
+body[data-theme="light"] {
+    /* Base Colors: Blanco y Rojo Neón */
+    --color-bg: #FFFFFF; 
+    --color-main-bg: rgba(245, 245, 245, 0.98); 
+    --color-text-light: #111111; 
+    --color-text-secondary: #555555; 
+    --color-accent-blue: #FF3366; /* ROJO NEÓN */
+    --color-accent-hover: #CC0033; /* Rojo más oscuro para hover */
+    --color-divider: #CCCCCC; 
+    --color-card-bg: rgba(255, 255, 255, 1.0); 
+    --color-card-hover: #EEEEEE;
+    --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.2); 
+    
+    /* Riesgo Colors (Ajustados para fondo claro) */
+    --risk-zero: #1B9C5F;
+    --risk-low: #DDAA00;
+    --risk-medium: #DD5500;
+    --risk-high: #CC0000;
+    
+    /* Desactivar efectos de glow/neón en modo claro */
+    text-shadow: none !important; 
+}
+body[data-theme="light"] header h1,
+body[data-theme="light"] .content-detail h3 {
+    text-shadow: none; /* Eliminar el neón de los títulos */
+}
+body[data-theme="light"] #detail-panel {
+    border-color: var(--color-divider);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: none; /* Eliminar el pulso de neón */
 }
 
 body {
@@ -30,20 +64,23 @@ body {
     line-height: 1.6; 
     margin: 0;
     padding: 0;
-    color: var(--color-text-light); 
+    color: var(--color-text-light);
     min-height: 100vh;
     background-color: var(--color-bg); 
     display: flex;
     justify-content: center;
     position: relative;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased; 
+    -webkit-font-smoothing: antialiased;
+    /* ADICIÓN: Transición suave para el cambio de fondo del body */
+    transition: background-color 0.5s ease;
 }
 
 a {
     color: var(--color-accent-blue);
     text-decoration: none;
-    transition: color 0.3s ease;
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 a:hover {
     color: var(--color-accent-hover);
@@ -83,13 +120,16 @@ a:hover {
     animation: pulseText 1.5s infinite;
 }
 @keyframes spin {
-    0% { transform: rotate(0deg); }
+    0% { transform: rotate(0deg);
+    }
     100% { transform: rotate(360deg); }
 }
 @keyframes pulseText {
-    0% { opacity: 0.7; }
+    0% { opacity: 0.7;
+    }
     50% { opacity: 1; }
-    100% { opacity: 0.7; }
+    100% { opacity: 0.7;
+    }
 }
 
 
@@ -97,11 +137,17 @@ a:hover {
 /* 1. VIDEO DE FONDO Y ESTRUCTURA GENERAL */
 /* ==================================== */
 .video-background {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 1; 
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 1; 
 }
 .video-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.65); 
-    z-index: 5; 
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%; 
+    /* MODIFICACIÓN: Usar color inicial oscuro */
+    background-color: rgba(0, 0, 0, 0.65); 
+    z-index: 5;
+    /* ADICIÓN: Transición para el cambio de opacidad con el tema */
+    transition: background-color 0.5s ease;
 }
 #youtube-background {
     position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw; min-width: 100%; min-height: 100%;
@@ -110,7 +156,7 @@ a:hover {
 
 main {
     width: 90%; 
-    max-width: 1400px; 
+    max-width: 1400px;
     margin: var(--spacing-margin) 2rem; 
     padding: 0; 
     background-color: var(--color-main-bg); 
@@ -118,62 +164,85 @@ main {
     border-radius: 15px; 
     overflow: hidden;
     border: 1px solid var(--color-divider);
-    z-index: 10; 
+    z-index: 10;
     position: relative; 
     backdrop-filter: blur(8px); 
+    /* ADICIÓN: Transición para el fondo del main y blur */
+    transition: background-color 0.5s ease, border-color 0.5s ease;
 
     opacity: 0;
     animation: fadeInMain 1s ease-out forwards;
-    animation-delay: 0.2s; 
+    animation-delay: 0.2s;
 }
 @keyframes fadeInMain {
-    from { opacity: 0; transform: translateY(50px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { opacity: 0; transform: translateY(50px) scale(0.98);
+    }
+    to { opacity: 1; transform: translateY(0) scale(1);
+    }
 }
 
 /* ==================================== */
 /* 2. HEADER Y TÍTULOS */
 /* ==================================== */
 header { 
-    position: sticky; top: 0; z-index: 20; 
+    position: sticky; top: 0;
+    z-index: 20; 
     background-color: var(--color-main-bg); 
     padding: 3rem 3.5rem 2rem 3.5rem; 
     border-bottom: 3px solid var(--color-accent-blue); 
     display: flex; justify-content: space-between; align-items: flex-end;
+    /* ADICIÓN: Transición para el fondo del header y la línea de acento */
+    transition: background-color 0.5s ease, border-bottom-color 0.5s ease;
 }
 header h1 {
     font-family: var(--font-heading); 
     font-size: 2.8rem; 
     font-weight: 800;
     color: var(--color-accent-blue);
-    margin: 0 0 0.5rem 0; 
+    margin: 0 0 0.5rem 0;
     letter-spacing: 0.08em; 
     text-shadow: 0 0 10px rgba(0, 191, 255, 0.7); 
+    /* ADICIÓN: Transición para el color y el neón */
+    transition: color 0.5s ease, text-shadow 0.5s ease;
 }
-.header-subtitle { font-size: 1.05rem; color: var(--color-text-light); font-weight: 500;}
+.header-subtitle { font-size: 1.05rem; color: var(--color-text-light);
+    font-weight: 500;
+    transition: color 0.5s ease;
+}
 .header-meta { text-align: right; }
-.meta-line { font-size: 0.85rem; color: var(--color-text-secondary); margin: 0 0 5px 0; }
+.meta-line { font-size: 0.85rem; color: var(--color-text-secondary); margin: 0 0 5px 0;
+}
 
 .section-title {
     font-family: var(--font-heading); color: var(--color-text-light); font-size: 1.8rem;
     padding: 2.5rem 3.5rem 0.5rem 3.5rem; 
     font-weight: 700;
     border-top: 1px solid var(--color-divider);
+    transition: color 0.5s ease, border-top-color 0.5s ease;
 }
-.section-title i { color: var(--color-accent-blue); margin-right: 15px; }
+.section-title i { color: var(--color-accent-blue); margin-right: 15px; 
+    transition: color 0.5s ease;
+}
 .section-intro {
-    font-size: 1.05rem; padding: 0 3.5rem; margin-bottom: 2rem; color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    padding: 0 3.5rem; margin-bottom: 2rem; color: var(--color-text-secondary);
 }
 
 /* Contenido Detallado Títulos */
 .content-detail h3 {
-    font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 2.2rem; 
+    font-family: var(--font-heading);
+    color: var(--color-accent-blue); font-size: 2.2rem; 
     border-bottom: 3px solid var(--color-accent-blue); padding-bottom: 15px; margin-bottom: 30px; 
-    font-weight: 700; text-shadow: 0 0 5px rgba(0, 191, 255, 0.5); 
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(0, 191, 255, 0.5); 
+    /* ADICIÓN: Transición para el color y el neón */
+    transition: color 0.5s ease, text-shadow 0.5s ease, border-bottom-color 0.5s ease;
 }
 .content-detail h4 {
-    font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.3rem; 
+    font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.3rem;
     margin: 0 0 12px 0; font-weight: 700; border-bottom: 1px dashed rgba(51, 51, 51, 0.6); padding-bottom: 8px;
+    /* ADICIÓN: Transición para el color */
+    transition: color 0.5s ease;
 }
 .full-width { grid-column: 1 / -1; }
 
@@ -186,9 +255,12 @@ header h1 {
     border: 2px solid var(--color-accent-blue);
     border-radius: 12px;
     margin-bottom: 40px;
+    /* ADICIÓN: Transición para el fondo y el borde */
+    transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 .sim-inputs {
-    display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 20px;
+    display: flex;
+    gap: 30px; flex-wrap: wrap; margin-bottom: 20px;
 }
 .input-group {
     flex: 1 1 200px;
@@ -198,7 +270,10 @@ header h1 {
 .input-group label {
     font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: var(--color-text-light);
 }
-.input-group i { color: var(--color-accent-blue); margin-right: 8px; }
+.input-group i { color: var(--color-accent-blue);
+    margin-right: 8px; 
+    transition: color 0.5s ease;
+}
 
 #alcaldia-select, input[type="range"] {
     background-color: var(--color-card-bg);
@@ -208,6 +283,8 @@ header h1 {
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
+    /* ADICIÓN: Transición para el cambio de colores */
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 input[type="range"] {
     -webkit-appearance: none;
@@ -217,333 +294,341 @@ input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 20px; height: 20px; border-radius: 50%; background: var(--color-accent-blue); cursor: pointer;
     margin-top: -5px;
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: background 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .range-value {
-    font-size: 0.9rem; color: var(--color-text-secondary); margin-top: 5px; text-align: right;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary); margin-top: 5px; text-align: right;
 }
 
 #simulation-area button {
-    background-color: var(--color-accent-blue); color: var(--color-bg); padding: 12px 25px;
-    border: none; border-radius: 6px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s; margin-top: 15px;
+    background-color: var(--color-accent-blue);
+    color: var(--color-bg); 
+    padding: 12px 25px; 
+    border: none; 
+    border-radius: 6px; 
+    font-size: 1.1rem; 
+    font-weight: 700; 
+    cursor: pointer;
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    margin-top: 15px; 
 }
 #simulation-area button:hover {
-    background-color: var(--color-accent-hover); transform: scale(1.02);
+    background-color: var(--color-accent-hover);
+    transform: scale(1.02);
 }
 
 /* Estilos de la caja de resultados del simulador */
 .result-box {
-    margin-top: 30px; padding: 20px; 
-    background-color: rgba(30, 30, 30, 0.8);
-    border-radius: 8px; 
-    border-left: 5px solid var(--color-divider);
-    /* Animación sutil de entrada */
-    opacity: 0;
-    transform: translateY(20px);
-    animation: resultPopIn 0.5s ease-out forwards;
+    margin-top: 30px; padding: 20px;
+    background-color: rgba(30, 30, 30, 0.8); border-radius: 8px; border-left: 5px solid var(--color-divider); 
+    /* Animación sutil de entrada */ opacity: 0;
+    transform: translateY(20px); animation: resultPopIn 0.5s ease-out forwards; 
+    /* ADICIÓN: Transición para el fondo y el borde */
+    transition: background-color 0.5s ease, border-left-color 0.5s ease;
 }
 @keyframes resultPopIn {
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: translateY(0);
+    }
 }
-
 .result-box p { margin: 0; font-size: 1rem; }
-#riesgo-texto {
+#riesgo-texto { 
     font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; margin-bottom: 5px;
-    padding: 10px 0; text-align: center; border-radius: 4px; color: var(--color-bg);
-    text-shadow: none; 
-    transition: all 0.5s ease-in-out; /* Transición para el cambio de color */
-}
+    padding: 10px 0; text-align: center; border-radius: 4px; color: var(--color-bg); text-shadow: none; 
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+} 
 
 /* CLASES DE RIESGO ACTUALIZADAS (Usando variables CSS) */
-.risk-level.pending { background-color: var(--color-text-secondary); color: var(--color-bg); }
-.risk-level.zero { background-color: var(--risk-zero); } /* VERDE: Cero Riesgo */
-.risk-level.low { background-color: var(--risk-low); } /* AMARILLO: Riesgo Bajo */
-.risk-level.medium { background-color: var(--risk-medium); } /* NARANJA: Riesgo Medio */
-/* Animación de Alto Riesgo con glow */
-.risk-level.high { 
-    background-color: var(--risk-high); 
-    box-shadow: 0 0 15px rgba(231, 76, 60, 0.9); 
-    animation: highRiskPulse 1.5s infinite alternate;
-} 
-@keyframes highRiskPulse {
-    from { box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); }
-    to { box-shadow: 0 0 20px var(--risk-high); }
-}
+.risk-level.pending { background-color: var(--color-text-secondary);
+    color: var(--color-bg); } 
+.risk-level.zero { background-color: var(--risk-zero); } /* VERDE: Cero Riesgo */ 
+.risk-level.low { background-color: var(--risk-low); } /* AMARILLO: Bajo Riesgo */ 
+.risk-level.medium { background-color: var(--risk-medium); } /* NARANJA: Medio Riesgo */
+.risk-level.high { background-color: var(--risk-high); } /* ROJO: Alto Riesgo */
 
-/* Nuevos estilos para los mensajes condicionales del simulador */
-#advice-container {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px dashed var(--color-divider);
-    text-align: center;
-}
-.impact-message {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 10px !important;
-}
-.high-alert {
-    color: var(--risk-high);
-}
-.low-alert {
-    color: var(--risk-zero);
-}
-.impact-link {
-    display: inline-block;
-    padding: 8px 15px;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: background-color 0.3s;
-}
-.high-risk-link {
-    background-color: var(--risk-high);
-    color: var(--color-bg);
-}
-.high-risk-link:hover {
-    background-color: #C0392B;
-    text-decoration: none;
-}
-.low-risk-link {
-    background-color: var(--color-accent-blue);
-    color: var(--color-bg);
-}
-.low-risk-link:hover {
-    background-color: var(--color-accent-hover);
-    text-decoration: none;
-}
-
-
-.colab-link-text {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-}
-.colab-link-text i {
-    color: var(--color-accent-blue);
-    margin-right: 5px;
-}
-.colab-link-text a {
-    font-weight: 600;
-}
-
-/* Fórmulas matemáticas */
-.formula-block {
-    text-align: center;
-    font-size: 1.5rem;
-    font-family: 'Times New Roman', serif; 
-    margin-bottom: 30px;
-}
 
 /* ==================================== */
 /* 4. CARRUSEL (ZONA INTERACTIVA) */
 /* ==================================== */
-.carousel-container {
-    padding: 20px 0; margin: 0 3.5rem 50px 3.5rem;
-    position: relative; overflow: hidden;
+.carousel-container { padding: 20px 0; margin: 0 3.5rem 50px 3.5rem;
+    position: relative; overflow: hidden; }
+.carousel-track { 
+    display: flex; gap: 20px; 
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.carousel-track {
-    display: flex; gap: 20px; transition: transform 0.5s ease-in-out;
+.carousel-card { 
+    flex: 0 0 330px; padding: 25px; 
+    background-color: var(--color-card-bg); 
+    border-radius: 10px; 
+    border: 1px solid rgba(0, 191, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+    cursor: pointer; 
+    /* MODIFICACIÓN: Transición más pulida y detallada */
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                background-color 0.4s ease, 
+                border-color 0.4s ease;
+    position: relative; opacity: 0; transform: scale(0.95);
+    animation: cardEntrance 0.7s forwards; 
 }
-.carousel-card {
-    flex: 0 0 330px; 
-    padding: 25px; background-color: var(--color-card-bg); border-radius: 10px;
-    border: 1px solid rgba(0, 191, 255, 0.2); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    cursor: pointer; transition: all 0.3s ease-in-out; position: relative;
-    opacity: 0;
-    transform: scale(0.95);
-    animation: cardEntrance 0.7s forwards;
-}
-.carousel-card:hover {
+.carousel-card:hover { 
     transform: translateY(-5px); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8); 
     border-color: var(--color-accent-hover);
 }
-@keyframes cardEntrance {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
+@keyframes cardEntrance { 
+    from { opacity: 0; transform: scale(0.95) translateY(10px); } 
+    to { opacity: 1; transform: scale(1) translateY(0);
+} } 
 /* Escalado para cada tarjeta */
-.carousel-track > :nth-child(1) { animation-delay: 0.2s; }
-.carousel-track > :nth-child(2) { animation-delay: 0.3s; }
-.carousel-track > :nth-child(3) { animation-delay: 0.4s; }
-
-/* Nuevo estilo y animación para la tarjeta activa (Active Card Pulse) */
-.carousel-card.active {
-    transform: translateY(-5px) scale(1.01); 
+.carousel-track > :nth-child(1) { animation-delay: 0.2s;
+} 
+.carousel-track > :nth-child(2) { animation-delay: 0.3s; } 
+.carousel-track > :nth-child(3) { animation-delay: 0.4s;
+} 
+/* Nuevo estilo y animación para la tarjeta activa (Active Card) */
+.carousel-card.active-card {
     border-color: var(--color-accent-blue);
-    background-color: var(--color-card-hover);
-    box-shadow: 0 0 15px rgba(0, 191, 255, 0.9);
-    animation: activePulse 2s infinite alternate ease-in-out; /* Pulso sutil */
+    box-shadow: 0 0 15px var(--color-accent-blue);
+    animation: glowPulse 4s infinite ease-in-out;
 }
-@keyframes activePulse {
-    from {
-        box-shadow: 0 0 15px rgba(0, 191, 255, 0.7), 0 8px 20px rgba(0, 0, 0, 0.8);
-    }
-    to {
-        box-shadow: 0 0 25px var(--color-accent-hover), 0 8px 25px rgba(0, 0, 0, 0.9);
-    }
-}
-
-.carousel-card h4 {
-    font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.15rem; 
-    margin-top: 0; margin-bottom: 10px; font-weight: 700;
-}
-.card-icon {
-    font-size: 2.5rem; color: var(--color-accent-blue); opacity: 0.5; position: absolute; top: 15px; right: 20px;
-}
-.card-action-hint {
-    display: block; font-size: 0.8rem; color: var(--color-accent-hover); margin-top: 15px; text-align: right;
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3);
+} 
+    50% { box-shadow: 0 0 25px var(--color-accent-blue), inset 0 0 15px var(--color-accent-blue);
+} 
+    100% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3);
+} } 
+/* Ajuste de animación glowPulse para tema claro */
+body[data-theme="light"] .carousel-card.active-card {
+    animation: none; /* Desactivar la animación de neón */
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 0 10px rgba(255, 51, 102, 0.7); /* Sombra roja sutil en modo claro */
 }
 
-.carousel-btn {
-    position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-    background-color: rgba(0, 0, 0, 0.5); color: var(--color-text-light); border: none;
-    padding: 15px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
-    transition: background-color 0.3s, transform 0.3s;
-}
-.carousel-btn:hover {
-    background-color: var(--color-accent-hover);
-    transform: translateY(-50%) scale(1.1);
-}
-.prev-btn { left: -15px; }
-.next-btn { right: -15px; }
 
+.carousel-card h4 { color: var(--color-text-light); transition: color 0.5s ease; }
+.carousel-card:hover h4 { color: var(--color-accent-hover); }
+
+.card-icon { font-size: 2.5rem; color: var(--color-accent-blue); margin: 10px 0; display: block; 
+    transition: color 0.5s ease;
+}
+.card-action-hint { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 10px; display: block; }
+
+.carousel-btn { 
+    position: absolute; top: 50%; transform: translateY(-50%); 
+    background: rgba(0, 0, 0, 0.5); 
+    color: var(--color-accent-blue); 
+    border: 1px solid var(--color-accent-blue); 
+    border-radius: 50%; 
+    width: 40px; height: 40px; 
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; z-index: 15; 
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                color 0.4s ease,
+                border-color 0.4s ease;
+}
+.carousel-btn:hover { 
+    background-color: var(--color-accent-hover); 
+    color: var(--color-bg); 
+    transform: translateY(-50%) scale(1.1); 
+}
+.prev-btn { left: -20px; }
+.next-btn { right: -20px; }
 
 /* ==================================== */
-/* 5. PANEL DETALLADO (ANCHO COMPLETO) */
+/* 5. PANEL DE DETALLES Y ANIMACIÓN DE CONTENIDO */
 /* ==================================== */
 #interactive-content {
-    padding: 0 3.5rem 3.5rem 3.5rem; min-height: 600px; 
-    display: block; 
-}
-/* AÑADIDO: Animación de borde de energía (glowPulse) */
-@keyframes glowPulse {
-    0% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3); }
-    50% { box-shadow: 0 0 25px var(--color-accent-blue), inset 0 0 15px var(--color-accent-blue); }
-    100% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3); }
+    padding: 0 3.5rem 3.5rem 3.5rem;
 }
 
-#detail-panel {
-    background-color: var(--color-card-bg); padding: 35px; border-radius: 12px;
-    border: 1px solid rgba(0, 191, 255, 0.5); 
+#detail-panel { 
+    background-color: var(--color-card-bg); 
+    padding: 35px; 
+    border-radius: 12px; 
+    border: 1px solid rgba(0, 191, 255, 0.5);
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6); 
     max-height: calc(100vh - 5rem - 2rem - 150px); 
-    overflow-y: auto; 
+    overflow-y: auto;
     width: 100%; 
-    animation: glowPulse 4s infinite ease-in-out; /* NUEVO: Aplicar la animación de pulso */
+    animation: glowPulse 4s infinite ease-in-out; 
+    /* ADICIÓN: Transición para el cambio de colores del tema */
+    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
-.content-detail {
-    display: none; 
+.content-detail { 
+    display: none;
     opacity: 0; 
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out; 
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
     padding-bottom: 25px; 
 }
-.content-detail.active {
+.content-detail.active { 
     display: block; 
-    opacity: 1; 
-    animation: contentFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+    opacity: 1;
+    /* Usar la animación JS en lugar de esta animación CSS para un mejor control */
+    animation: none;
 }
-@keyframes contentFadeIn { 
-    from { opacity: 0; transform: translateY(20px); } 
-    to { opacity: 1; transform: translateY(0); } 
-}
-
-.info-grid {
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-    gap: 30px; margin-top: 25px;
-}
-.info-grid.two-columns {
-    grid-template-columns: 1fr 1fr;
-}
+/* La animación de entrada de los bloques ahora se gestiona en JS con `fadeInUp` */
 .info-block {
-    background-color: rgba(30, 30, 30, 0.7); padding: 25px; border-radius: 12px; 
-    border: 1px solid rgba(0, 191, 255, 0.3); 
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); 
-    transition: all 0.3s ease-in-out; opacity: 0; transform: translateY(30px); 
+    opacity: 0; 
+    transform: translateY(20px);
 }
-/* Keyframe usado por JS para el efecto escalonado */
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-
-
-/* Sección de Imágenes y Citas (APA 7) */
-.project-figure {
-    margin: 20px 0; padding: 15px; background-color: rgba(0, 0, 0, 0.5); border-radius: 8px;
-    border: 1px dashed var(--color-text-secondary);
-}
-.project-figure img {
-    width: 100%; height: auto; border-radius: 4px; display: block; margin-bottom: 10px;
-    border: 1px solid var(--color-divider);
-    min-height: 150px; 
-    object-fit: cover;
-}
-.project-figure figcaption {
-    font-size: 0.85rem; color: var(--color-text-secondary); padding-top: 10px; border-top: 1px solid var(--color-divider);
-}
-.project-figure figcaption p {
-    margin: 0; line-height: 1.4;
-}
-.project-figure figcaption strong {
-    color: var(--color-accent-blue);
+@keyframes fadeInUp {
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
-/* Listas de Alcaldías (Barra de progreso) */
-.alcaldias-list { list-style-type: none; padding: 0; }
+/* Listas de alcaldías (Animación de barras) */
+.alcaldias-list { list-style: none; padding: 0; }
 .alcaldias-list li {
-    background-color: rgba(0, 191, 255, 0.08); padding: 10px; margin-bottom: 8px; 
-    border-left: 5px solid var(--color-accent-blue); font-weight: 600;
-    position: relative; overflow: hidden; color: var(--color-text-light);
-    display: flex; /* Para mejor alineación del texto y el contador */
-    justify-content: space-between; 
-    align-items: center;
+    background-color: var(--color-card-hover); 
+    padding: 8px 15px; 
+    margin-bottom: 10px; 
+    border-radius: 5px; 
+    font-weight: 600; 
+    position: relative; 
+    overflow: hidden; 
+    z-index: 1;
+    transition: background-color 0.5s ease;
 }
 .alcaldias-list li::before {
-    content: ''; position: absolute; top: 0; left: 0; height: 100%;
+    content: ''; position: absolute; top: 0; left: 0; height: 100%; 
     background-color: rgba(0, 191, 255, 0.25);
     width: var(--percentage, 0%); 
-    transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    /* MODIFICACIÓN: Transición más pulida para la barra */
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
     z-index: -1;
-}
+} 
 /* El contador dinámico lo gestiona JS, no usamos ::after para la cifra */
-.percentage-counter {
-    font-weight: 700;
-    color: var(--color-accent-blue);
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin-left: 10px;
-    min-width: 45px; /* Para que no salte al contar */
-    text-align: right;
+.percentage-counter { font-weight: 700;
+    color: var(--color-accent-blue); background-color: rgba(0, 0, 0, 0.5); padding: 2px 8px; border-radius: 3px; margin-left: 10px;
+    transition: color 0.5s ease, background-color 0.5s ease;
 }
 
-
-/* Referencias */
-.references-list li {
-    padding: 5px 0;
-    border-bottom: 1px dotted rgba(51, 51, 51, 0.5);
-    font-size: 0.95rem;
+/* ==================================== */
+/* 5.5. Theme Switch Styles (ADICIÓN) */
+/* ==================================== */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-left: auto; 
+    padding-right: 3.5rem; /* Ajustar al padding del header */
+    height: 100%;
 }
 
-/* FOOTER Y BOTÓN */
-footer {
-    padding: 25px 3rem; text-align: center; border-top: 1px solid var(--color-divider);
-    background-color: rgba(0, 0, 0, 0.98); font-size: 0.9rem; color: var(--color-text-secondary); 
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin: 0;
+}
+
+.theme-switch input { 
     opacity: 0;
-    animation: fadeInFooter 1s ease-out forwards;
-    animation-delay: 0.8s;
-}
-@keyframes fadeInFooter {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    width: 0;
+    height: 0;
 }
 
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-divider);
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--color-accent-blue); /* El color del thumb se ajusta con el tema */
+    transition: 0.4s;
+    border-radius: 50%;
+    /* Efecto de neón/sombra solo en tema oscuro */
+    box-shadow: 0 0 10px var(--color-accent-blue);
+}
+
+/* Estado del Switch en modo oscuro (Default) */
+input:checked + .slider {
+    background-color: var(--color-accent-blue);
+}
+input:checked + .slider.round:before {
+    transform: translateX(26px);
+    background-color: var(--color-text-light); /* El color del thumb se ajusta */
+    box-shadow: none; 
+}
+
+/* Iconografía (Sol/Luna) */
+.icon-dark, .icon-light {
+    font-size: 14px;
+    color: var(--color-text-light);
+    z-index: 1;
+    transition: opacity 0.4s, color 0.4s;
+}
+
+.icon-light {
+    opacity: 0.3;
+}
+input:checked ~ .slider .icon-light {
+    opacity: 1;
+    color: #FFF; 
+}
+input:checked ~ .slider .icon-dark {
+    opacity: 0.3;
+}
+
+/* Ajuste del thumb para el tema claro: el slider-thumb es Rojo Neón */
+body[data-theme="light"] .slider.round:before {
+    box-shadow: 0 0 5px rgba(255, 51, 102, 0.8); /* Neón sutil rojo en modo claro (thumb) */
+}
+body[data-theme="light"] input:checked + .slider.round:before {
+    box-shadow: 0 0 10px rgba(255, 51, 102, 1); /* Neón rojo más intenso cuando está activo */
+}
+
+
+/* ==================================== */
+/* 5. BOTÓN SCROLL-TO-TOP */
+/* ==================================== */
 #scrollToTopBtn {
-    display: none; position: fixed; bottom: 33px; right: 33px; z-index: 100; border: none; outline: none;
-    background-color: var(--color-accent-blue); color: var(--color-bg); cursor: pointer; padding: 15px 20px;
-    border-radius: 50%; font-size: 18px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
-    transition: background-color 0.3s, transform 0.3s;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99;
+    display: none;
+    background-color: var(--color-accent-blue);
+    color: var(--color-bg);
+    border: none;
+    cursor: pointer;
+    padding: 15px 20px;
+    border-radius: 50%; 
+    font-size: 18px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 #scrollToTopBtn:hover {
     background-color: var(--color-accent-hover);
@@ -565,18 +650,18 @@ footer {
     .carousel-container { margin-left: 1.5rem; margin-right: 1.5rem; }
     .carousel-track { 
         overflow-x: scroll; 
-        scroll-snap-type: x mandatory; 
-        -webkit-overflow-scrolling: touch; 
+        scroll-snap-type: x mandatory;
+        padding-bottom: 20px; /* Espacio para el scrollbar */
     }
-    .carousel-card { flex: 0 0 80%; scroll-snap-align: start; }
-    .carousel-btn { display: none; } 
+    .carousel-card { scroll-snap-align: start; flex: 0 0 280px; }
+    .carousel-btn { display: none; }
 
-    /* Ajuste de contenido detallado para móvil */
-    #interactive-content { display: block; padding: 0 1.5rem 1.5rem 1.5rem; }
-    #detail-panel { max-height: none; padding: 20px; }
-    .info-grid { grid-template-columns: 1fr; }
-    .info-grid.two-columns { grid-template-columns: 1fr; }
-
-    /* Simulador en móvil */
-    .sim-inputs { flex-direction: column; gap: 15px; }
+    #interactive-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+    #detail-panel { max-height: 50vh; }
+    
+    .info-grid { grid-template-columns: 1fr; gap: 20px; }
+    .info-block { padding: 20px; }
+    
+    .sim-inputs { flex-direction: column; }
+    .theme-switch-wrapper { padding-right: 1.5rem; } /* Ajuste del padding del switch */
 }
