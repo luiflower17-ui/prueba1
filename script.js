@@ -1,4 +1,46 @@
 // ===============================================
+// 0.1. TOGGLE MODO CLARO/OSCURO (Punto 1 y 3)
+// ===============================================
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+
+function toggleDarkMode() {
+    // Si está marcado, el modo oscuro está activo (el default), si no, es modo claro.
+    const isDarkMode = darkModeToggle.checked;
+    
+    if (!isDarkMode) {
+        // Modo Claro
+        body.classList.add('light-mode');
+        // Recordar la preferencia
+        localStorage.setItem('darkMode', 'disabled');
+    } else {
+        // Modo Oscuro
+        body.classList.remove('light-mode');
+        // Recordar la preferencia
+        localStorage.setItem('darkMode', 'enabled');
+    }
+    playSoftClick(); // Sonido de click
+}
+
+// Inicializar el modo basado en la preferencia del usuario o por defecto (oscuro)
+document.addEventListener('DOMContentLoaded', () => {
+    // Revisar LocalStorage
+    const darkModePreference = localStorage.getItem('darkMode');
+    
+    if (darkModePreference === 'disabled') {
+        body.classList.add('light-mode');
+        darkModeToggle.checked = false; // Desmarcar el switch si está en modo claro
+    } else {
+        // Si no hay preferencia o es 'enabled', el modo oscuro es el predeterminado
+        body.classList.remove('light-mode');
+        darkModeToggle.checked = true;
+    }
+    
+    // Asignar el listener después de la inicialización para evitar el toggle inicial
+    darkModeToggle.addEventListener('change', toggleDarkMode);
+});
+
+// ===============================================
 // 0. PRELOADER Y ANIMACIÓN DE CARGA INICIAL
 // ===============================================
 window.addEventListener('load', () => {
@@ -31,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('touchstart', resumeContext, { once: true });
     }
 });
-
 /**
  * Genera un sonido sintetizado con la Web Audio API.
  */
@@ -104,8 +145,7 @@ function animateInfoBlocks(contentElement) {
     infoBlocks.forEach((block, index) => {
         block.style.animation = `none`; 
         block.offsetHeight; 
-        // Animación de entrada pulida (Usando la animación CSS3 fadeInUp)
-        block.style.animation = `fadeInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards`;
+        block.style.animation = `fadeInUp 0.6s ease-out forwards`;
         block.style.animationDelay = `${0.2 + index * 0.1}s`; 
     });
 }
@@ -113,13 +153,9 @@ function animateInfoBlocks(contentElement) {
 function showContent(targetId) {
     const nextContent = document.getElementById(targetId);
     
-    // ADICIÓN: Deep Linking (Actualizar el hash de la URL)
-    window.location.hash = targetId;
-
     if (!nextContent || nextContent === currentActiveContent) return;
 
     playSoftClick();
-
     // Limpiar mensajes del simulador al cambiar de sección
     const adviceContainer = document.getElementById('advice-container');
     if (adviceContainer) {
@@ -129,32 +165,29 @@ function showContent(targetId) {
     // Reiniciar el estado del simulador si salimos
     if (targetId !== 'content-algoritmo') {
         const riesgoTextoEl = document.getElementById('riesgo-texto');
+        const simResultEl = document.getElementById('sim-result');
         if (riesgoTextoEl) {
             riesgoTextoEl.textContent = "Esperando datos...";
             riesgoTextoEl.className = `risk-level pending`; 
         }
+        if (simResultEl) {
+             simResultEl.classList.remove('high-pulse', 'medium-pulse'); // Limpiar pulso
+        }
     }
 
-    // MODIFICACIÓN: Actualizar la tarjeta activa en el carrusel
-    carouselCards.forEach(card => card.classList.remove('active-card'));
-    const newActiveCard = document.querySelector(`.carousel-card[data-target="${targetId}"]`);
-    if (newActiveCard) {
-        newActiveCard.classList.add('active-card');
-    }
-    
 
     if (currentActiveContent) {
         // Desactivar el contenido actual
         currentActiveContent.classList.remove('active');
         currentActiveContent.style.opacity = '0';
-        currentActiveContent.style.transform = 'translateY(-20px)'; // Aplicar transformación para animación de salida
+        currentActiveContent.style.transform = 'translateY(-20px)';
 
         setTimeout(() => {
             currentActiveContent.style.display = 'none'; 
             
             // Activar el nuevo contenido
             nextContent.style.display = 'block';
-            void nextContent.offsetWidth; // Forzar reflow para que la transición funcione
+            void nextContent.offsetWidth; 
             nextContent.classList.add('active');
             nextContent.style.opacity = '1';
             nextContent.style.transform = 'translateY(0)';
@@ -165,71 +198,73 @@ function showContent(targetId) {
             
             // Si es la sección de impacto, iniciamos la animación del contador
             if (targetId === 'content-impacto') {
-                animateAlcaldiasBars();
+                animateAlcaldiaPercentages();
             }
-        }, 300);
+            
+            // Actualizar la tarjeta activa en el carrusel
+            updateActiveCard(targetId);
+            
+            // Mover el carrusel para sincronizar el scroll visual
+            const currentIndex = contentIds.indexOf(targetId);
+            if (currentIndex !== -1) {
+                const totalCards = contentIds.length;
+                const totalVisibleCards = 3; 
+                const maxScrollIndex = totalCards - totalVisibleCards;
+                
+                let scrollIndex = 0;
+                
+                if (currentIndex >= totalVisibleCards) {
+                    // Si la nueva tarjeta está fuera de la vista (índice 3 o más), movemos el carrusel
+                    // para que la tarjeta activa quede como la tercera tarjeta visible.
+                    scrollIndex = Math.min(currentIndex - (totalVisibleCards - 1), maxScrollIndex);
+                }
+                
+                // Aseguramos que el índice no sea negativo o exceda el máximo
+                scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
+                
+                currentCardIndex = scrollIndex;
+                moveToCard(currentCardIndex);
+            }
+        }, 400); // Esperar a que la transición de opacidad termine
     } else {
-        // Primera carga
-        detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
+        // Primer contenido a mostrar
         nextContent.style.display = 'block';
-        void nextContent.offsetWidth;
+        void nextContent.offsetWidth; 
         nextContent.classList.add('active');
         nextContent.style.opacity = '1';
         nextContent.style.transform = 'translateY(0)';
         currentActiveContent = nextContent;
-
         animateInfoBlocks(nextContent);
-        if (targetId === 'content-impacto') {
-            animateAlcaldiasBars();
-        }
+        updateActiveCard(targetId);
     }
 }
 
-// Inicializar y manejar la tarjeta activa al cargar
+// Inicializar mostrando el primer contenido
 document.addEventListener('DOMContentLoaded', () => {
-    // Usar el hash de la URL para la carga inicial (Deep Linking)
-    const initialTargetId = window.location.hash ? window.location.hash.substring(1) : detailContents[0]?.id; 
-    
-    if (initialTargetId && document.getElementById(initialTargetId)) {
-        showContent(initialTargetId);
-        // La función showContent ya se encarga de actualizar el active-card
-        
-        // Sincronizar el scroll del carrusel si la tarjeta activa no es la primera
-        const initialIndex = contentIds.indexOf(initialTargetId);
-        if (initialIndex > -1) {
-            // Este es un ajuste manual si la tarjeta activa no es una de las primeras visibles
-            const totalCards = contentIds.length;
-            const totalVisibleCards = 3; 
-            const maxScrollIndex = totalCards - totalVisibleCards;
-            
-            let scrollIndex = 0;
-            
-            if (initialIndex >= totalVisibleCards) {
-                // Si la tarjeta activa está fuera de la vista (índice 3 o más), movemos el carrusel
-                // para que la tarjeta activa quede como la tercera tarjeta visible.
-                scrollIndex = Math.min(initialIndex - (totalVisibleCards - 1), maxScrollIndex);
-            }
-            
-            scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
-            
-            currentCardIndex = scrollIndex;
-            moveToCard(currentCardIndex);
-        }
+    if (contentIds.length > 0) {
+        showContent(contentIds[0]);
     }
 });
 
-
-// Añadir listeners de click a las tarjetas
+// Asignar listeners a las tarjetas
 carouselCards.forEach(card => {
     card.addEventListener('click', () => {
-        const targetId = card.getAttribute('data-target');
-        showContent(targetId);
+        showContent(card.getAttribute('data-target'));
     });
 });
 
-// ===============================================
-// 4. LÓGICA DEL CARRUSEL (SCROLL VISUAL)
-// ===============================================
+// Función para actualizar la clase 'active' de la tarjeta
+function updateActiveCard(targetId) {
+    carouselCards.forEach(card => {
+        if (card.getAttribute('data-target') === targetId) {
+            card.classList.add('active-card');
+        } else {
+            card.classList.remove('active-card');
+        }
+    });
+}
+
+// Lógica de carrusel (movimiento visual)
 const carouselTrack = document.getElementById('carousel-track');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
@@ -251,14 +286,14 @@ if (nextBtn && carouselTrack) {
         const totalCards = carouselTrack.children.length;
         const totalVisibleCards = 3;
         const maxIndex = totalCards - totalVisibleCards;
-
+        
         if (currentCardIndex < maxIndex) {
             currentCardIndex++;
             moveToCard(currentCardIndex);
         } else if (currentCardIndex >= maxIndex) {
             currentCardIndex = 0;
             moveToCard(currentCardIndex);
-        } 
+        }
     });
 }
 
@@ -272,183 +307,48 @@ if (prevBtn) {
     });
 }
 
-// ===============================================
-// 5. LÓGICA DEL SIMULADOR
-// ===============================================
-
-// Centralizar la actualización de los valores de rango
-document.addEventListener('DOMContentLoaded', () => {
-    const rangeInputs = [
-        { id: 'lluvia-input', valueId: 'lluvia-val' },
-        { id: 'obstruccion-input', valueId: 'obstruccion-val' },
-        { id: 'vulnerabilidad-input', valueId: 'vulnerabilidad-val' },
-        { id: 'exposicion-input', valueId: 'exposicion-val' },
-    ];
-
-    rangeInputs.forEach(item => {
-        const input = document.getElementById(item.id);
-        const valueSpan = document.getElementById(item.valueId);
-        
-        if (input && valueSpan) {
-            input.oninput = function() {
-                valueSpan.textContent = this.value;
-            };
-        }
-    });
-});
-
-
-function calcularRiesgo() {
-    playConfirmAction();
-
-    // 1. Obtener valores de entrada
-    const C = parseFloat(document.getElementById('lluvia-input').value); // Precipitación
-    const P = parseFloat(document.getElementById('obstruccion-input').value); // Obstrucción
-    const M = parseFloat(document.getElementById('vulnerabilidad-input').value); // Multiplicador de vulnerabilidad
-    const E = parseFloat(document.getElementById('exposicion-input').value); // Exposición
-
-    // 2. Fórmula conceptual: R = C + P + (E * M)
-    const R = C + P + (E * M);
-
-    // 3. Clasificar el riesgo (CORRECCIÓN: Se revierte a la lógica de 4 niveles)
-    let riesgoText = '';
-    let riesgoClass = '';
-    let R_display = R.toFixed(2);
-    
-    // Clasificación de riesgo (CERO, BAJO, MEDIO, ALTO)
-    if (R >= 4.0) {
-        riesgoText = `Riesgo: ALTO (${R_display})`;
-        riesgoClass = "high";
-    } else if (R >= 2.0) {
-        riesgoText = `Riesgo: MEDIO (${R_display})`;
-        riesgoClass = "medium";
-    } else if (R > 0) { 
-        riesgoText = `Riesgo: BAJO (${R_display})`;
-        riesgoClass = "low";
-    } else { // R <= 0
-        riesgoText = `Riesgo: CERO (${R_display})`;
-        riesgoClass = "zero";
-    }
-    
-    // 4. Actualizar el display de clasificación
-    const riesgoTextoEl = document.getElementById('riesgo-texto');
-    const adviceContainer = document.getElementById('advice-container');
-
-    riesgoTextoEl.textContent = riesgoText;
-    riesgoTextoEl.className = `risk-level ${riesgoClass}`;
-
-    // 5. Añadir mensaje de sugerencia condicional
-    let messageHTML = '';
-    if (riesgoClass === 'high') {
-        messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil y evite zonas de riesgo.</p> 
-        <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link"> <i class="fas fa-file-pdf"></i> Protocolo de Emergencia </a>`;
-    } else if (riesgoClass === 'medium') {
-        messageHTML = `<p class="impact-message medium-alert">El riesgo es moderado. Monitoree las condiciones climáticas y evite tirar basura en la vía pública.</p>`;
-    } else {
-        messageHTML = `<p class="impact-message low-alert">Riesgo bajo o nulo. Manténgase informado y preparado.</p> 
-        <a href="https://youtu.be/wAaV8rV2bRw" target="_blank" class="impact-link low-risk-link"> <i class="fas fa-info-circle"></i> Ver consejos de prevención (Video) </a>`;
-    }
-    adviceContainer.innerHTML = messageHTML;
-}
-
-// ===============================================
-// 6. ANIMACIÓN DE BARRAS DE ALCALDÍAS
-// ===============================================
-function animateAlcaldiasBars() {
-    const alcaldiasList = document.querySelector('.alcaldias-list');
-    if (!alcaldiasList) return;
-
-    const alcaldias = alcaldiasList.querySelectorAll('li');
-    
-    alcaldias.forEach((li, index) => {
-        const percentage = li.getAttribute('data-percentage');
-        const counter = li.querySelector('.percentage-counter');
-        
-        // 1. Establecer la variable CSS para la animación
-        li.style.setProperty('--percentage', `${percentage}%`);
-        
-        // 2. Animación de conteo numérico (simulada)
-        let startValue = 0;
-        const duration = 1500; //ms
-        const startTime = performance.now();
-        
-        function updateCounter(currentTime) {
-            const elapsedTime = currentTime - startTime;
-            const progress = Math.min(elapsedTime / duration, 1);
-            
-            // Valor actual: interpolación lineal simple
-            const currentValue = Math.floor(progress * parseFloat(percentage));
-            
-            if (counter) {
-                counter.textContent = `${currentValue}%`;
-            }
-            
-            if (progress < 1) {
-                requestAnimationFrame(updateCounter);
-            } else {
-                if (counter) {
-                     counter.textContent = `${percentage}%`; // Asegurar el valor final exacto
-                }
-            }
-        }
-        
-        // Retraso para que las barras aparezcan secuencialmente
-        setTimeout(() => {
-            requestAnimationFrame(updateCounter);
-        }, index * 100); 
-    });
-}
-
-// ===============================================
-// 7. NAVEGACIÓN POR TECLADO (FLECHAS) - CORRECCIÓN DE SCROLL
-// ===============================================
-
-function getCurrentActiveIndex() {
-    const currentActiveId = currentActiveContent?.id;
-    return contentIds.indexOf(currentActiveId);
-}
-
+// Navegación con flechas del teclado
 function navigateSections(direction) {
-    let currentIndex = getCurrentActiveIndex();
+    if (!currentActiveContent) return;
     
-    if (currentIndex === -1) {
-        currentIndex = 0;
-    }
+    const currentTargetId = currentActiveContent.id;
+    const currentIndex = contentIds.indexOf(currentTargetId);
+    let newIndex;
     
-    let newIndex = currentIndex;
-    
-    if (direction === 'next') {
-        newIndex = (currentIndex + 1) % contentIds.length;
-    } else if (direction === 'prev') {
-        newIndex = (currentIndex - 1 + contentIds.length) % contentIds.length;
-    }
-
-    const newTargetId = contentIds[newIndex];
-    if (newTargetId) {
-        // Simular el click en la nueva tarjeta (esto ya cambia el contenido y la clase 'active-card')
-        showContent(newTargetId);
-
-        // Lógica para sincronizar el scroll visual del carrusel:
-        const totalCards = contentIds.length;
-        const totalVisibleCards = 3; 
-        const maxScrollIndex = totalCards - totalVisibleCards;
-        
-        // CORRECCIÓN: Ajustar currentCardIndex para mantener visible la nueva tarjeta activa
-        if (newIndex < currentCardIndex) {
-            // Si vamos hacia atrás, movemos el scroll al inicio de la nueva tarjeta (izquierda)
-            currentCardIndex = newIndex;
-        } else if (newIndex >= currentCardIndex + totalVisibleCards) {
-            // Si vamos hacia adelante y la tarjeta se sale de la vista (derecha), 
-            // la colocamos como la tercera tarjeta visible (indice - 2)
-            currentCardIndex = newIndex - (totalVisibleCards - 1);
+    if (currentIndex !== -1) {
+        if (direction === 'next') {
+            newIndex = (currentIndex + 1) % contentIds.length;
+        } else if (direction === 'prev') {
+            newIndex = (currentIndex - 1 + contentIds.length) % contentIds.length;
         }
-        // Si la tarjeta ya está visible, no se ajusta currentCardIndex.
-
-        // Aseguramos que el índice no sea negativo o exceda el máximo
-        currentCardIndex = Math.max(0, Math.min(currentCardIndex, maxScrollIndex));
         
-        // Aplicar el scroll
-        moveToCard(currentCardIndex);
+        const newTargetId = contentIds[newIndex];
+        if (newTargetId) {
+            // Simular el click
+            const targetCard = document.querySelector(`.carousel-card[data-target="${newTargetId}"]`);
+            if (targetCard) {
+                targetCard.click();
+            }
+            
+            // Mover el carrusel para sincronizar el scroll visual del carrusel:
+            const totalCards = contentIds.length;
+            const totalVisibleCards = 3; 
+            const maxScrollIndex = totalCards - totalVisibleCards;
+            
+            let scrollIndex = 0;
+            
+            if (newIndex >= totalVisibleCards) {
+                // Si la nueva tarjeta está fuera de la vista (índice 3 o más), movemos el carrusel
+                // para que la tarjeta activa quede como la tercera tarjeta visible.
+                scrollIndex = Math.min(newIndex - (totalVisibleCards - 1), maxScrollIndex);
+            }
+            
+            // Aseguramos que el índice no sea negativo o exceda el máximo
+            scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
+            
+            currentCardIndex = scrollIndex;
+            moveToCard(currentCardIndex);
+        }
     }
 }
 
@@ -468,58 +368,166 @@ document.addEventListener('keydown', (event) => {
 });
 
 
-// ===============================================
-// 8. FUNCIONALIDAD DE CAMBIO DE TEMA (DARK/LIGHT) 
-// ===============================================
-const themeToggle = document.getElementById('checkbox-theme');
-const body = document.body;
-const videoOverlay = document.querySelector('.video-overlay');
-const DARK_THEME = 'dark';
-const LIGHT_THEME = 'light';
-const THEME_KEY = 'flood-risk-theme';
-const DARK_OVERLAY_COLOR = 'rgba(0, 0, 0, 0.65)'; // Color oscuro original
-const LIGHT_OVERLAY_COLOR = 'rgba(255, 255, 255, 0.7)'; // Overlay más claro
+// Función para animar porcentajes
+function animateAlcaldiaPercentages() {
+    const alcaldiaItems = document.querySelectorAll('.alcaldias-list li');
+    alcaldiaItems.forEach((item, index) => {
+        const percentage = parseFloat(item.getAttribute('data-percentage'));
+        const delay = index * 200; // Retraso para el efecto escalonado
+        
+        // Usamos setProperty para la variable de CSS que controla el ancho
+        setTimeout(() => {
+            item.style.setProperty('--percentage', `${percentage}%`);
+        }, delay);
 
-/**
- * Aplica el tema guardado en localStorage o el tema oscuro por defecto.
- * También ajusta la opacidad del video de fondo.
- */
-function initializeTheme() {
-    // 1. Obtener tema guardado o usar 'dark' como default
-    const savedTheme = localStorage.getItem(THEME_KEY) || DARK_THEME;
+        // Animación del contador de número (opcional, si es visible)
+        // El CSS ya lo maneja con el ancho del pseudo-elemento.
+    });
+}
+
+
+// ===============================================
+// 4. LÓGICA DEL SIMULADOR
+// ===============================================
+
+// Centralizar la actualización de los valores de rango
+document.addEventListener('DOMContentLoaded', () => {
+    // ... (Inicialización del switch arriba) ...
     
-    // 2. Aplicar el tema al body
-    body.setAttribute('data-theme', savedTheme);
-    
-    // 3. Sincronizar el estado del checkbox
-    themeToggle.checked = (savedTheme === LIGHT_THEME);
-    
-    // 4. Ajustar el overlay del video de fondo
-    if (videoOverlay) {
-        if (savedTheme === LIGHT_THEME) {
-            videoOverlay.style.backgroundColor = LIGHT_OVERLAY_COLOR;
-        } else {
-            videoOverlay.style.backgroundColor = DARK_OVERLAY_COLOR;
-        }
+    // Inicializar el display de factores (Punto 4)
+    updateFactorDisplay('capacidad', document.getElementById('capacidad-input').value);
+    updateFactorDisplay('hidraulica', document.getElementById('hidraulica-input').value);
+    updateFactorDisplay('obstruccion', document.getElementById('obstruccion-input').value);
+    updateFactorDisplay('exposicion', document.getElementById('exposicion-input').value);
+});
+
+
+// NUEVA FUNCIÓN PARA BARRAS DE FACTOR (Punto 4)
+function updateFactorDisplay(factor, value) {
+    const displayElement = document.getElementById(`${factor}-display`);
+    if (!displayElement) return;
+
+    const barAfter = displayElement.querySelector('::after'); // No funciona con JS, usar setProperty en el padre
+
+    let max, color;
+
+    // Definir el máximo valor y color para cada factor
+    switch (factor) {
+        case 'capacidad': // C, Max 5 (Alto C = Peor)
+            max = 5;
+            // Escala de Verde (0) a Rojo (5)
+            if (value <= 1) color = 'var(--risk-zero)';
+            else if (value <= 2.5) color = 'var(--risk-low)';
+            else if (value <= 4) color = 'var(--risk-medium)';
+            else color = 'var(--risk-high)';
+            break;
+        case 'hidraulica': // K, Max 5 (Alto K = Mejor)
+            max = 5;
+            // Escala de Rojo (0) a Verde (5)
+            if (value <= 1) color = 'var(--risk-high)';
+            else if (value <= 2.5) color = 'var(--risk-medium)';
+            else if (value <= 4) color = 'var(--risk-low)';
+            else color = 'var(--risk-zero)';
+            break;
+        case 'obstruccion': // P, Max 3 (Alto P = Peor)
+            max = 3;
+            // Escala de Verde (0) a Rojo (3)
+            if (value == 0) color = 'var(--risk-zero)';
+            else if (value <= 1) color = 'var(--risk-low)';
+            else if (value <= 2) color = 'var(--risk-medium)';
+            else color = 'var(--risk-high)';
+            break;
+        case 'exposicion': // E, Max 3 (Alto E = Peor)
+            max = 3;
+            // Escala de Verde (0) a Rojo (3)
+            if (value == 0) color = 'var(--risk-zero)';
+            else if (value == 1) color = 'var(--risk-low)';
+            else if (value == 2) color = 'var(--risk-medium)';
+            else color = 'var(--risk-high)';
+            break;
+        default:
+            max = 1;
+            color = 'var(--color-accent-blue)';
     }
+
+    // Calcular el porcentaje para la barra
+    const percentage = (value / max) * 100;
+
+    // Actualizar el estilo de la barra usando variables CSS en el elemento padre
+    displayElement.style.setProperty('--percentage-width', `${percentage}%`);
+    displayElement.style.setProperty('--bar-color', color);
 }
 
-/**
- * Cambia entre el tema oscuro y claro, y guarda la preferencia.
- */
-function toggleTheme() {
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
+
+function calcularRiesgo() {
+    playConfirmAction();
+
+    // Factores estáticos (constantes)
+    const M = 1.8; // Vulnerabilidad Histórica
+
+    // Factores dinámicos (sliders)
+    const C = parseFloat(document.getElementById('capacidad-input').value);
+    const K = parseFloat(document.getElementById('hidraulica-input').value);
+    const P = parseFloat(document.getElementById('obstruccion-input').value);
+    const E = parseInt(document.getElementById('exposicion-input').value);
+
+    // 1. Calcular el riesgo base (R_base)
+    // El riesgo se acumula con la lluvia (C) + obstrucción (P), y se amplifica por la exposición (E) y vulnerabilidad (M).
+    // R = (C + P) + (E * M)
+    const R_initial = C + P + (E * M);
+
+    // 2. Aplicar el factor de capacidad hidráulica (K) como mitigación.
+    // Usamos K como un factor de descuento, donde un K alto reduce el riesgo.
+    // Asumimos que K no puede ser 0 para evitar división por cero; el mínimo es 0.5.
+    const K_adjusted = Math.max(K, 0.5); 
+    const R_mitigated = R_initial / (K_adjusted / 5); // Normalizamos K a una escala 0-1 (K/MaxK) e invertimos el efecto.
+
+    // 3. Redondear el riesgo final
+    const R = Math.round(R_mitigated * 10) / 10;
     
-    localStorage.setItem(THEME_KEY, newTheme);
-    // Llama a initializeTheme para aplicar el nuevo tema y ajustes visuales
-    initializeTheme();
-}
+    let riesgoText = "Riesgo: CERO";
+    let riesgoClass = "zero";
 
-// Inicializar el tema al cargar la página
-document.addEventListener('DOMContentLoaded', initializeTheme);
+    if (R < 0.5) {
+        riesgoText = "Riesgo: CERO";
+        riesgoClass = "zero";
+    } else if (R >= 8) {
+        riesgoText = "Riesgo: ALTO";
+        riesgoClass = "high";
+    } else if (R >= 4.0 && R < 8.0) {
+        riesgoText = "Riesgo: MEDIO";
+        riesgoClass = "medium";
+    } else if (R >= 0.5 && R < 4.0) {
+        riesgoText = "Riesgo: BAJO";
+        riesgoClass = "low";
+    }
 
-// Listener para el switch
-if (themeToggle) {
-    themeToggle.addEventListener('change', toggleTheme);
+
+    // 4. Actualizar el display de clasificación (Punto 2 anterior: Solo Riesgo: [Nivel])
+    const riesgoTextoEl = document.getElementById('riesgo-texto');
+    const simResultEl = document.getElementById('sim-result'); // Elemento para control de impacto visual
+    const adviceContainer = document.getElementById('advice-container');
+    
+    // --- NUEVO: Control de impacto visual (Pulso) ---
+    simResultEl.classList.remove('high-pulse', 'medium-pulse'); // Limpiar clases anteriores
+
+    let messageHTML = '';
+    riesgoTextoEl.textContent = riesgoText; // Ya contiene "Riesgo: ..."
+    riesgoTextoEl.className = `risk-level ${riesgoClass}`;
+
+
+    // 5. Añadir mensaje de sugerencia condicional y activar pulso
+    if (riesgoClass === 'high') {
+        simResultEl.classList.add('high-pulse'); // Añadir pulso rojo
+        messageHTML = `<p class="impact-message high-alert"><strong>⚠️ ALERTA MÁXIMA:</strong> Siga las indicaciones de Protección Civil. La combinación de lluvia alta (C=${C}) y obstrucción (P=${P}) ha superado la capacidad crítica de drenaje (K=${K}).</p> <a href="www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" class="impact-link high-risk-link"> <i class="fas fa-file-pdf"></i> Protocolo de Emergencia </a>`;
+    } else if (riesgoClass === 'medium') {
+        simResultEl.classList.add('medium-pulse'); // Añadir pulso naranja
+        messageHTML = `<p class="impact-message medium-alert"><strong>❗️ ALERTA:</strong> Nivel de riesgo moderado. Se recomienda limpiar coladeras y evitar áreas bajas. El factor de Obstrucción (P=${P}) es un mitigador potencial.</p>`;
+    } else if (riesgoClass === 'low') {
+        messageHTML = `<p class="impact-message low-alert"><strong>🟢 PRECAUCIÓN:</strong> Nivel de riesgo bajo, pero K=${K} indica que el drenaje puede comenzar a saturarse con precipitaciones continuas. Siga limpiando coladeras.</p>`;
+    } else {
+        messageHTML = `<p class="impact-message zero-alert"><strong>✅ RIESGO CERO:</strong> El sistema se encuentra estable. Mantenga la vigilancia en la limpieza de residuos (P) para evitar futuros picos.</p>`;
+    }
+
+    adviceContainer.innerHTML = messageHTML;
 }
