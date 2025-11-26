@@ -73,7 +73,6 @@ a:hover {
     /* Invertir colores de riesgo en modo claro */
     .risk-level.zero, .risk-level.low, .risk-level.medium, .risk-level.high { 
         color: #0C0C0C; 
-        text-shadow: none; /* Asegurar que no haya sombra en texto claro */
     }
     
     /* Ajustes específicos de light-mode */
@@ -93,12 +92,6 @@ a:hover {
     }
     .content-detail h3 { text-shadow: none; }
     .video-overlay { background-color: rgba(255, 255, 255, 0.75); } 
-    
-    /* Desactivar animaciones de pulso en modo claro para que sean más sutiles y no molestas */
-    .result-box.high-pulse, .result-box.medium-pulse {
-        animation: none !important;
-        box-shadow: var(--shadow-light) !important;
-    }
 }
 
 
@@ -203,7 +196,7 @@ a:hover {
     opacity: 1;
 }
 
-/* Estado: Modo Oscuro (checkbox checked) */
+/* Estado: Modo Claro (checkbox NO checked) */
 #darkModeToggle:checked + .toggle-label .toggle-ball {
     transform: translateX(0);
 }
@@ -245,10 +238,6 @@ a:hover {
     top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.65); 
     z-index: 5;
 }
-.light-mode .video-overlay { 
-    background-color: rgba(255, 255, 255, 0.75); 
-}
-
 #youtube-background {
     position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw; min-width: 100%; min-height: 100%;
     transform: translate(-50%, -50%); pointer-events: none; border: none; z-index: 2;
@@ -297,8 +286,7 @@ header h1 {
     color: var(--color-accent-blue);
     margin: 0 0 0.5rem 0;
     letter-spacing: 0.08em; 
-    /* MEJORA DE IMPACTO: Resplandor intenso en el título */
-    text-shadow: 0 0 15px rgba(0, 191, 255, 0.9), 0 0 5px rgba(0, 191, 255, 0.7); 
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.7); 
 }
 .header-subtitle { font-size: 1.05rem; color: var(--color-text-light);
     font-weight: 500;}
@@ -311,11 +299,6 @@ header h1 {
     padding: 2.5rem 3.5rem 0.5rem 3.5rem; 
     font-weight: 700;
     border-top: 1px solid var(--color-divider);
-    /* MEJORA DE IMPACTO: Sombra sutil para títulos de sección */
-    text-shadow: 0 0 5px rgba(0, 191, 255, 0.4);
-}
-.light-mode .section-title {
-    text-shadow: none;
 }
 .section-title i { color: var(--color-accent-blue); margin-right: 15px; }
 .section-intro {
@@ -335,10 +318,6 @@ header h1 {
     font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.3rem;
     margin: 0 0 12px 0; font-weight: 700; border-bottom: 1px dashed rgba(51, 51, 51, 0.6); padding-bottom: 8px;
 }
-.light-mode .content-detail h4 {
-    border-bottom-color: var(--color-light-divider);
-}
-
 .full-width { grid-column: 1 / -1; }
 
 /* ==================================== */
@@ -416,43 +395,16 @@ header h1 {
     transform: scale(1.02);
 }
 
-/* Animaciones de Pulso para Riesgo ALTO y MEDIO (Impacto) */
-@keyframes pulseRed {
-    0% { box-shadow: 0 0 5px 0 rgba(231, 76, 60, 0.7); border-left-color: var(--risk-high); }
-    50% { box-shadow: 0 0 20px 8px rgba(231, 76, 60, 0.5); border-left-color: var(--risk-high); }
-    100% { box-shadow: 0 0 5px 0 rgba(231, 76, 60, 0.7); border-left-color: var(--risk-high); }
-}
-@keyframes pulseOrange {
-    0% { box-shadow: 0 0 3px 0 rgba(243, 156, 18, 0.6); border-left-color: var(--risk-medium); }
-    50% { box-shadow: 0 0 15px 5px rgba(243, 156, 18, 0.4); border-left-color: var(--risk-medium); }
-    100% { box-shadow: 0 0 3px 0 rgba(243, 156, 18, 0.6); border-left-color: var(--risk-medium); }
-}
-
-
 /* Estilos de la caja de resultados del simulador */
 .result-box {
     margin-top: 30px; padding: 20px;
-    background-color: rgba(30, 30, 30, 0.8); border-radius: 8px; border-left: 5px solid var(--color-divider); 
-    opacity: 0;
+    background-color: rgba(30, 30, 30, 0.8); border-radius: 8px; border-left: 5px solid var(--color-divider); /* Animación sutil de entrada */ opacity: 0;
     transform: translateY(20px); animation: resultPopIn 0.5s ease-out forwards; 
-    transition: all 0.5s ease-in-out; /* Para la animación de pulso */
 }
 @keyframes resultPopIn {
     to { opacity: 1; transform: translateY(0);
     }
 }
-
-/* Aplicación de pulso */
-.result-box.high-pulse {
-    animation: pulseRed 1.5s infinite;
-    border-left-color: var(--risk-high) !important;
-}
-
-.result-box.medium-pulse {
-    animation: pulseOrange 2s infinite;
-    border-left-color: var(--risk-medium) !important;
-}
-
 /* MODIFICADO: Solo se muestra el texto de riesgo (Punto 2) */
 .result-box p { margin: 0; font-size: 1rem; } 
 #riesgo-texto { 
@@ -476,13 +428,7 @@ header h1 {
     border-radius: 8px;
     background-color: var(--color-card-bg);
     border: 1px solid var(--color-divider);
-    transition: all 0.5s ease-in-out;
 }
-.light-mode #advice-container {
-    background-color: var(--color-light-bg);
-    border-color: var(--color-light-divider);
-}
-
 .impact-message {
     font-size: 1.1rem;
     font-weight: 500;
@@ -493,10 +439,6 @@ header h1 {
 .impact-message.high-alert {
     background-color: rgba(231, 76, 60, 0.2);
     border-left: 3px solid var(--risk-high);
-}
-.impact-message.medium-alert {
-    background-color: rgba(243, 156, 18, 0.2);
-    border-left: 3px solid var(--risk-medium);
 }
 .impact-link {
     display: inline-block;
@@ -526,4 +468,9 @@ header h1 {
     transition: width 0.3s ease-out, background-color 0.3s ease-out;
 }
 
-/* ... (Resto de estilos) ... */
+/* ==================================== */
+/* 4. CARRUSEL (ZONA INTERACTIVA) */
+/* ==================================== */
+.carousel-container { padding: 20px 0; margin: 0 3.5rem 50px 3.5rem;
+    position: relative; overflow: hidden; }
+/* ... (Resto de los estilos del carrusel, alcaldías, y media queries sin cambios sustanciales) ... */
