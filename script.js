@@ -1,5 +1,5 @@
 // ===============================================
-// 0. PRELOADER Y ANIMACIÓN DE CARGA INICIAL
+// 0. PRELOADER YANIMACIÓN DE CARGA INICIAL
 // ===============================================
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
@@ -509,3 +509,4 @@ document.addEventListener('DOMContentLoaded', initializeTheme);
 if (themeToggle) {
     themeToggle.addEventListener('change', toggleTheme);
 }
+
