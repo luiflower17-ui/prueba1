@@ -1,3 +1,4 @@
+
 // ===============================================
 // 0. PRELOADER Y ANIMACIÓN DE CARGA INICIAL
 // ===============================================
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('touchstart', resumeContext, { once: true });
     }
 });
+
 /**
  * Genera un sonido sintetizado con la Web Audio API.
  */
@@ -59,6 +61,7 @@ function createSound(frequency, duration, volume, type = 'square') {
 const playSoftClick = () => createSound(1500, 0.015, 0.1, 'square');
 // Sonido de acción (botón de simulación)
 const playConfirmAction = () => createSound(1200, 0.08, 0.2, 'sine');
+
 // ===============================================
 // 2. MANEJO DE LA BARRA DE NAVEGACIÓN FLOTANTE (HEADER Y SCROLL)
 // ===============================================
@@ -96,6 +99,7 @@ let currentActiveContent = null;
 
 // Array ordenado de IDs para navegación secuencial (teclado)
 const contentIds = Array.from(carouselCards).map(card => card.getAttribute('data-target')).filter(id => id);
+
 function animateInfoBlocks(contentElement) {
     const infoBlocks = contentElement.querySelectorAll('.info-block');
     infoBlocks.forEach((block, index) => {
@@ -109,15 +113,13 @@ function animateInfoBlocks(contentElement) {
 
 function showContent(targetId) {
     const nextContent = document.getElementById(targetId);
+    
     // ADICIÓN: Deep Linking (Actualizar el hash de la URL)
     window.location.hash = targetId;
+
     if (!nextContent || nextContent === currentActiveContent) return;
 
-    // Solo reproducir sonido si ya había contenido activo, o si no es la carga inicial
-    if (currentActiveContent) {
-        playSoftClick();
-    }
-
+    playSoftClick();
 
     // Limpiar mensajes del simulador al cambiar de sección
     const adviceContainer = document.getElementById('advice-container');
@@ -168,7 +170,7 @@ function showContent(targetId) {
             }
         }, 300);
     } else {
-        // Primera carga: Garantizamos que solo el contenido inicial esté activo
+        // Primera carga
         detailContents.forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
         nextContent.style.display = 'block';
         void nextContent.offsetWidth;
@@ -186,32 +188,31 @@ function showContent(targetId) {
 
 // Inicializar y manejar la tarjeta activa al cargar
 document.addEventListener('DOMContentLoaded', () => {
+    // Usar el hash de la URL para la carga inicial (Deep Linking)
+    const initialTargetId = window.location.hash ? window.location.hash.substring(1) : detailContents[0]?.id; 
     
-    // 1. Determinar el contenido inicial. Si no hay hash válido, forzar el primer elemento.
-    let initialTargetId = detailContents[0]?.id; // Intentar siempre con el primer ID como fallback.
-    const hashId = window.location.hash ? window.location.hash.substring(1) : null;
-    
-    if (hashId && document.getElementById(hashId)) {
-        initialTargetId = hashId; // Usar el hash si es válido.
-    }
-
-    // 2. Si hay un ID válido (ya sea hash o el primer elemento), mostrar el contenido.
-    if (initialTargetId) {
+    if (initialTargetId && document.getElementById(initialTargetId)) {
         showContent(initialTargetId);
+        // La función showContent ya se encarga de actualizar el active-card
         
-        // 3. Sincronizar el scroll del carrusel (misma lógica)
+        // Sincronizar el scroll del carrusel si la tarjeta activa no es la primera
         const initialIndex = contentIds.indexOf(initialTargetId);
         if (initialIndex > -1) {
+            // Este es un ajuste manual si la tarjeta activa no es una de las primeras visibles
             const totalCards = contentIds.length;
             const totalVisibleCards = 3; 
             const maxScrollIndex = totalCards - totalVisibleCards;
             
             let scrollIndex = 0;
+            
             if (initialIndex >= totalVisibleCards) {
+                // Si la tarjeta activa está fuera de la vista (índice 3 o más), movemos el carrusel
+                // para que la tarjeta activa quede como la tercera tarjeta visible.
                 scrollIndex = Math.min(initialIndex - (totalVisibleCards - 1), maxScrollIndex);
             }
             
             scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
+            
             currentCardIndex = scrollIndex;
             moveToCard(currentCardIndex);
         }
@@ -226,6 +227,7 @@ carouselCards.forEach(card => {
         showContent(targetId);
     });
 });
+
 // ===============================================
 // 4. LÓGICA DEL CARRUSEL (SCROLL VISUAL)
 // ===============================================
@@ -236,6 +238,7 @@ let currentCardIndex = 0; // Índice de desplazamiento visual (NO índice de la 
 const CARD_WIDTH = 330;
 const CARD_GAP = 20;
 const totalStepSize = CARD_WIDTH + CARD_GAP;
+
 function moveToCard(index) {
     if (carouselTrack) {
         const offset = -index * totalStepSize;
@@ -294,6 +297,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
 function calcularRiesgo() {
     playConfirmAction();
 
@@ -305,6 +310,7 @@ function calcularRiesgo() {
 
     // 2. Fórmula conceptual: R = C + P + (E * M)
     const R = C + P + (E * M);
+
     // 3. Clasificar el riesgo (CORRECCIÓN: Se revierte a la lógica de 4 niveles)
     let riesgoText = '';
     let riesgoClass = '';
@@ -331,6 +337,7 @@ function calcularRiesgo() {
 
     riesgoTextoEl.textContent = riesgoText;
     riesgoTextoEl.className = `risk-level ${riesgoClass}`;
+
     // 5. Añadir mensaje de sugerencia condicional
     let messageHTML = '';
     if (riesgoClass === 'high') {
@@ -359,7 +366,7 @@ function animateAlcaldiasBars() {
         const counter = li.querySelector('.percentage-counter');
         
         // 1. Establecer la variable CSS para la animación
-        li.style.setProperty('--percentage', `${percentage}`);
+        li.style.setProperty('--percentage', `${percentage}%`);
         
         // 2. Animación de conteo numérico (simulada)
         let startValue = 0;
@@ -389,7 +396,7 @@ function animateAlcaldiasBars() {
         // Retraso para que las barras aparezcan secuencialmente
         setTimeout(() => {
             requestAnimationFrame(updateCounter);
-        }, index * 100);
+        }, index * 100); 
     });
 }
 
@@ -404,11 +411,13 @@ function getCurrentActiveIndex() {
 
 function navigateSections(direction) {
     let currentIndex = getCurrentActiveIndex();
+    
     if (currentIndex === -1) {
         currentIndex = 0;
     }
     
     let newIndex = currentIndex;
+    
     if (direction === 'next') {
         newIndex = (currentIndex + 1) % contentIds.length;
     } else if (direction === 'prev') {
@@ -419,10 +428,12 @@ function navigateSections(direction) {
     if (newTargetId) {
         // Simular el click en la nueva tarjeta (esto ya cambia el contenido y la clase 'active-card')
         showContent(newTargetId);
+
         // Lógica para sincronizar el scroll visual del carrusel:
         const totalCards = contentIds.length;
         const totalVisibleCards = 3; 
         const maxScrollIndex = totalCards - totalVisibleCards;
+        
         // CORRECCIÓN: Ajustar currentCardIndex para mantener visible la nueva tarjeta activa
         if (newIndex < currentCardIndex) {
             // Si vamos hacia atrás, movemos el scroll al inicio de la nueva tarjeta (izquierda)
@@ -433,8 +444,10 @@ function navigateSections(direction) {
             currentCardIndex = newIndex - (totalVisibleCards - 1);
         }
         // Si la tarjeta ya está visible, no se ajusta currentCardIndex.
+
         // Aseguramos que el índice no sea negativo o exceda el máximo
         currentCardIndex = Math.max(0, Math.min(currentCardIndex, maxScrollIndex));
+        
         // Aplicar el scroll
         moveToCard(currentCardIndex);
     }
@@ -454,6 +467,8 @@ document.addEventListener('keydown', (event) => {
         navigateSections('prev');
     }
 });
+
+
 // ===============================================
 // 8. FUNCIONALIDAD DE CAMBIO DE TEMA (DARK/LIGHT) 
 // ===============================================
