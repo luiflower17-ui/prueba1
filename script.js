@@ -1,6 +1,6 @@
 // ===============================================
 // 0.1. TOGGLE MODO CLARO/OSCURO (Punto 1 y 3)
-// ===============================================
+// ==============================================
 const darkModeToggle = document.getElementById('darkModeToggle');
 const body = document.body;
 
@@ -531,3 +531,4 @@ function calcularRiesgo() {
 
     adviceContainer.innerHTML = messageHTML;
 }
+
