@@ -18,7 +18,7 @@
     --font-heading: 'Montserrat', sans-serif; 
     --percentage: 0%; 
 
-    /* Colores de Riesgo Centralizados (Oscuro) */
+    /* Colores de Riesgo Centralizados */
     --risk-zero: #2ECC71;      /* VERDE */
     --risk-low: #F1C40F;       /* AMARILLO */
     --risk-medium: #F39C12;    /* NARANJA */
@@ -143,7 +143,6 @@ a:hover {
 .video-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%; 
-    /* MODIFICACIÓN: Usar color inicial oscuro */
     background-color: rgba(0, 0, 0, 0.65); 
     z-index: 5;
     /* ADICIÓN: Transición para el cambio de opacidad con el tema */
@@ -190,8 +189,9 @@ header {
     background-color: var(--color-main-bg); 
     padding: 3rem 3.5rem 2rem 3.5rem; 
     border-bottom: 3px solid var(--color-accent-blue); 
-    display: flex; justify-content: space-between; align-items: flex-end;
-    /* ADICIÓN: Transición para el fondo del header y la línea de acento */
+    display: flex; justify-content: space-between; 
+    /* CORRECCIÓN: Alinear al centro para simetría vertical del switch */
+    align-items: center; 
     transition: background-color 0.5s ease, border-bottom-color 0.5s ease;
 }
 header h1 {
@@ -522,7 +522,7 @@ body[data-theme="light"] .carousel-card.active-card {
     align-items: center;
     margin-left: auto; 
     padding-right: 3.5rem; /* Ajustar al padding del header */
-    height: 100%;
+    height: auto; 
 }
 
 .theme-switch {
