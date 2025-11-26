@@ -259,9 +259,6 @@ if (nextBtn && carouselTrack) {
             currentCardIndex = 0;
             moveToCard(currentCardIndex);
         } 
-        // Al usar el botón, no cambiamos la tarjeta activa, solo el scroll.
-        // Si queremos que al mover el scroll se active la primera visible, es más complejo.
-        // Dejaremos que los botones solo muevan el scroll visualmente.
     });
 }
 
@@ -313,16 +310,13 @@ function calcularRiesgo() {
     // 2. Fórmula conceptual: R = C + P + (E * M)
     const R = C + P + (E * M);
 
-    // 3. Clasificar el riesgo
+    // 3. Clasificar el riesgo (CORRECCIÓN: Se revierte a la lógica de 4 niveles)
     let riesgoText = '';
     let riesgoClass = '';
     let R_display = R.toFixed(2);
     
-    // Asignar clasificación de riesgo
-    if (R >= 6.0) {
-        riesgoText = `Riesgo: CRÍTICO (${R_display})`;
-        riesgoClass = "high"; // Usaremos la clase 'high' para los dos niveles de alerta
-    } else if (R >= 4.0) {
+    // Clasificación de riesgo (CERO, BAJO, MEDIO, ALTO)
+    if (R >= 4.0) {
         riesgoText = `Riesgo: ALTO (${R_display})`;
         riesgoClass = "high";
     } else if (R >= 2.0) {
@@ -341,7 +335,6 @@ function calcularRiesgo() {
     const adviceContainer = document.getElementById('advice-container');
 
     riesgoTextoEl.textContent = riesgoText;
-    // Se añade la clase 'high' o 'medium', etc., que maneja el color de fondo en CSS
     riesgoTextoEl.className = `risk-level ${riesgoClass}`;
 
     // 5. Añadir mensaje de sugerencia condicional
@@ -407,7 +400,7 @@ function animateAlcaldiasBars() {
 }
 
 // ===============================================
-// 7. NAVEGACIÓN POR TECLADO (FLECHAS)
+// 7. NAVEGACIÓN POR TECLADO (FLECHAS) - CORRECCIÓN DE SCROLL
 // ===============================================
 
 function getCurrentActiveIndex() {
@@ -419,7 +412,6 @@ function navigateSections(direction) {
     let currentIndex = getCurrentActiveIndex();
     
     if (currentIndex === -1) {
-        // Si no hay contenido activo, iniciamos en el primero
         currentIndex = 0;
     }
     
@@ -441,18 +433,21 @@ function navigateSections(direction) {
         const totalVisibleCards = 3; 
         const maxScrollIndex = totalCards - totalVisibleCards;
         
-        let scrollIndex = 0;
-        
-        if (newIndex >= totalVisibleCards) {
-            // Si la nueva tarjeta está fuera de la vista (índice 3 o más), movemos el carrusel
-            // para que la tarjeta activa quede como la tercera tarjeta visible.
-            scrollIndex = Math.min(newIndex - (totalVisibleCards - 1), maxScrollIndex);
+        // CORRECCIÓN: Ajustar currentCardIndex para mantener visible la nueva tarjeta activa
+        if (newIndex < currentCardIndex) {
+            // Si vamos hacia atrás, movemos el scroll al inicio de la nueva tarjeta (izquierda)
+            currentCardIndex = newIndex;
+        } else if (newIndex >= currentCardIndex + totalVisibleCards) {
+            // Si vamos hacia adelante y la tarjeta se sale de la vista (derecha), 
+            // la colocamos como la tercera tarjeta visible (indice - 2)
+            currentCardIndex = newIndex - (totalVisibleCards - 1);
         }
-        
+        // Si la tarjeta ya está visible, no se ajusta currentCardIndex.
+
         // Aseguramos que el índice no sea negativo o exceda el máximo
-        scrollIndex = Math.max(0, Math.min(scrollIndex, maxScrollIndex));
+        currentCardIndex = Math.max(0, Math.min(currentCardIndex, maxScrollIndex));
         
-        currentCardIndex = scrollIndex;
+        // Aplicar el scroll
         moveToCard(currentCardIndex);
     }
 }
@@ -474,7 +469,7 @@ document.addEventListener('keydown', (event) => {
 
 
 // ===============================================
-// 8. FUNCIONALIDAD DE CAMBIO DE TEMA (DARK/LIGHT) - ADICIÓN
+// 8. FUNCIONALIDAD DE CAMBIO DE TEMA (DARK/LIGHT) 
 // ===============================================
 const themeToggle = document.getElementById('checkbox-theme');
 const body = document.body;
