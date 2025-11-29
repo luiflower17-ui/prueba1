@@ -28,7 +28,7 @@
 /* ADICIÓN: Variables para Tema Claro (Blanco y Rojo Neón) */
 body[data-theme="light"] {
     /* Base Colors: Blanco y Rojo Neón */
-    --color-bg: #FFFFFF; 
+    --color-bg: #FFFFFF;
     --color-main-bg: rgba(245, 245, 245, 0.98); 
     --color-text-light: #111111; 
     --color-text-secondary: #555555; 
@@ -46,7 +46,7 @@ body[data-theme="light"] {
     --risk-high: #CC0000;
     
     /* Desactivar efectos de glow/neón en modo claro */
-    text-shadow: none !important; 
+    text-shadow: none !important;
 }
 body[data-theme="light"] header h1,
 body[data-theme="light"] .content-detail h3 {
@@ -168,13 +168,13 @@ main {
     backdrop-filter: blur(8px); 
     /* ADICIÓN: Transición para el fondo del main y blur */
     transition: background-color 0.5s ease, border-color 0.5s ease;
-
     opacity: 0;
     animation: fadeInMain 1s ease-out forwards;
     animation-delay: 0.2s;
 }
 @keyframes fadeInMain {
-    from { opacity: 0; transform: translateY(50px) scale(0.98);
+    from { opacity: 0;
+    transform: translateY(50px) scale(0.98);
     }
     to { opacity: 1; transform: translateY(0) scale(1);
     }
@@ -189,9 +189,9 @@ header {
     background-color: var(--color-main-bg); 
     padding: 3rem 3.5rem 2rem 3.5rem; 
     border-bottom: 3px solid var(--color-accent-blue); 
-    display: flex; justify-content: space-between; 
+    display: flex; justify-content: space-between;
     /* CORRECCIÓN: Alinear al centro para simetría vertical del switch */
-    align-items: center; 
+    align-items: center;
     transition: background-color 0.5s ease, border-bottom-color 0.5s ease;
 }
 header h1 {
@@ -201,7 +201,7 @@ header h1 {
     color: var(--color-accent-blue);
     margin: 0 0 0.5rem 0;
     letter-spacing: 0.08em; 
-    text-shadow: 0 0 10px rgba(0, 191, 255, 0.7); 
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
     /* ADICIÓN: Transición para el color y el neón */
     transition: color 0.5s ease, text-shadow 0.5s ease;
 }
@@ -210,7 +210,8 @@ header h1 {
     transition: color 0.5s ease;
 }
 .header-meta { text-align: right; }
-.meta-line { font-size: 0.85rem; color: var(--color-text-secondary); margin: 0 0 5px 0;
+.meta-line { font-size: 0.85rem;
+    color: var(--color-text-secondary); margin: 0 0 5px 0;
 }
 
 .section-title {
@@ -240,156 +241,88 @@ header h1 {
 }
 .content-detail h4 {
     font-family: var(--font-heading); color: var(--color-accent-blue); font-size: 1.3rem;
-    margin: 0 0 12px 0; font-weight: 700; border-bottom: 1px dashed rgba(51, 51, 51, 0.6); padding-bottom: 8px;
+    margin: 0 0 12px 0; font-weight: 700;
+    border-bottom: 1px dashed rgba(51, 51, 51, 0.6); padding-bottom: 8px;
     /* ADICIÓN: Transición para el color */
     transition: color 0.5s ease;
 }
 .full-width { grid-column: 1 / -1; }
 
 /* ==================================== */
-/* 3. SIMULADOR (Integrado en el contenido detallado) */
+/* 3. CARRUSEL Y NAVEGACIÓN */
 /* ==================================== */
-#simulation-area {
-    padding: 30px;
-    background-color: rgba(10, 10, 10, 0.9);
-    border: 2px solid var(--color-accent-blue);
+#project-overview {
+    padding-bottom: 5rem;
+}
+.carousel-container {
+    margin: 30px 3.5rem;
+    overflow: hidden; 
+    position: relative;
+    padding-bottom: 20px;
+}
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.carousel-card {
+    flex: 0 0 auto; 
+    width: 330px; 
+    margin-right: 20px; 
+    background-color: var(--color-card-bg);
     border-radius: 12px;
-    margin-bottom: 40px;
-    /* ADICIÓN: Transición para el fondo y el borde */
-    transition: background-color 0.5s ease, border-color 0.5s ease;
+    padding: 25px;
+    border: 3px solid var(--color-divider);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                transform 0.3s ease-out, box-shadow 0.4s ease-out;
+    position: relative;
+    
+    /* Animación de entrada inicial */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease-out forwards;
 }
-.sim-inputs {
-    display: flex;
-    gap: 30px; flex-wrap: wrap; margin-bottom: 20px;
+.carousel-card:hover {
+    border-color: var(--color-accent-hover);
+    background-color: var(--color-card-hover);
+    transform: translateY(-5px); 
 }
-.input-group {
-    flex: 1 1 200px;
-    display: flex;
-    flex-direction: column;
+.carousel-card h4 {
+    color: var(--color-text-light);
+    transition: color 0.5s ease;
+    font-size: 1.1rem;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 0;
 }
-.input-group label {
-    font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: var(--color-text-light);
+.carousel-card .card-icon {
+    font-size: 2.5rem;
+    color: var(--color-accent-blue);
+    margin: 10px 0 15px 0;
+    transition: color 0.5s ease;
 }
-.input-group i { color: var(--color-accent-blue);
-    margin-right: 8px; 
+.carousel-card p {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    min-height: 40px;
+    transition: color 0.5s ease;
+}
+.card-action-hint {
+    display: block;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: var(--color-accent-blue);
+    font-weight: 600;
     transition: color 0.5s ease;
 }
 
-#alcaldia-select, input[type="range"] {
-    background-color: var(--color-card-bg);
-    border: 1px solid var(--color-divider);
-    color: var(--color-text-light);
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    /* ADICIÓN: Transición para el cambio de colores */
-    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
-}
-input[type="range"] {
-    -webkit-appearance: none;
-    height: 10px;
-}
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px; height: 20px; border-radius: 50%; background: var(--color-accent-blue); cursor: pointer;
-    margin-top: -5px;
-    /* MODIFICACIÓN: Transición más pulida */
-    transition: background 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-.range-value {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary); margin-top: 5px; text-align: right;
-}
+/* Animación de entrada inicial (escalonada) */
+.carousel-track > :nth-child(1) { animation-delay: 0.2s; }
+.carousel-track > :nth-child(2) { animation-delay: 0.3s; }
+.carousel-track > :nth-child(3) { animation-delay: 0.4s; }
 
-#simulation-area button {
-    background-color: var(--color-accent-blue);
-    color: var(--color-bg); 
-    padding: 12px 25px; 
-    border: none; 
-    border-radius: 6px; 
-    font-size: 1.1rem; 
-    font-weight: 700; 
-    cursor: pointer;
-    /* MODIFICACIÓN: Transición más pulida */
-    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    margin-top: 15px; 
-}
-#simulation-area button:hover {
-    background-color: var(--color-accent-hover);
-    transform: scale(1.02);
-}
-
-/* Estilos de la caja de resultados del simulador */
-.result-box {
-    margin-top: 30px; padding: 20px;
-    background-color: rgba(30, 30, 30, 0.8); border-radius: 8px; border-left: 5px solid var(--color-divider); 
-    /* Animación sutil de entrada */ opacity: 0;
-    transform: translateY(20px); animation: resultPopIn 0.5s ease-out forwards; 
-    /* ADICIÓN: Transición para el fondo y el borde */
-    transition: background-color 0.5s ease, border-left-color 0.5s ease;
-}
-@keyframes resultPopIn {
-    to { opacity: 1; transform: translateY(0);
-    }
-}
-.result-box p { margin: 0; font-size: 1rem; }
-#riesgo-texto { 
-    font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; margin-bottom: 5px;
-    padding: 10px 0; text-align: center; border-radius: 4px; color: var(--color-bg); text-shadow: none; 
-    /* MODIFICACIÓN: Transición más pulida */
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-} 
-
-/* CLASES DE RIESGO ACTUALIZADAS (Usando variables CSS) */
-.risk-level.pending { background-color: var(--color-text-secondary);
-    color: var(--color-bg); } 
-.risk-level.zero { background-color: var(--risk-zero); } /* VERDE: Cero Riesgo */ 
-.risk-level.low { background-color: var(--risk-low); } /* AMARILLO: Bajo Riesgo */ 
-.risk-level.medium { background-color: var(--risk-medium); } /* NARANJA: Medio Riesgo */
-.risk-level.high { background-color: var(--risk-high); } /* ROJO: Alto Riesgo */
-
-
-/* ==================================== */
-/* 4. CARRUSEL (ZONA INTERACTIVA) */
-/* ==================================== */
-.carousel-container { padding: 20px 0; margin: 0 3.5rem 50px 3.5rem;
-    position: relative; overflow: hidden; }
-.carousel-track { 
-    display: flex; gap: 20px; 
-    /* MODIFICACIÓN: Transición más pulida */
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-.carousel-card { 
-    flex: 0 0 330px; padding: 25px; 
-    background-color: var(--color-card-bg); 
-    border-radius: 10px; 
-    border: 1px solid rgba(0, 191, 255, 0.2);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
-    cursor: pointer; 
-    /* MODIFICACIÓN: Transición más pulida y detallada */
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-                background-color 0.4s ease, 
-                border-color 0.4s ease;
-    position: relative; opacity: 0; transform: scale(0.95);
-    animation: cardEntrance 0.7s forwards; 
-}
-.carousel-card:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8); 
-    border-color: var(--color-accent-hover);
-}
-@keyframes cardEntrance { 
-    from { opacity: 0; transform: scale(0.95) translateY(10px); } 
-    to { opacity: 1; transform: scale(1) translateY(0);
-} } 
-/* Escalado para cada tarjeta */
-.carousel-track > :nth-child(1) { animation-delay: 0.2s;
-} 
-.carousel-track > :nth-child(2) { animation-delay: 0.3s; } 
-.carousel-track > :nth-child(3) { animation-delay: 0.4s;
-} 
 /* Nuevo estilo y animación para la tarjeta activa (Active Card) */
 .carousel-card.active-card {
     border-color: var(--color-accent-blue);
@@ -398,11 +331,12 @@ input[type="range"]::-webkit-slider-thumb {
 }
 @keyframes glowPulse {
     0% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3);
-} 
+    }
     50% { box-shadow: 0 0 25px var(--color-accent-blue), inset 0 0 15px var(--color-accent-blue);
-} 
+    }
     100% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.5), inset 0 0 10px rgba(0, 191, 255, 0.3);
-} } 
+    }
+}
 /* Ajuste de animación glowPulse para tema claro */
 body[data-theme="light"] .carousel-card.active-card {
     animation: none; /* Desactivar la animación de neón */
@@ -410,223 +344,345 @@ body[data-theme="light"] .carousel-card.active-card {
     box-shadow: 0 0 10px rgba(255, 51, 102, 0.7); /* Sombra roja sutil en modo claro */
 }
 
-
-.carousel-card h4 { color: var(--color-text-light); transition: color 0.5s ease; }
-.carousel-card:hover h4 { color: var(--color-accent-hover); }
-
-.card-icon { font-size: 2.5rem; color: var(--color-accent-blue); margin: 10px 0; display: block; 
-    transition: color 0.5s ease;
+/* Botones de Navegación del Carrusel */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-divider);
+    color: var(--color-text-light);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: var(--shadow-subtle);
+    transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.5s ease;
 }
-.card-action-hint { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 10px; display: block; }
-
-.carousel-btn { 
-    position: absolute; top: 50%; transform: translateY(-50%); 
-    background: rgba(0, 0, 0, 0.5); 
-    color: var(--color-accent-blue); 
-    border: 1px solid var(--color-accent-blue); 
-    border-radius: 50%; 
-    width: 40px; height: 40px; 
-    display: flex; align-items: center; justify-content: center; 
-    cursor: pointer; z-index: 15; 
-    /* MODIFICACIÓN: Transición más pulida */
-    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                color 0.4s ease,
-                border-color 0.4s ease;
+.carousel-btn:hover {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-blue);
 }
-.carousel-btn:hover { 
-    background-color: var(--color-accent-hover); 
-    color: var(--color-bg); 
-    transform: translateY(-50%) scale(1.1); 
-}
-.prev-btn { left: -20px; }
-.next-btn { right: -20px; }
+.prev-btn { left: 0; }
+.next-btn { right: 0; }
 
 /* ==================================== */
-/* 5. PANEL DE DETALLES Y ANIMACIÓN DE CONTENIDO */
+/* 4. CONTENIDO DETALLADO (PANEL) */
 /* ==================================== */
 #interactive-content {
-    padding: 0 3.5rem 3.5rem 3.5rem;
+    min-height: 400px;
+    padding: 0 3.5rem;
+    position: relative;
 }
-
-#detail-panel { 
-    background-color: var(--color-card-bg); 
-    padding: 35px; 
-    border-radius: 12px; 
-    border: 1px solid rgba(0, 191, 255, 0.5);
-    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6); 
-    max-height: calc(100vh - 5rem - 2rem - 150px); 
-    overflow-y: auto;
-    width: 100%; 
-    animation: glowPulse 4s infinite ease-in-out; 
-    /* ADICIÓN: Transición para el cambio de colores del tema */
+#detail-panel {
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-accent-blue);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+    border-radius: 12px;
+    padding: 30px;
+    min-height: 400px;
+    position: relative;
+    /* Animación pulso para el tema oscuro */
+    animation: panelPulse 6s infinite ease-in-out;
+    /* Transiciones */
     transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
-.content-detail { 
-    display: none;
-    opacity: 0; 
-    /* MODIFICACIÓN: Transición más pulida */
-    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
-    padding-bottom: 25px; 
+@keyframes panelPulse {
+    0% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); }
+    50% { box-shadow: 0 0 25px rgba(0, 191, 255, 0.8); }
+    100% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); }
 }
-.content-detail.active { 
-    display: block; 
+
+.content-detail {
+    position: absolute; 
+    top: 30px; 
+    left: 30px; 
+    right: 30px; 
+    bottom: 30px;
+    opacity: 0;
+    display: none; /* Inicialmente oculto */
+    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    padding-bottom: 25px;
+}
+.content-detail.active {
+    display: block;
     opacity: 1;
     /* Usar la animación JS en lugar de esta animación CSS para un mejor control */
-    animation: none;
+    animation: none; 
 }
 /* La animación de entrada de los bloques ahora se gestiona en JS con `fadeInUp` */
 .info-block {
-    opacity: 0; 
+    opacity: 0;
     transform: translateY(20px);
 }
 @keyframes fadeInUp {
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+    to { opacity: 1; transform: translateY(0);
     }
+}
+.content-detail p, .content-detail li {
+    color: var(--color-text-light);
+    transition: color 0.5s ease;
+}
+
+/* Estilos para listas y bloques de información */
+.content-detail ul, .content-detail ol {
+    list-style-type: disc;
+    padding-left: 25px;
+    margin-bottom: 20px;
+}
+.content-detail ol { list-style-type: decimal; }
+.info-block {
+    background-color: var(--color-card-hover);
+    padding: 15px 20px;
+    border-left: 4px solid var(--color-accent-blue);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    transition: background-color 0.5s ease, border-left-color 0.5s ease;
+}
+.info-block h4 {
+    margin: 0 0 10px 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.info-block p, .info-block ul li {
+    font-size: 0.95rem;
+}
+.example-box {
+    border: 1px solid var(--color-divider) !important;
+    padding: 20px !important;
+    background-color: var(--color-card-bg) !important;
+    transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+.example-box p strong {
+    color: var(--color-accent-blue);
+    transition: color 0.5s ease;
 }
 
 /* Listas de alcaldías (Animación de barras) */
-.alcaldias-list { list-style: none; padding: 0; }
+.alcaldias-list {
+    list-style: none;
+    padding: 0;
+}
 .alcaldias-list li {
-    background-color: var(--color-card-hover); 
-    padding: 8px 15px; 
-    margin-bottom: 10px; 
-    border-radius: 5px; 
-    font-weight: 600; 
-    position: relative; 
-    overflow: hidden; 
+    background-color: var(--color-card-hover);
+    padding: 8px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
     z-index: 1;
     transition: background-color 0.5s ease;
 }
 .alcaldias-list li::before {
-    content: ''; position: absolute; top: 0; left: 0; height: 100%; 
+    content: '';
+    position: absolute;
+    top: 0; left: 0; height: 100%;
     background-color: rgba(0, 191, 255, 0.25);
-    width: var(--percentage, 0%); 
-    /* MODIFICACIÓN: Transición más pulida para la barra */
-    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+    width: var(--percentage, 0%); /* MODIFICACIÓN: Transición más pulida para la barra */
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: -1;
-} 
-/* El contador dinámico lo gestiona JS, no usamos ::after para la cifra */
-.percentage-counter { font-weight: 700;
-    color: var(--color-accent-blue); background-color: rgba(0, 0, 0, 0.5); padding: 2px 8px; border-radius: 3px; margin-left: 10px;
-    transition: color 0.5s ease, background-color 0.5s ease;
+    transition: background-color 0.5s ease;
+}
+body[data-theme="light"] .alcaldias-list li::before {
+    background-color: rgba(255, 51, 102, 0.2);
+}
+.alcaldias-list li .percentage-counter {
+    float: right;
+    color: var(--color-accent-blue);
+    transition: color 0.5s ease;
 }
 
 /* ==================================== */
-/* 5.5. Theme Switch Styles (ADICIÓN) */
+/* 5. SIMULADOR DE RIESGO */
 /* ==================================== */
-.theme-switch-wrapper {
-    display: flex;
+#simulation-area {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
     align-items: center;
-    margin-left: auto; 
-    padding-right: 3.5rem; /* Ajustar al padding del header */
-    height: auto; 
+    padding: 20px;
+    background-color: var(--color-card-hover);
+    border-radius: 8px;
+    border: 1px solid var(--color-divider);
+    transition: background-color 0.5s ease, border-color 0.5s ease;
+    margin-bottom: 20px;
 }
-
-.theme-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    margin: 0;
+#simulation-area h4 {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    border-bottom: 1px dashed rgba(51, 51, 51, 0.6);
 }
-
-.theme-switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
+.sim-inputs {
+    display: grid;
+    /* Ajuste para acomodar 4 inputs en una rejilla 2x2 */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--color-divider);
-    transition: 0.4s;
+.input-group {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 5px;
+    flex-direction: column;
 }
-
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: var(--color-accent-blue); /* El color del thumb se ajusta con el tema */
-    transition: 0.4s;
-    border-radius: 50%;
-    /* Efecto de neón/sombra solo en tema oscuro */
-    box-shadow: 0 0 10px var(--color-accent-blue);
-}
-
-/* Estado del Switch en modo oscuro (Default) */
-input:checked + .slider {
-    background-color: var(--color-accent-blue);
-}
-input:checked + .slider.round:before {
-    transform: translateX(26px);
-    background-color: var(--color-text-light); /* El color del thumb se ajusta */
-    box-shadow: none; 
-}
-
-/* Iconografía (Sol/Luna) */
-.icon-dark, .icon-light {
-    font-size: 14px;
+.input-group label {
+    font-size: 1rem;
     color: var(--color-text-light);
-    z-index: 1;
-    transition: opacity 0.4s, color 0.4s;
+    margin-bottom: 8px;
+    font-weight: 500;
+    transition: color 0.5s ease;
 }
-
-.icon-light {
-    opacity: 0.3;
+.input-group i {
+    color: var(--color-accent-blue);
+    margin-right: 8px;
+    transition: color 0.5s ease;
 }
-input:checked ~ .slider .icon-light {
-    opacity: 1;
-    color: #FFF; 
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: var(--color-divider);
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.2s;
 }
-input:checked ~ .slider .icon-dark {
-    opacity: 0.3;
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-accent-blue);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--color-accent-blue);
+    transition: background 0.2s, box-shadow 0.2s;
 }
-
-/* Ajuste del thumb para el tema claro: el slider-thumb es Rojo Neón */
-body[data-theme="light"] .slider.round:before {
-    box-shadow: 0 0 5px rgba(255, 51, 102, 0.8); /* Neón sutil rojo en modo claro (thumb) */
+input[type=range]::-webkit-slider-thumb:hover {
+    background: var(--color-accent-hover);
 }
-body[data-theme="light"] input:checked + .slider.round:before {
-    box-shadow: 0 0 10px rgba(255, 51, 102, 1); /* Neón rojo más intenso cuando está activo */
+.range-value {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-top: 5px;
+    transition: color 0.5s ease;
 }
-
-
-/* ==================================== */
-/* 5. BOTÓN SCROLL-TO-TOP */
-/* ==================================== */
-#scrollToTopBtn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 99;
-    display: none;
+#alcaldia-select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--color-divider);
+    background-color: var(--color-card-bg);
+    color: var(--color-text-light);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+#alcaldia-select:focus {
+    border-color: var(--color-accent-blue);
+    outline: none;
+}
+#sim-button {
+    grid-column: 1 / -1;
+    padding: 12px 20px;
     background-color: var(--color-accent-blue);
     color: var(--color-bg);
     border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 700;
     cursor: pointer;
-    padding: 15px 20px;
-    border-radius: 50%; 
-    font-size: 18px; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    margin-top: 15px;
+}
+#simulation-area button:hover {
+    background-color: var(--color-accent-hover);
+    transform: scale(1.02);
+}
+/* Estilos de la caja de resultados del simulador */
+.result-box {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: rgba(30, 30, 30, 0.8);
+    border-radius: 8px;
+    border-left: 5px solid var(--color-divider);
+    /* Animación sutil de entrada */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: resultPopIn 0.5s ease-out forwards;
+    /* ADICIÓN: Transición para el fondo y el borde */
+    transition: background-color 0.5s ease, border-left-color 0.5s ease;
+}
+@keyframes resultPopIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+.result-box p { margin: 0; font-size: 1rem;
+}
+#riesgo-texto {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 4px;
+    color: var(--color-bg);
+    text-shadow: none; 
+    /* MODIFICACIÓN: Transición más pulida */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* CLASES DE RIESGO ACTUALIZADAS (Usando variables CSS) */
+.risk-level.pending { background-color: var(--color-text-secondary); color: var(--color-bg); }
+.risk-level.zero { background-color: var(--risk-zero); }
+.risk-level.low { background-color: var(--risk-low); }
+.risk-level.medium { background-color: var(--risk-medium); }
+.risk-level.high { background-color: var(--risk-high); }
+
+.impact-message { font-size: 1.1rem; font-weight: 500; margin-bottom: 10px; }
+.impact-message strong { color: inherit; }
+.high-alert { color: var(--risk-high); }
+.medium-alert { color: var(--risk-medium); }
+.low-alert { color: var(--risk-low); }
+.zero-alert { color: var(--risk-zero); }
+
+.impact-detail { font-size: 0.95rem; color: var(--color-text-secondary); margin-top: 10px; }
+.impact-link { 
+    display: inline-block; 
+    margin-top: 10px; 
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+.high-risk-link {
+    background-color: var(--risk-high);
+    color: white;
+}
+.high-risk-link:hover {
+    background-color: #CC0000;
+}
+.impact-link i {
+    margin-right: 8px;
+}
+
+
+/* ==================================== */
+/* 6. BOTÓN SCROLL TO TOP */
+/* ==================================== */
+#scrollToTopBtn {
+    display: none; /* Oculto por defecto, se muestra con JS */
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-accent-blue);
+    color: var(--color-bg);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.5);
+    z-index: 100;
+    font-size: 1.2rem;
     /* MODIFICACIÓN: Transición más pulida */
     transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -637,7 +693,7 @@ body[data-theme="light"] input:checked + .slider.round:before {
 
 
 /* ==================================== */
-/* 6. MEDIA QUERIES (Responsivo) */
+/* 7. MEDIA QUERIES (Responsivo) */
 /* ==================================== */
 @media (max-width: 900px) {
     main { margin: 2rem 1rem; }
@@ -651,17 +707,29 @@ body[data-theme="light"] input:checked + .slider.round:before {
     .carousel-track { 
         overflow-x: scroll; 
         scroll-snap-type: x mandatory;
-        padding-bottom: 20px; /* Espacio para el scrollbar */
+        padding-bottom: 10px;
     }
-    .carousel-card { scroll-snap-align: start; flex: 0 0 280px; }
+    .carousel-card {
+        scroll-snap-align: start;
+        flex: 0 0 calc(90vw - 3rem); /* Ajuste para que quepa uno y haya un poco del siguiente */
+        width: calc(90vw - 3rem);
+    }
     .carousel-btn { display: none; }
+    
+    #interactive-content { padding: 0 1.5rem; }
+    #detail-panel { padding: 20px; }
+    .content-detail { top: 20px; left: 20px; right: 20px; bottom: 20px; }
+    .content-detail h3 { font-size: 1.8rem; }
+    
+    .sim-inputs { grid-template-columns: 1fr; }
+    .input-group.full-width { grid-column: auto; }
+}
 
-    #interactive-content { padding-left: 1.5rem; padding-right: 1.5rem; }
-    #detail-panel { max-height: 50vh; }
-    
-    .info-grid { grid-template-columns: 1fr; gap: 20px; }
-    .info-block { padding: 20px; }
-    
-    .sim-inputs { flex-direction: column; }
-    .theme-switch-wrapper { padding-right: 1.5rem; } /* Ajuste del padding del switch */
+@media (max-width: 600px) {
+    .video-background { display: none; } /* Ocultar video en móvil para rendimiento */
+    body { background-color: var(--color-bg); }
+    main { margin: 1rem 0.5rem; }
+    header h1 { font-size: 1.8rem; }
+    .header-subtitle { font-size: 0.9rem; }
+    #scrollToTopBtn { right: 15px; bottom: 15px; width: 40px; height: 40px; font-size: 1rem; }
 }
