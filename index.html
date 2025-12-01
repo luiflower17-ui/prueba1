@@ -12,19 +12,42 @@
   <!-- Tu CSS -->
   <link rel="stylesheet" href="styles.css">
   
-  <!-- Estilos inline ligeros para ajustar el header sin tocar el archivo CSS -->
+  <!-- Estilos específicos para ajustar el encabezado (Sutil y Compacto) -->
   <style>
-    header { padding: 1rem 2rem; align-items: flex-start; }
-    .header-content { display: flex; flex-direction: column; justify-content: center; }
-    .institution-line { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.7; margin-bottom: 5px; }
-    .header-content h1 { font-size: 1.8rem; margin: 5px 0; line-height: 1.1; }
-    .academic-wrapper { display: flex; gap: 15px; font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 5px; border-top: 1px solid var(--color-divider); padding-top: 5px; }
-    .academic-wrapper span { margin-right: 10px; }
-    .header-right { align-self: center; }
+    header {
+      padding: 1rem 2.5rem; /* Menos padding vertical */
+      align-items: center;
+    }
+    .institution-line {
+      font-size: 0.7rem; /* Letra pequeña */
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.7; /* Más sutil */
+      margin-bottom: 2px;
+    }
+    .header-content h1 {
+      font-size: 2rem; /* Título principal grande */
+      margin: 5px 0;
+      line-height: 1.1;
+    }
+    .academic-info-compact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      font-size: 0.75rem; /* Letra pequeña */
+      color: var(--color-text-secondary);
+      margin-top: 8px;
+      border-top: 1px solid var(--color-divider);
+      padding-top: 8px;
+    }
+    .academic-info-compact span {
+      display: inline-block;
+    }
     /* Ajuste para móviles */
     @media (max-width: 768px) {
-      .academic-wrapper { flex-direction: column; gap: 2px; }
-      header { text-align: center; align-items: center; }
+      header { padding: 1.5rem; text-align: center; flex-direction: column; }
+      .header-right { margin-top: 15px; }
+      .academic-info-compact { justify-content: center; gap: 5px; flex-direction: column; }
     }
   </style>
 </head>
@@ -46,13 +69,13 @@
   </div>
 
   <main>
-    <!-- Header Rediseñado (Más sutil y compacto) -->
+    <!-- Header Rediseñado -->
     <header>
       <div class="header-content">
-        <p class="institution-line">GOBIERNO CDMX | SECTEI | UNIVERSIDAD ROSARIO CASTELLANOS</p>
-        <h1>Herramienta digital para la detección temprana de inundaciones</h1>
+        <p class="institution-line">Gobierno CDMX | SECTEI | Universidad Rosario Castellanos</p>
+        <h1>Herramienta digital predicción de inundaciones en CDMX</h1>
         
-        <div class="academic-wrapper">
+        <div class="academic-info-compact">
           <span><strong>U.A:</strong> Magdalena Contreras</span>
           <span><strong>Carrera:</strong> Ciencia de Datos para Negocios</span>
           <span><strong>Grupo 202:</strong> Aliza Ramírez · Giovanni Morales · Luis Flores</span>
@@ -73,11 +96,10 @@
       </div>
     </header>
 
-    <!-- Sección principal -->
+    <!-- Sección de Navegación (Carrusel) -->
     <section id="project-overview">
       <h2 class="section-title"><i class="fas fa-book-open"></i> Contenido del proyecto</h2>
 
-      <!-- Carrusel -->
       <div class="carousel-container">
         <div class="carousel-track" id="carousel-track">
           
@@ -196,7 +218,7 @@
             <div class="info-block">
               <p>De acuerdo con reportes del C5 (hasta junio de 2025), se recibieron más de 3,800 reportes, donde el 51.3% correspondió a inundaciones. Las alcaldías más afectadas son:</p>
               
-              <!-- SECCIÓN CRÍTICA PARA PORCENTAJES: Clase 'alcaldias-list' y data-percentage -->
+              <!-- ATENCIÓN: Esta lista tiene la clase 'alcaldias-list' para activar la animación de barras con CSS/JS -->
               <ul class="alcaldias-list">
                 <li data-percentage="19">
                   Tlalpan (19%) <span class="percentage-counter">0%</span>
@@ -227,6 +249,7 @@
             <h3>4. Marco teórico: clasificación de inundaciones</h3>
             <div class="info-block">
               <p>Las inundaciones pueden clasificarse atendiendo a su origen y rapidez:</p>
+              
               <h4>Clasificación según la causa:</h4>
               <ul>
                 <li><strong>Inundaciones fluviales:</strong> ocasionadas por el desborde de ríos debido al exceso de caudal.</li>
@@ -234,6 +257,7 @@
                 <li><strong>Inundaciones costeras:</strong> generadas por el aumento del nivel del mar (mareas de tormenta o tsunamis).</li>
                 <li><strong>Inundaciones represarias:</strong> resultado de fallas estructurales o roturas en presas.</li>
               </ul>
+
               <h4>Clasificación según la rapidez:</h4>
               <ul>
                 <li><strong>Inundaciones repentinas:</strong> caracterizadas por su rápido desarrollo e imprevisibilidad (avenidas torrenciales).</li>
@@ -284,7 +308,7 @@
 
               <hr style="border: 0; border-top: 1px solid var(--color-divider); margin: 30px 0;">
 
-              <h4>8. Ejemplo práctico: Zócalo (Centro Histórico)</h4>
+              <h4>Ejemplo práctico: Zócalo (Centro Histórico)</h4>
               <p>Para demostrar la eficacia del algoritmo, se presenta el siguiente ejemplo real analizado:</p>
               
               <div class="example-box">
