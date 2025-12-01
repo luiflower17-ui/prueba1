@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Predicción de Inundaciones en CDMX — Proyecto</title>
+  <title>Herramienta Digital: Inundaciones CDMX</title>
 
   <!-- Fuentes e íconos -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,18 +30,20 @@
   </div>
 
   <main>
-    <!-- Header -->
+    <!-- Header Actualizado -->
     <header>
       <div class="header-left">
-        <h1>Predicción de Inundaciones en CDMX</h1>
-        <p class="header-subtitle">App prototipo para detección temprana y apoyo operativo</p>
+        <h1>Inundaciones CDMX</h1>
+        <p class="header-subtitle">Herramienta digital para la detección temprana de desastres naturales</p>
       </div>
 
       <div class="header-right">
         <div class="meta-info">
-          <p class="meta-line">Gobierno de la Ciudad de México</p>
-          <p class="meta-line">Universidad Rosario Castellanos</p>
-          <p class="meta-line project-members">Aliza Ramírez · Giovanni Morales · Luis Flores</p>
+          <p class="meta-line"><strong>Gobierno de la CDMX | SECTEI | URC</strong></p>
+          <p class="meta-line">Unidad Académica: Magdalena Contreras</p>
+          <p class="meta-line">Licenciatura: Ciencia de Datos para Negocios</p>
+          <p class="meta-line project-members">Equipo 202: Aliza Ramírez · Giovanni Morales · Luis Flores</p>
+          <p class="meta-line" style="font-size: 0.75rem; margin-top: 2px;">Preceptor: Fernando Izquierdo Martínez</p>
         </div>
         
         <div class="theme-switch-wrapper">
@@ -63,67 +65,75 @@
       <!-- Carrusel -->
       <div class="carousel-container">
         <div class="carousel-track" id="carousel-track">
-          <!-- Tarjetas del carrusel -->
-          <div class="carousel-card" data-target="content-problema">
-            <h4>1. Problema y antecedentes</h4>
-            <i class="fas fa-exclamation-triangle card-icon"></i>
-            <p>Contexto histórico y causas principales de inundación en la CDMX.</p>
+          <!-- 1. Contexto -->
+          <div class="carousel-card" data-target="content-contexto">
+            <h4>1. Contexto</h4>
+            <i class="fas fa-city card-icon"></i>
+            <p>¿Por qué se inunda la Ciudad de México? Geografía y factores agravantes.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
+          <!-- 2. Objetivos (Mantenido de estructura anterior para completar UI) -->
           <div class="carousel-card" data-target="content-objetivos">
             <h4>2. Objetivos</h4>
             <i class="fas fa-bullseye card-icon"></i>
-            <p>Objetivos generales y específicos del estudio y la plataforma.</p>
+            <p>Objetivos generales y específicos del proyecto.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
+          <!-- 3. Marco Teórico -->
           <div class="carousel-card" data-target="content-marco">
-            <h4>3. Marco teórico</h4>
+            <h4>3. Marco Teórico</h4>
             <i class="fas fa-book card-icon"></i>
-            <p>Tipos de inundación, factores y consecuencias.</p>
+            <p>Clasificación de inundaciones por origen y rapidez.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
-          <div class="carousel-card" data-target="content-impacto">
-            <h4>4. Zonas de impacto</h4>
-            <i class="fas fa-map-marked-alt card-icon"></i>
-            <p>Alcaldías y puntos críticos según C5 y análisis.</p>
+          <!-- 4. Herramientas -->
+          <div class="carousel-card" data-target="content-herramientas">
+            <h4>4. Herramientas y Modelos</h4>
+            <i class="fas fa-satellite card-icon"></i>
+            <p>Modelos meteorológicos, hidrológicos y mapas de riesgo.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
-          <div class="carousel-card" data-target="content-modelos">
-            <h4>5. Modelos de predicción</h4>
-            <i class="fas fa-chart-line card-icon"></i>
-            <p>MHU, Atlas de Riesgos y modelos hidrometeorológicos.</p>
+          <!-- 5. Afectaciones -->
+          <div class="carousel-card" data-target="content-afectaciones">
+            <h4>5. Afectaciones</h4>
+            <i class="fas fa-car-crash card-icon"></i>
+            <p>Impacto en infraestructura urbana y transporte.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
-          <div class="carousel-card" data-target="content-metodologia">
-            <h4>6. Metodología</h4>
-            <i class="fas fa-flask card-icon"></i>
-            <p>Variables, procesos y cálculo de riesgo.</p>
+          <!-- 6. Fórmula -->
+          <div class="carousel-card" data-target="content-formula">
+            <h4>6. Fórmula de Predicción</h4>
+            <i class="fas fa-square-root-alt card-icon"></i>
+            <p>Metodología del algoritmo: Intensidad vs Capacidad.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
-          <div class="carousel-card" data-target="content-algoritmo">
-            <h4>7. Algoritmo / Simulador</h4>
-            <i class="fas fa-code card-icon"></i>
-            <p>Herramienta interactiva para estimar riesgo por alcaldía.</p>
+          <!-- 7. Simulador -->
+          <div class="carousel-card" data-target="content-simulador">
+            <h4>7. Simulador Interactivo</h4>
+            <i class="fas fa-laptop-code card-icon"></i>
+            <p>Propuesta de fórmula de predicción en tiempo real.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
-          <div class="carousel-card" data-target="content-conclusion">
-            <h4>8. Conclusiones</h4>
-            <i class="fas fa-flag-checkered card-icon"></i>
-            <p>Resumen ejecutivo y recomendaciones.</p>
+          <!-- 8. Guía de Acción -->
+          <div class="carousel-card" data-target="content-guia">
+            <h4>8. Guía de Acción</h4>
+            <i class="fas fa-hands-helping card-icon"></i>
+            <p>Manual para la ciudadanía: Antes, Durante y Después.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
 
+          <!-- 9. Referencias -->
           <div class="carousel-card" data-target="content-referencias">
             <h4>9. Referencias</h4>
             <i class="fas fa-file-alt card-icon"></i>
-            <p>Fuentes y enlaces consultados.</p>
+            <p>Bibliografía y fuentes consultadas.</p>
             <span class="card-action-hint">Ver detalle</span>
           </div>
         </div>
@@ -138,223 +148,117 @@
       <div id="interactive-content">
         <div id="detail-panel">
 
-          <!-- SECCIÓN 1 — Problemas y antecedentes -->
-          <div id="content-problema" class="content-detail">
-            <h3>1. Problema y antecedentes</h3>
+          <!-- 1. Contexto -->
+          <div id="content-contexto" class="content-detail">
+            <h3>1. Contexto: ¿Por qué se inunda la CDMX?</h3>
             <div class="info-block">
-                <p>
-                  La Ciudad de México se asienta sobre la cuenca lacustre del Valle de México; esta condición,
-                  combinada con el crecimiento urbano, la impermeabilización del suelo y la sobreexplotación del acuífero,
-                  incrementa la vulnerabilidad a inundaciones. Eventualidades históricas como la Gran Inundación de 1629
-                  y la de 1951 muestran la magnitud del fenómeno en la ciudad.
-                </p>
-
-                <p>
-                  Obras hidráulicas del siglo XX (túneles emisores, interceptores, plantas de bombeo) mejoraron el
-                  drenaje, pero en temporadas extremas (ej. lluvias récord 2025, +33% respecto a 1982) la infraestructura
-                  ha sido rebasada en múltiples puntos.
-                </p>
-
-                <h4>Problemas centrales</h4>
-                <ul>
-                  <li>Crecimiento urbano desordenado y pérdida de áreas permeables.</li>
-                  <li>Acumulación y arrastre de residuos que obstruyen coladeras y colectores (≈50% de encharcamientos relacionados).</li>
-                  <li>Hundimiento diferencial (subsidencia) que altera pendientes y reduce K (capacidad efectiva).</li>
-                  <li>Sistemas de drenaje combinados que, en sobrecarga, colapsan y generan rebasamientos.</li>
-                </ul>
-
-                <h4>Antecedentes relevantes</h4>
-                <ul>
-                  <li>Gran Inundación (1629) y su impacto urbano-social.</li>
-                  <li>Inundación masiva de 16 julio de 1951; entubamiento de ríos y construcción de infraestructura entre 1933–1975.</li>
-                  <li>Construcción de túneles emisores (Poniente, Central, Oriente) y ampliaciones; aun así, en 2025 algunos emisores fueron rebasados.</li>
-                </ul>
+              <p>
+                La Ciudad de México presenta un alto índice de inundaciones debido a su geografía: está construida en una cuenca cerrada rodeada de un sistema montañoso, funcionando como un "plato hondo" donde toda la lluvia que cae busca acumularse naturalmente en el centro. Históricamente, se edificó sobre el lago de Texcoco, que fue secado y sustituido por asfalto, lo que eliminó la filtración natural del agua hacia el subsuelo.
+              </p>
+              <h4>Factores agravantes en la capital:</h4>
+              <ul>
+                <li><strong>Hundimiento (subsidencia):</strong> La sobreexplotación de agua subterránea provoca que la ciudad se hunda (entre 21 y 30 cm/año en áreas críticas), afectando la pendiente necesaria para el drenaje.</li>
+                <li><strong>Obstrucción por basura:</strong> Más del 50% de las inundaciones urbanas están relacionadas con residuos sólidos que forman "tapones" en las coladeras.</li>
+                <li><strong>Crecimiento urbano:</strong> La alta urbanización y el calentamiento global son causas directas del problema.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- SECCIÓN 2 — Objetivos y justificación -->
+          <!-- 2. Objetivos (Información complementaria necesaria para la estructura) -->
           <div id="content-objetivos" class="content-detail">
-            <h3>2. Objetivos y justificación</h3>
+            <h3>2. Objetivos del Proyecto</h3>
             <div class="info-block">
-                <h4>Objetivo general</h4>
-                <p>Analizar y proponer herramientas (mapas, algoritmo, guía operativa) para reducir el impacto de inundaciones en la CDMX.</p>
-
-                <h4>Objetivos específicos</h4>
-                <ul>
-                  <li>Identificar zonas de mayor incidencia y prioridad de atención.</li>
-                  <li>Evaluar el impacto del crecimiento urbano en la capacidad del sistema de drenaje.</li>
-                  <li>Determinar el papel de los residuos sólidos en la obstrucción hidráulica.</li>
-                  <li>Proponer recomendaciones operativas y soluciones basadas en la naturaleza.</li>
-                </ul>
-
-                <h4>Justificación</h4>
-                <p>
-                  La investigación y la plataforma digital complementaria permiten anticipar puntos críticos, optimizar
-                  tareas de limpieza y priorizar la logística de respuesta (bombas, desvíos, cuadrillas). Tecnologías
-                  como radares, satélites (Sentinel-1), Mapa Hidrográfico Urbano y Atlas de Riesgos son instrumentos clave.
-                </p>
+              <p>Desarrollar una herramienta digital eficiente para la gestión del riesgo hídrico.</p>
+              <h4>Objetivos Específicos:</h4>
+              <ul>
+                <li>Identificar zonas de mayor incidencia y prioridad de atención.</li>
+                <li>Evaluar el impacto del crecimiento urbano en la capacidad del sistema de drenaje.</li>
+                <li>Determinar el papel de los residuos sólidos en la obstrucción hidráulica.</li>
+                <li>Proponer recomendaciones operativas y soluciones basadas en la naturaleza.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- SECCIÓN 3 — Marco teórico -->
+          <!-- 3. Marco Teórico -->
           <div id="content-marco" class="content-detail">
-            <h3>3. Marco teórico</h3>
+            <h3>3. Marco Teórico: Clasificación</h3>
             <div class="info-block">
-                <h4>Tipología</h4>
-                <p>
-                  Las inundaciones pueden clasificarse por causa (pluvial, fluvial, costera, represarias) y por velocidad
-                  (repentinas o lentas). En entornos urbanos, la tipología pluvial y urbana (obstrucción) es especialmente relevante.
-                </p>
-
-                <h4>Factores determinantes</h4>
-                <ul>
-                  <li>Lluvias torrenciales y acumuladas que superan la capacidad de drenaje.</li>
-                  <li>Deshielos y mareas en zonas costeras (cuando aplicable).</li>
-                  <li>Impermeabilización y pérdida de áreas de absorción.</li>
-                  <li>Obstrucción por residuos sólidos que forman tapones en coladeras y ductos.</li>
-                  <li>Subsidencia que altera la pendiente y la evacuación del agua.</li>
-                </ul>
-
-                <h4>Consecuencias</h4>
-                <ul>
-                  <li>Daños materiales y económicos.</li>
-                  <li>Focos de infección y riesgos sanitarios por agua estancada.</li>
-                  <li>Interrupción de transporte y servicios públicos (metro, carreteras, AICM).</li>
-                  <li>Contaminación y afectación de cuerpos de agua.</li>
-                </ul>
+              <p>Las inundaciones pueden clasificarse atendiendo a su origen y rapidez:</p>
+              <h4>Clasificación según la causa:</h4>
+              <ul>
+                <li><strong>Fluviales:</strong> Ocasionadas por el desborde de ríos.</li>
+                <li><strong>Pluviales:</strong> Producto de lluvias intensas que superan la capacidad del drenaje.</li>
+                <li><strong>Costeras:</strong> Generadas por aumento del nivel del mar.</li>
+                <li><strong>Represarias:</strong> Resultado de fallas estructurales en presas.</li>
+              </ul>
+              <h4>Clasificación según la rapidez:</h4>
+              <ul>
+                <li><strong>Repentinas:</strong> Rápido desarrollo e imprevisibilidad.</li>
+                <li><strong>Lentas:</strong> Se desarrollan en horas o días, permitiendo respuesta.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- SECCIÓN 4 — Impacto y zonas -->
-          <div id="content-impacto" class="content-detail">
-            <h3>4. Zonas de mayor impacto y riesgo</h3>
+          <!-- 4. Herramientas y Modelos -->
+          <div id="content-herramientas" class="content-detail">
+            <h3>4. Herramientas y Modelos de Predicción 🛰️</h3>
             <div class="info-block">
-                <p>
-                  Según reportes consolidados del C5 (temporada 2025) y análisis cartográficos, las alcaldías con mayor número
-                  de reportes son:
-                </p>
-
-                <ul class="alcaldias-list">
-                  <li data-percentage="19">Tlalpan <span class="percentage-counter">0%</span></li>
-                  <li data-percentage="18">Iztapalapa <span class="percentage-counter">0%</span></li>
-                  <li data-percentage="10">Gustavo A. Madero <span class="percentage-counter">0%</span></li>
-                  <li data-percentage="10">Xochimilco <span class="percentage-counter">0%</span></li>
-                  <li data-percentage="9">Tláhuac <span class="percentage-counter">0%</span></li>
-                </ul>
-
-                <h4>Zonas y vialidades críticas</h4>
-                <ul>
-                  <li>Laguna Ticomán (GAM)</li>
-                  <li>Reforma Social (Miguel Hidalgo)</li>
-                  <li>Zedec Santa Fe (Cuajimalpa)</li>
-                  <li>Parque Tezozómoc (Azcapotzalco)</li>
-                  <li>La Ciénega (Tláhuac)</li>
-                  <li>Viaducto Tlalpan, Calzada Ignacio Zaragoza, Periférico Sur y otras arterias críticas</li>
-                </ul>
-            </div>
-          </div>
-          
-          <!-- SECCIÓN 5 — Modelos de predicción -->
-          <div id="content-modelos" class="content-detail">
-            <h3>5. Modelos de predicción</h3>
-            <div class="info-block">
-                <p>
-                  La predicción combina modelos meteorológicos (pronóstico de precipitación), modelos hidrológicos
-                  (comportamiento de cuencas y escorrentías) y capas urbanas (subsidencia, historial de obstrucciones,
-                  red de drenaje). Herramientas clave incluidas:
-                </p>
-
-                <ul>
-                  <li><strong>Modelos meteorológicos numéricos</strong> — pronóstico de intensidad y acumulados.</li>
-                  <li><strong>Modelos hidrológicos</strong> — estimación de caudales y tiempos de concentración.</li>
-                  <li><strong>Mapa Hidrográfico Urbano (MHU)</strong> — dirección natural del flujo y puntos colectores en la red urbana.</li>
-                  <li><strong>Atlas de Riesgos</strong> — clasificación de subsidencia y exposición por celdas territoriales.</li>
-                </ul>
-
-                <p>
-                  En operaciones, combinar probabilidad (P) y severidad (S) por celda permite priorizar intervenciones donde P×S sea mayor.
-                </p>
-
-                <h4>Beneficios del MHU y Atlas</h4>
-                <ul>
-                  <li>Identificar rutas naturales de escurrimiento para diseñar desvíos y zonas de contención controlada.</li>
-                  <li>Localizar puntos estratégicos para bombas móviles o cierres temporales.</li>
-                  <li>Planificar obras preventivas y priorizar limpieza de puntos críticos.</li>
-                </ul>
-
-                <!-- EJEMPLO PRÁCTICO: ZÓCALO -->
-                <div class="example-box" id="example-zocalo">
-                  <h4>Ejemplo práctico: Zócalo (Centro Histórico)</h4>
-                  <p><strong>Contexto (2025):</strong> registro de 50 mm en 20 min (intensidad pico), con antecedentes de obstrucción por basura en coladeras y subsidencia en el área.</p>
-                  <ol>
-                    <li><strong>Paso 1 — Intensidad de lluvia (C):</strong> Intensidad pico 50 mm/20 min → C alta (criterio operativo).</li>
-                    <li><strong>Paso 2 — Capacidad efectiva (K):</strong> Red profunda presente, pero K se reduce por obstrucción y subsidencia; pendientes locales deficientes.</li>
-                    <li><strong>Paso 3 — Comparación C vs K:</strong> C &gt; K ⇒ alta probabilidad de encharcamiento en plancha y calles aledañas.</li>
-                    <li><strong>Paso 4 — Severidad (S):</strong> Zona de alta exposición (turismo, comercio, estaciones de Metro) ⇒ S elevada.</li>
-                    <li><strong>Paso 5 — Resultados y acciones:</strong>
-                      <ul>
-                        <li><strong>Verde:</strong> P baja / S baja → Monitoreo.</li>
-                        <li><strong>Amarillo:</strong> P media → Limpieza urgente de coladeras y avisos a la comunidad.</li>
-                        <li><strong>Naranja:</strong> P alta → Envío de cuadrillas y preparación de desvíos.</li>
-                        <li><strong>Rojo:</strong> P muy alta / rebase → Cierres puntuales, bombas móviles y evacuación si aplica.</li>
-                      </ul>
-                    </li>
-                  </ol>
-                  <p>
-                    <strong>Resumen:</strong> aunque exista drenaje profundo, el Zócalo puede presentar encharcamiento severo cuando
-                    concurren lluvia intensa, obstrucción y subsidencia. Las acciones preventivas deben priorizar limpieza y desalojo rápido.
-                  </p>
-                </div>
+              <p>Es posible predecir zonas de riesgo mediante la combinación de modelos climáticos y urbanos utilizando estaciones, satélites y globos sonda.</p>
+              <h4>Modelos utilizados:</h4>
+              <ul>
+                <li><strong>Modelos meteorológicos:</strong> Simulan el comportamiento atmosférico (modelos numéricos de pronóstico).</li>
+                <li><strong>Modelos hidrológicos:</strong> Describen mediante ecuaciones los procesos en una cuenca hidrográfica.</li>
+              </ul>
+              <h4>Herramientas de mapeo:</h4>
+              <ul>
+                <li><strong>Mapa Hidrográfico Urbano (MHU):</strong> Desarrollado por la UNAM, muestra la dirección del flujo de agua y ayuda a localizar sitios estratégicos para desviar el agua.</li>
+                <li><strong>Atlas de Riesgos:</strong> Base de conocimiento del territorio para mejorar la toma de decisiones y proyectar impactos futuros.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- SECCIÓN 6 — Metodología -->
-          <div id="content-metodologia" class="content-detail">
-            <h3>6. Metodología</h3>
+          <!-- 5. Afectaciones -->
+          <div id="content-afectaciones" class="content-detail">
+            <h3>5. Afectaciones a Infraestructura y Transporte 🚦</h3>
             <div class="info-block">
-                <p>
-                  El enfoque integra datos observados y pronosticados: lluvia (intensidad y acumulado), capacidad hidráulica (K),
-                  subsidencia (Atlas), obstrucción (reportes C5) y exposición (infraestructura crítica y densidad poblacional).
-                </p>
-
-                <h4>Variables definidas</h4>
-                <ul>
-                  <li><strong>C (Lluvia):</strong> intensidad pico (mm/h), acumulado reciente y duración.</li>
-                  <li><strong>K (Capacidad):</strong> diámetro de colectores, pendientes, condición y mantenimiento.</li>
-                  <li><strong>Subsidencia:</strong> clases (amarillo 0–10 cm/año, naranja 11–20, rojo 21–30) y su efecto en pendientes.</li>
-                  <li><strong>P (Probabilidad):</strong> estimada a partir de C/K e historial de encharcamientos.</li>
-                  <li><strong>S (Severidad):</strong> combina P con exposición y criticidad de infraestructura.</li>
-                </ul>
-
-                <h4>Proceso operativo</h4>
-                <ol>
-                  <li>Recolección de entradas: estaciones meteorológicas, radares, satélites (Sentinel), reportes C5, SACMEX.</li>
-                  <li>Procesamiento espacial en celdas (p.ej. 500×500 m) y cálculo C/K por celda.</li>
-                  <li>Estimación de P y S; priorización por P×S.</li>
-                  <li>Generación de mapa de riesgo y lista priorizada para limpieza, bombas y avisos.</li>
-                  <li>Emisión de alertas (niveles) y recomendaciones operativas.</li>
-                </ol>
+              <p>Las lluvias intensas tienen un impacto negativo directo en la infraestructura vial, económica y social:</p>
+              <ul>
+                <li><strong>Infraestructura vial:</strong> El 33% de los daños en carreteras, puentes y túneles son causados por fuertes lluvias.</li>
+                <li><strong>Interrupción de servicios:</strong> Encharcamientos que detienen el acceso y movilidad, generando retrasos.</li>
+                <li><strong>Transporte colectivo:</strong> Interrupción parcial del Metro y filtraciones en el Aeropuerto Internacional de la CDMX.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- SECCIÓN 7 — Algoritmo / Simulador (LÓGICA ACTUALIZADA) -->
-          <div id="content-algoritmo" class="content-detail">
-            <h3>7. Algoritmo / Simulador</h3>
+          <!-- 6. Fórmula de Predicción -->
+          <div id="content-formula" class="content-detail">
+            <h3>6. Fórmula de Predicción</h3>
+            <div class="info-block">
+              <p>El proyecto busca desarrollar un algoritmo que anticipe puntos críticos por colonia para activar tareas de limpieza.</p>
+              <h4>Metodología del algoritmo:</h4>
+              <p>El sistema compara la <strong>Intensidad de la Lluvia (C)</strong> contra la <strong>Capacidad de Desalojo (K)</strong>.</p>
+              <ul>
+                <li>Si <strong>C > K</strong>, el agua supera al drenaje = Alta probabilidad de encharcamiento.</li>
+                <li>También se calcula la <strong>Severidad (S)</strong>, combinando probabilidad con la exposición de la zona (vías clave, metro).</li>
+              </ul>
+            </div>
+          </div>
 
+          <!-- 7. Simulador -->
+          <div id="content-simulador" class="content-detail">
+            <h3>7. Propuesta de Fórmula (Simulador)</h3>
             <p class="section-intro">
-              El simulador implementa la fórmula de riesgo: <code>R = (C + P + E) × M</code>. <br>
-              Selecciona tu alcaldía (Vulnerabilidad Histórica) y ajusta los factores ambientales.
+              Simulación de riesgo basada en la vulnerabilidad histórica por alcaldía y factores ambientales.
             </p>
 
             <div id="simulation-area">
               <h4>Simulador de Riesgo CDMX</h4>
               
               <div class="sim-inputs">
-                
-                <!-- Factor Alcaldía (M) -->
+                <!-- Alcaldía -->
                 <div class="input-group full-width-group">
                   <label for="alcaldia-select"><i class="fas fa-city"></i> Vulnerabilidad Histórica (Alcaldía)</label>
-                  <select id="alcaldia-select" aria-label="Selecciona alcaldía">
+                  <select id="alcaldia-select">
                     <option value="" disabled selected>-- Seleccione una opción --</option>
                     <option value="1">1. Tlalpan (M=1.4)</option>
                     <option value="2">2. Iztapalapa (M=1.3)</option>
@@ -365,131 +269,96 @@
                   </select>
                 </div>
 
-                <!-- Factor C (Lluvia) -->
+                <!-- Factores -->
                 <div class="input-group">
                   <label for="lluvia-input"><i class="fas fa-cloud-showers-heavy"></i> Lluvia (C)</label>
                   <input type="range" id="lluvia-input" min="0" max="3" step="1" value="0">
-                  <div class="range-labels">
-                    <span>0 (Nula)</span>
-                    <span>3 (Fuerte)</span>
-                  </div>
+                  <div class="range-labels"><span>0 (Nula)</span><span>3 (Fuerte)</span></div>
                   <p class="range-value-display">Valor C: <span id="lluvia-val">0</span></p>
                 </div>
 
-                <!-- Factor P (Obstrucción) -->
                 <div class="input-group">
                   <label for="obstruccion-input"><i class="fas fa-trash-alt"></i> Obstrucción (P)</label>
                   <input type="range" id="obstruccion-input" min="0" max="3" step="1" value="0">
-                  <div class="range-labels">
-                    <span>0 (Poca)</span>
-                    <span>3 (Máxima)</span>
-                  </div>
+                  <div class="range-labels"><span>0 (Poca)</span><span>3 (Máxima)</span></div>
                   <p class="range-value-display">Valor P: <span id="obstruccion-val">0</span></p>
                 </div>
 
-                <!-- Factor E (Exposición) -->
                 <div class="input-group">
                   <label for="exposicion-input"><i class="fas fa-building"></i> Exposición (E)</label>
                   <input type="range" id="exposicion-input" min="0" max="3" step="1" value="0">
-                  <div class="range-labels">
-                    <span>0 (Poca)</span>
-                    <span>3 (Máxima/Centro)</span>
-                  </div>
+                  <div class="range-labels"><span>0 (Poca)</span><span>3 (Alta)</span></div>
                   <p class="range-value-display">Valor E: <span id="exposicion-val">0</span></p>
                 </div>
               </div>
 
               <button id="btn-calc"><i class="fas fa-calculator"></i> Calcular Riesgo</button>
 
-              <!-- CAJA DE RESULTADOS DINÁMICA -->
               <div id="sim-result" class="result-box">
                 <p id="sim-result-intro">Resultado del cálculo:</p>
                 <div id="riesgo-texto" class="risk-level pending">Esperando datos...</div>
                 <div id="advice-container"></div>
               </div>
 
-              <!-- LINK A COLAB AÑADIDO -->
+              <!-- Enlace Colab -->
               <div class="colab-reference" style="margin-top:20px; padding:15px; background:rgba(255,255,255,0.05); border-radius:8px; border:1px solid var(--color-divider);">
-                <p>
-                  <strong>¿Quieres ver el código en Python?</strong><br>
-                  Puedes consultar el notebook original de este simulador en Google Colab:
-                </p>
+                <p><strong>Ver código fuente en Python:</strong></p>
                 <a href="https://colab.research.google.com/drive/1QZGbNwUbsDe2hNXoZ2ShXIT4115ufMUO?usp=sharing#scrollTo=zcBPJGGBTYOZ" target="_blank" style="display:inline-block; margin-top:5px; font-weight:bold; color: var(--color-accent);">
-                  <i class="fas fa-external-link-alt"></i> Ver en Google Colab
+                  <i class="fas fa-external-link-alt"></i> Abrir Google Colab
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- SECCIÓN 8 — Conclusiones -->
-          <div id="content-conclusion" class="content-detail">
-            <h3>8. Conclusiones</h3>
+          <!-- 8. Guía de Acción -->
+          <div id="content-guia" class="content-detail">
+            <h3>8. Guía de Acción para la Ciudadanía</h3>
             <div class="info-block">
-                <p>
-                  Como pudimos ver, el documento muestra que, aunque la CDMX cuenta con grandes obras hidráulicas y protocolos de atención,
-                  el riesgo de inundaciones persiste por distintas causas: crecimiento urbano desordenado, pérdida de áreas de absorción,
-                  subsidencia acelerada y obstrucción por residuos que rebasan al drenaje combinado durante lluvias intensas.
-                </p>
-
-                <p>
-                  Integrar una plataforma digital con algoritmo de predicción que incluya mapas como el Mapa Hidrográfico Urbano y
-                  el Atlas de Riesgos, junto con una guía clara de acciones antes, durante y después, permitiría anticipar puntos críticos y reducir afectaciones.
-                </p>
-
-                <p>
-                  Finalmente, se concluye en la necesidad de combinar mantenimiento preventivo, soluciones basadas en la naturaleza
-                  (techos verdes, jardines de lluvia), recuperación de zonas de absorción y la participación comunitaria activa.
-                </p>
+              <p>Manual basado en protección civil:</p>
+              <h4>Antes (Prepárate):</h4>
+              <ul>
+                <li>Limpia coladeras y azoteas.</li>
+                <li>Revisa la impermeabilización y reubica vehículos.</li>
+                <li>Prepara un kit de emergencia y conoce las salidas.</li>
+              </ul>
+              <h4>Durante (Actúa):</h4>
+              <ul>
+                <li>No cruces corrientes de agua ni camines en zonas inundadas.</li>
+                <li>Aléjate de árboles, estructuras frágiles y cables sueltos.</li>
+                <li>Desconecta la energía eléctrica.</li>
+              </ul>
+              <h4>Después (Revisa):</h4>
+              <ul>
+                <li>Revisa tu casa por daños estructurales.</li>
+                <li>Limpia y desinfecta para evitar enfermedades.</li>
+                <li>No consumas alimentos que hayan estado en contacto con el agua.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- SECCIÓN 9 — Referencias (ACTUALIZADAS CON TUS LINKS) -->
+          <!-- 9. Referencias -->
           <div id="content-referencias" class="content-detail">
-            <h3>9. Referencias</h3>
+            <h3>9. Referencias Bibliográficas</h3>
             <div class="info-block">
-                <p>Fuentes consultadas y recursos de apoyo para el simulador.</p>
-
-                <ul class="reference-list">
-                  <li>
-                    <strong>Protección Civil / CENAPRED:</strong> Guía oficial para la prevención y acción ante inundaciones.
-                    <a href="http://www.proteccioncivil.gob.mx/work/models/ProteccionCivil/Resource/377/1/images/cartel_i.pdf" target="_blank" rel="noopener">
-                    <i class="fas fa-file-pdf"></i> Ver Guía de Prevención (PDF)</a>
-                  </li>
-
-                  <li>
-                    <strong>Smile and Learn (YouTube):</strong> Video educativo sobre inundaciones y desastres naturales.
-                    <a href="https://youtu.be/wAaV8rV2bRw" target="_blank" rel="noopener">
-                    <i class="fab fa-youtube"></i> Ver Video: Las Inundaciones en 1 minuto</a>
-                  </li>
-
-                  <li>
-                    <strong>Atlas de Riesgos de la Ciudad de México</strong> (2024). Gobierno de la Ciudad de México.
-                    <a href="https://www.gob.mx/semarnat" target="_blank" rel="noopener">https://www.gob.mx/semarnat</a>
-                  </li>
-
-                  <li>
-                    <strong>CENAPRED.</strong> La última gran inundación de la Ciudad de México. 
-                    <a href="https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico" target="_blank" rel="noopener">
-                    Enlace al artículo</a>
-                  </li>
-
-                  <li>
-                    <strong>Instituto de Geografía, UNAM.</strong> Estudios de subsidencia y Mapa Hidrográfico Urbano.
-                    <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelital-riesgo/" target="_blank" rel="noopener">
-                    Enlace UNAM Global</a>
-                  </li>
-
-                  <li>
-                    <strong>Mercado Libre — Blog.</strong> Alcaldías de CDMX que más se inundan (Reportes 2025).
-                    <a href="https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan-2025" target="_blank" rel="noopener">
-                    Enlace al Blog</a>
-                  </li>
-                </ul>
+              <ul class="reference-list">
+                <li>[Ciudad de México anegada]. (s. f.-a). Mediateca - INAH. <a href="https://mediateca.inah.gob.mx/islandora_74/islandora/object/mapa:176" target="_blank">Enlace</a></li>
+                <li>CENAPRED (s. f.). La última gran inundación de la Ciudad de México. <a href="https://www.gob.mx/cenapred/articulos/la-ultima-graninundacion-de-la-ciudad-de-mexico" target="_blank">Enlace</a></li>
+                <li>Indicadores de lluvia SACMEX. <a href="https://charcos.sacmex.cdmx.gob.mx/monthlyprecipitation-graph" target="_blank">Enlace</a></li>
+                <li>(2019). Causas de las inundaciones. Tierra y Tecnología. <a href="https://www.icog.es/TyT/index.php/2014/10/causas-las-inundaciones/" target="_blank">Enlace</a></li>
+                <li>Atlas de Riesgos del Estado de México. <a href="https://cgproteccioncivil.edomex.gob.mx/atlas-riesgos" target="_blank">Enlace</a></li>
+                <li>EcoExploratorio (2022). Tipos de Inundación. <a href="https://ecoexploratorio.org/amenazas-naturales/inundaciones/tiposde-inundacion/" target="_blank">Enlace</a></li>
+                <li>Estrada, L. (2025). CDMX frente al agua. Tecnológico De Monterrey. <a href="https://conecta.tec.mx/es/noticias/nacional/sostenibilidad/cdmx-frente-al-aguainundaciones-causas-y-vias-para-actuar" target="_blank">Enlace</a></li>
+                <li>Hernández-Espinosa et al. (2021). El Sistema de drenaje de la CDMX. <a href="https://portal.amelica.org/ameli/journal/595/5952727008/html/" target="_blank">Enlace</a></li>
+                <li>López, A. I. (2025). El hundimiento de Ciudad de México. El País. <a href="https://elpais.com/mexico/2025-08-30/el-hundimiento-deciudad-de-mexico-un-factor-desestimado-que-agrava-las-inundaciones-en-lacapital.html" target="_blank">Enlace</a></li>
+                <li>Mercado Libre (2025). Alcaldías CDMX que más se inundan. <a href="https://www.mercadolibre.com.mx/blog/re-alcaldias-cdmx-que-mas-se-inundan2025" target="_blank">Enlace</a></li>
+                <li>Eje Central (2025). ¿Qué es el Mapa Hidrográfico Urbano? <a href="https://www.ejecentral.com.mx/nuestro-eje/quees-el-mapa-hidrografico-urbano-de-la-cdmx-asi-funciona-la-herramienta-paraprevenir-danos-por-inundaciones-esto-dice-la-unam" target="_blank">Enlace</a></li>
+                <li>Torres, B. (2025). Mapeo de inundaciones desde el espacio. UNAM Global. <a href="https://unamglobal.unam.mx/global_revista/inundaciones-cdmx-mapa-satelitalriesgo/" target="_blank">Enlace</a></li>
+              </ul>
             </div>
           </div>
 
-        </div> <!-- cierre detail-panel -->
-      </div> <!-- cierre interactive-content -->
+        </div> 
+      </div>
     </section>
 
     <!-- Botón scroll top -->
